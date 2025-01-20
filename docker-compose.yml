@@ -1,0 +1,13 @@
+services:
+  app:
+    container_name: info-hub
+    build:
+      context: .
+    volumes:
+      - ./nextjs:/app   # ローカルのディレクトリをコンテナ内の /app にマウント
+    working_dir: /app  # コンテナ内での作業ディレクトリ
+    ports:
+      - "3000:3000"
+    stdin_open: true   # インタラクティブなセッションを許可
+    tty: true          # 仮想端末を有効にする
+
