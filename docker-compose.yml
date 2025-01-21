@@ -4,7 +4,7 @@ services:
     build:
       context: .
     volumes:
-      - ./nextjs:/app   # ローカルのディレクトリをコンテナ内の /app にマウント
+      - .:/app   # ローカルのディレクトリをコンテナ内の /app にマウント
     working_dir: /app  # コンテナ内での作業ディレクトリ
     ports:
       - "3000:3000"
