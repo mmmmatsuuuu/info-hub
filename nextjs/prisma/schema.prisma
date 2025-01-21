@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // 使用するDBプロバイダに合わせて変更
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id    String   @id @default(uuid()) @map("user_id")
+  clerk_id   String   @unique
+  type       String   // admin || teacher || student
+  name       String
+  email      String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  Student    Student? // 1対1リレーション (typeがstudentの場合)
+  Teacher    Teacher? // 1対1リレーション (typeがteacherの場合)
+}
+
+model Student {
+  user_id        String   @id @map("user_id")
+  admission_year Int
+  school_name    String
+  student_number String
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  User           User     @relation(fields: [user_id], references: [user_id])
+  Progress       Progress[]
+}
+
+model Teacher {
+  user_id     String   @id @map("user_id")
+  subject_id  String
+  school_name String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  User        User     @relation(fields: [user_id], references: [user_id])
+  Subject     Subject  @relation(fields: [subject_id], references: [subject_id])
+}
+
+model Subject {
+  subject_id  String   @id @default(uuid()) @map("subject_id")
+  subject_name String
+  description  String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  Units        Unit[]
+  Teachers     Teacher[]
+}
+
+model Unit {
+  unit_id      String   @id @default(uuid()) @map("unit_id")
+  unit_name    String
+  subject_id   String
+  description  String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  Subject      Subject  @relation(fields: [subject_id], references: [subject_id])
+  Lessons      Lesson[]
+}
+
+model Lesson {
+  lesson_id   String   @id @default(uuid()) @map("lesson_id")
+  title       String
+  description String?
+  unit_id     String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  Unit        Unit     @relation(fields: [unit_id], references: [unit_id])
+  Contents    Content[]
+}
+
+model Content {
+  content_id  String   @id @default(uuid()) @map("content_id")
+  title       String
+  lesson_id   String
+  description String?
+  type        String
+  url         String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  Lesson      Lesson   @relation(fields: [lesson_id], references: [lesson_id])
+  Progress    Progress[]
+}
+
+model Progress {
+  student_id  String
+  content_id  String
+  view_count  Int
+  test_score  Int?
+
+  Student     Student @relation(fields: [student_id], references: [user_id])
+  Content     Content @relation(fields: [content_id], references: [content_id])
+
+  @@id([student_id, content_id]) // 複合主キー
+}
