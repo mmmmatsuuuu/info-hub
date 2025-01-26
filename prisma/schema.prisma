@@ -70,26 +70,35 @@ model Lesson {
   lesson_id   String   @id @default(uuid()) @map("lesson_id")
   title       String
   description String?
-  unit_id     String
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
   Unit        Unit     @relation(fields: [unit_id], references: [unit_id])
-  Contents    Content[]
+  Contents    LessonContent[]
+  unit_id     String
 }
 
 model Content {
   content_id  String   @id @default(uuid()) @map("content_id")
   title       String
-  lesson_id   String
   description String?
   type        String
   url         String
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  Lesson      Lesson   @relation(fields: [lesson_id], references: [lesson_id])
+  Lessons     LessonContent[]
   Progress    Progress[]
+}
+
+model LessonContent {
+  lesson_id   String
+  content_id  String
+
+  Lesson      Lesson   @relation(fields: [lesson_id], references: [lesson_id], onDelete: Cascade)
+  Content     Content  @relation(fields: [content_id], references: [content_id], onDelete: Cascade)
+
+  @@id([lesson_id, content_id]) // 複合主キー
 }
 
 model Progress {
