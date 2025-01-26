@@ -1,11 +1,8 @@
 import {
   ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
-} from '@clerk/nextjs'
-import './globals.css'
+} from '@clerk/nextjs';
+import './globals.css';
+import Header from '@components/component/Header';
 
 export default function RootLayout({
   children,
@@ -15,14 +12,13 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="ja">
-        <body>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+        <body
+          className='w-screen min-h-screen bg-slate-100'
+        >
+          <Header />
+          <div className='max-w-7xl mx-auto py-12 px-4'>
           {children}
+          </div>
         </body>
       </html>
     </ClerkProvider>
