@@ -26,6 +26,9 @@ export default async function LessonPage({
         className="flex flex-col gap-4"
       >
         <Header1 title={ lesson.title } />
+        <p>
+          { lesson.description }
+        </p>
         <InnerCard>
           <Header2 title="動画" />
           <Movie

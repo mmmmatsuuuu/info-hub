@@ -17,7 +17,7 @@ export default async function LessonList({ subjectId }: { subjectId: string }) {
         return (
           <div
             key={unit.unit_id}
-            className='p-2 py-4 border-b'
+            className='p-2 py-4 border-b border-gray-400 pb-10'
           >
             <Header2 title={ unit.unit_name } />
             <p className='text-gray-600'>

@@ -23,7 +23,7 @@ export function Quiz({
             key={c.content_id}
           >
             <div
-              className="flex items-center"
+              className="flex items-center p-2"
             >
               <div
                 className="grow"

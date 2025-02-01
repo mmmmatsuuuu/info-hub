@@ -9,7 +9,7 @@ export function InternalLink({
   return (
     <Link
       href={ href }
-      className="rounded shadow bg-gray-200 text-gray-500 hover:bg-gray-700 hover:text-white px-8 py-2"
+      className="rounded shadow bg-gray-200 text-gray-500 hover:bg-gray-700 hover:text-white px-12 py-4"
     >
       { text || "開く" }
     </Link>
@@ -26,7 +26,7 @@ export function ExternalLink({
     <Link
       href={ href }
       rel="noopener noreferrer" target="_blank"
-      className="rounded shadow bg-gray-200 text-gray-500 hover:bg-gray-700 hover:text-white px-8 py-2"
+      className="rounded shadow bg-gray-200 text-gray-500 hover:bg-gray-700 hover:text-white px-12 py-4"
     >
       { text || "開く" }
     </Link>
