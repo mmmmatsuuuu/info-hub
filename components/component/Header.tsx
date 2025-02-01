@@ -1,8 +1,8 @@
 import Link from "next/link";
 import {
-  SignInButton,
+  // SignInButton,
   SignedIn,
-  SignUpButton,
+  // SignUpButton,
   SignedOut,
   UserButton
 } from '@clerk/nextjs';
