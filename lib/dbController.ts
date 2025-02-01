@@ -49,7 +49,7 @@ export async function getLesson(lessonId: string) {
     return null;
   }
   for (let i = 0; i < lesson.Contents.length; i++) {
-    let content = await prisma.content.findUnique({
+    const content = await prisma.content.findUnique({
       where: {
         content_id: lesson.Contents[i].content_id
       }

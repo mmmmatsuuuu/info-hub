@@ -9,9 +9,10 @@ import { NotFoundWithRedirect } from "@components/ui/notFound";
 export default async function LessonPage({
   params
 }: {
-  params: { lesson_id: string }
+  params: Promise<{ lesson_id: string }>
 }) {
-  const lesson = await getLesson(params.lesson_id);
+  const p = await params;
+  const lesson = await getLesson(p.lesson_id);
 
   if (!lesson) {
     return (
