@@ -10,7 +10,7 @@ import {
 
 export default function Header() {
   return (
-    <header className="bg-slate-800 text-white p-4">
+    <header className="sticky top-0 z-50 bg-slate-800 text-white p-4">
       <nav>
         <ul className="flex items-center">
           <li className="grow mx-6">
@@ -27,14 +27,14 @@ export default function Header() {
               <UserButton />
             </SignedIn>
             <SignedOut>
-              <div className="flex items-center">
+              {/* <div className="flex items-center">
                 <div className="mr-4">
                   <SignInButton />
                 </div>
                 <div className="mr-4">
                   <SignUpButton />
                 </div>
-              </div>
+              </div> */}
             </SignedOut>
           </li>
         </ul>

@@ -1,67 +1,41 @@
-import { prisma } from '@lib/prisma';
+import { Header2 } from '@components/ui/title';
+import { getSubject } from '@lib/dbController';
+import { LessonCard } from './LessonCard';
 
 export default async function LessonList({ subjectId }: { subjectId: string }) {
-  const LessonList = await prisma.subject.findUnique({
-    where: {
-      subject_id: subjectId,
-    },
-    include: {
-      Units: {
-        include: {
-          Lessons: {
-            orderBy: {
-              lesson_id: 'asc'
-            }
-          }
-        },
-        orderBy: {
-          unit_id: 'asc'
-        }
-      },
-    },
-  });
+  const subject = await getSubject(subjectId);
+
+  if (!subject) {
+    return null;
+  }
 
   return (
     <div
       className='' 
     >
-      {LessonList?.Units.map((unit) => {
+      {subject.Units.map((unit) => {
         return (
           <div
             key={unit.unit_id}
+            className='p-2 py-4 border-b'
           >
-            <h2
-              className='text-2xl font-bold text-gray-800 mt-8 mb-2'
-            >
-              {unit.unit_name}
-            </h2>
+            <Header2 title={ unit.unit_name } />
             <p className='text-gray-600'>
               {unit.description}
             </p>
-            {unit.Lessons.map((lesson) => {
-              return (
-                <div
-                  key={lesson.lesson_id}
-                  className='bg-white shadow-sm rounded-md p-4 mt-4 flex'
-                >
-                  <h3
-                    className='grow text-lg font-bold text-gray-800'
-                  >
-                    {`${lesson.lesson_id} - ${lesson.title}`}
-                  </h3>
-                  <div
-                    className='text-gray-600'
-                  >
-                    <div>
-                      実施回数: 13回
-                    </div>
-                    <div>
-                      小テスト最高得点: 100点
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            <div
+              className='flex flex-col gap-4'
+            >
+              {unit.Lessons.map((lesson) => {
+                return (
+                  <LessonCard
+                    key={ lesson.lesson_id }
+                    lessonId={ lesson.lesson_id }
+                    title={ lesson.title }
+                  />
+                );
+              })}
+            </div>
           </div>
         );
       })}
