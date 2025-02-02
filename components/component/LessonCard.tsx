@@ -1,6 +1,7 @@
-import { InnerCard } from "@components/ui/card";
+import { InnerCard, SmallCard } from "@components/ui/card";
 import { Header3 } from "@components/ui/title";
 import { InternalLink } from "@components/ui/myLink";
+import Link from "@node_modules/next/link";
 
 export async function LessonCard({
   lessonId, title
@@ -38,5 +39,26 @@ export async function LessonCard({
         </div>
       </div>
     </InnerCard>
+  )
+}
+
+export async function SmallLessonCard({
+  lessonId, title
+}: {
+  lessonId: string,
+  title: string,
+}) {
+  return (
+    <Link
+      href={ `/lesson/${ lessonId }` }
+      className=""
+    >
+      <SmallCard
+        bgColor="bg-white hover:bg-gray-700"
+        textColor="text-gray-500 hover:text-white"
+      >
+            { `${lessonId} - ${ title }` }
+      </SmallCard>
+    </Link>
   )
 }

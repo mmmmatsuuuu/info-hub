@@ -13,11 +13,13 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="ja">
         <body
-          className='w-screen min-h-screen bg-white'
+          className='w-screen h-screen bg-white'
         >
           <Header />
-          <div className='max-w-5xl mx-auto py-12 px-4'>
-          {children}
+          <div 
+            className='max-w-6xl mx-auto flex flex-row h-[calc(100vh-64px)] overflow-y-hidden relative bg-white'
+          >
+            {children}
           </div>
         </body>
       </html>
