@@ -1,10 +1,6 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarInset
 } from "@/components/ui/sidebar";
 import { SmallLessonList } from "./LessonList";
 import { Header3 } from "@components/ui/title";
