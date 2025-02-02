@@ -1,8 +1,8 @@
-import { Header2 } from '@components/ui/title';
+import { Header2, Header3 } from '@components/ui/title';
 import { getSubject } from '@lib/dbController';
-import { LessonCard } from './LessonCard';
+import { LessonCard, SmallLessonCard } from './LessonCard';
 
-export default async function LessonList({ subjectId }: { subjectId: string }) {
+export async function LessonList({ subjectId }: { subjectId: string }) {
   const subject = await getSubject(subjectId);
 
   if (!subject) {
@@ -29,6 +29,44 @@ export default async function LessonList({ subjectId }: { subjectId: string }) {
               {unit.Lessons.map((lesson) => {
                 return (
                   <LessonCard
+                    key={ lesson.lesson_id }
+                    lessonId={ lesson.lesson_id }
+                    title={ lesson.title }
+                  />
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export async function SmallLessonList({ subjectId }: { subjectId: string }) {
+  const subject = await getSubject(subjectId);
+
+  if (!subject) {
+    return null;
+  }
+
+  return (
+    <div
+      className='' 
+    >
+      {subject.Units.map((unit) => {
+        return (
+          <div
+            key={unit.unit_id}
+            className='p-2 border-b border-gray-400'
+          >
+            <Header3 title={ unit.unit_name } />
+            <div
+              className='flex flex-col gap-1'
+            >
+              {unit.Lessons.map((lesson) => {
+                return (
+                  <SmallLessonCard
                     key={ lesson.lesson_id }
                     lessonId={ lesson.lesson_id }
                     title={ lesson.title }

@@ -1,4 +1,6 @@
 import { getLesson } from "@lib/dbController";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import AppSidebar from "@components/component/Sidebar";
 import { Header1, Header2 } from "@components/ui/title";
 import { OuterCard, InnerCard } from "@components/ui/card";
 import { Movie } from "@components/component/Movie";
@@ -20,35 +22,43 @@ export default async function LessonPage({
     )
   }
   return (
-    <OuterCard
-
+    <SidebarProvider
+      defaultOpen={ true }
     >
-      <div
-        className="flex flex-col gap-4"
+      <AppSidebar />
+      <main
+        className="p-2 w-full h-[calc(100vh-64px)] overflow-y-scroll"
       >
-        <Header1 title={ lesson.title } />
-        <p>
-          { lesson.description }
-        </p>
-        <InnerCard>
-          <Header2 title="動画" />
-          <Movie
-            contents={ lesson.movies }
-          />
-        </InnerCard>
-        <InnerCard>
-          <Header2 title="小テスト" />
-          <Quiz 
-            contents={lesson.quiz}
-          />
-        </InnerCard>
-        <InnerCard>
-          <Header2 title="その他の教材" />
-          <Others
-            contents={lesson.others}
-          />
-        </InnerCard>
-      </div>
-    </OuterCard>
+        <SidebarTrigger />
+        <OuterCard>
+          <div
+            className="flex flex-col gap-4"
+          >
+            <Header1 title={ lesson.title } />
+            <p>
+              { lesson.description }
+            </p>
+            <InnerCard>
+              <Header2 title="動画" />
+              <Movie
+                contents={ lesson.movies }
+              />
+            </InnerCard>
+            <InnerCard>
+              <Header2 title="小テスト" />
+              <Quiz 
+                contents={lesson.quiz}
+              />
+            </InnerCard>
+            <InnerCard>
+              <Header2 title="その他の教材" />
+              <Others
+                contents={lesson.others}
+              />
+            </InnerCard>
+          </div>
+        </OuterCard>
+      </main>
+    </SidebarProvider>
   )
 }

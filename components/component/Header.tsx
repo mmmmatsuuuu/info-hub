@@ -10,9 +10,9 @@ import {
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 bg-slate-800 text-white p-4">
+    <header className="sticky top-0 z-50 bg-slate-800 text-white">
       <nav>
-        <ul className="flex items-center">
+        <ul className="flex items-center h-[64px]">
           <li className="grow mx-6">
             <Link href="/">
               <h1

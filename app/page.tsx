@@ -1,13 +1,17 @@
 import React from 'react';
 import { OuterCard } from '@components/ui/card';
 import { Header1 } from '@components/ui/title';
-import LessonList from '@components/component/LessonList';
+import { LessonList } from '@components/component/LessonList';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 
 
 export default function Home() {
   return (
-    <Tabs defaultValue='info1' defaultChecked>
+    <Tabs 
+      defaultValue='info1' 
+      defaultChecked
+      className='py-6 overflow-y-scroll'
+    >
       <TabsList>
         <TabsTrigger 
           value='info1'
