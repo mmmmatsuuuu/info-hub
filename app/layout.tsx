@@ -4,10 +4,10 @@ import {
 import './globals.css';
 import Header from '@components/component/Header';
 
-export default function RootLayout({
-  children,
+export default async function RootLayout({
+  children
 }: {
-  children: React.ReactNode
+  children: React.ReactNode,
 }) {
   return (
     <ClerkProvider>

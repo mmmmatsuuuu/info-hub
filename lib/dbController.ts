@@ -1,5 +1,26 @@
 import { prisma } from '@lib/prisma';
 
+// ==================================================
+// User Table
+// ==================================================
+export async function getUserWithClerkId(clerkId: string) {
+  return await prisma.user.findUnique({
+    where: {
+      clerk_id: clerkId
+    }
+  });
+}
+
+
+// ==================================================
+// Teacher Table
+// ==================================================
+// ==================================================
+// Student Table
+// ==================================================
+// ==================================================
+// Subject Table
+// ==================================================
 export async function getSubject(subjectId: string) {
   return await prisma.subject.findUnique({
     where: {
@@ -26,6 +47,12 @@ export async function getSubject(subjectId: string) {
   });
 }
 
+// ==================================================
+// Unit Table
+// ==================================================
+// ==================================================
+// Lesson Table
+// ==================================================
 export async function getLesson(lessonId: string) {
   const movies = [];
   const quiz = [];
@@ -78,3 +105,9 @@ export async function getLesson(lessonId: string) {
     others:others
   }
 }
+// ==================================================
+// Content Table
+// ==================================================
+// ==================================================
+// Progress Table
+// ==================================================

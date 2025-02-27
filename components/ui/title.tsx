@@ -7,7 +7,7 @@ export function Header1({
 }) {
   return (
     <div
-      className={ `border-b-2 ${ borderColor || "border-gray-400"} mt-6 mb-2` }
+      className={ `w-full border-b-2 ${ borderColor || "border-gray-400"} mt-6 mb-2` }
     >
       <h1
         className={ `text-2xl font-bold ${ textColor || "text-gray-600"}` }

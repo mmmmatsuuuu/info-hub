@@ -3,14 +3,26 @@ import { OuterCard } from '@components/ui/card';
 import { Header1 } from '@components/ui/title';
 import { LessonList } from '@components/component/LessonList';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
+import Footer from '@components/component/Footer';
+import { auth } from "@clerk/nextjs/server";
+import { getUserWithClerkId } from '@lib/dbController';
+import { redirect } from 'next/navigation';
 
+export default async function Home() {
+  // ユーザデータがない場合、registerページにリダイレクト
+  const { userId } = await auth();
+  if (userId) {
+    const userData = await getUserWithClerkId(userId);
+    if (!userData) {
+      return redirect("/register");
+    }
+  }
 
-export default function Home() {
   return (
     <Tabs 
       defaultValue='info1' 
       defaultChecked
-      className='py-6 overflow-y-scroll'
+      className='w-full py-6 overflow-y-scroll'
     >
       <TabsList>
         <TabsTrigger 
@@ -54,6 +66,7 @@ export default function Home() {
           </OuterCard>
         </div>
       </TabsContent>
+      <Footer />
     </Tabs>
   )
 }

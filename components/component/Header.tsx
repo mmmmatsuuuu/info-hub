@@ -1,8 +1,8 @@
 import Link from "next/link";
 import {
-  // SignInButton,
+  SignInButton,
   SignedIn,
-  // SignUpButton,
+  SignUpButton,
   SignedOut,
   UserButton
 } from '@clerk/nextjs';
@@ -27,14 +27,26 @@ export default function Header() {
               <UserButton />
             </SignedIn>
             <SignedOut>
-              {/* <div className="flex items-center">
+              <div className="flex items-center">
                 <div className="mr-4">
-                  <SignInButton />
+                  <SignInButton>
+                    <div
+                      className="bg-white rounded-md text-gray-800 text-center border border-gray-500 p-2 w-24 cursor-pointer text-sm hover:bg-gray-800 hover:text-white"
+                    >
+                      ログイン
+                    </div>
+                  </SignInButton>
                 </div>
                 <div className="mr-4">
-                  <SignUpButton />
+                  <SignUpButton>
+                    <div
+                      className="bg-white rounded-md text-gray-800 text-center border border-gray-500 p-2 w-24 cursor-pointer text-sm hover:bg-gray-800 hover:text-white"
+                    >
+                      登録
+                    </div>
+                  </SignUpButton>
                 </div>
-              </div> */}
+              </div>
             </SignedOut>
           </li>
         </ul>

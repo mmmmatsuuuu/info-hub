@@ -32,7 +32,7 @@ export function InnerCard({
 }) {
   return (
     <div
-      className={ `p-2 rounded-md ${ bgColor || "bg-white"} border ${ borderColor || "border-gray-200"} ${ textColor || "text-gray-600"}` }
+      className={ `w-full p-2 rounded-md ${ bgColor || "bg-white"} border ${ borderColor || "border-gray-200"} ${ textColor || "text-gray-600"}` }
     >
       { children }
     </div>
