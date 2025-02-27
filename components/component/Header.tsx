@@ -4,11 +4,11 @@ import {
   SignedIn,
   SignUpButton,
   SignedOut,
-  UserButton
+  UserButton,
 } from '@clerk/nextjs';
 
 
-export default function Header() {
+export default async function Header() {
   return (
     <header className="sticky top-0 z-50 bg-slate-800 text-white">
       <nav>

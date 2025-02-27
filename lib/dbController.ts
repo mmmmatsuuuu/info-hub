@@ -11,6 +11,40 @@ export async function getUserWithClerkId(clerkId: string) {
   });
 }
 
+export async function createUserWithStudent(
+  clerkId: string, 
+  username: string, 
+  email: string,
+  admissionYear: number,
+  schoolName: string,
+  studentNumber: string,
+) {
+  const result = await prisma.$transaction(async (tx) => {
+    const user = await tx.user.create({
+      data: {
+        clerk_id: clerkId,
+        type: "student",
+        name: username,
+        email: email,
+      },
+    });
+    const student = await tx.student.create({
+      data: {
+        user_id: user.user_id,
+        admission_year: admissionYear,
+        school_name: schoolName,
+        student_number: studentNumber
+      }
+    });
+    return { user, student };
+  });
+
+  return {
+    error: undefined,
+    success: true,
+    values: result.user
+  };
+}
 
 // ==================================================
 // Teacher Table
@@ -18,6 +52,7 @@ export async function getUserWithClerkId(clerkId: string) {
 // ==================================================
 // Student Table
 // ==================================================
+
 // ==================================================
 // Subject Table
 // ==================================================
