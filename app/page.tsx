@@ -26,18 +26,6 @@ export default async function Home() {
     <div
       className='w-full py-6 overflow-y-scroll'
     >
-      { userData && 
-        <div
-          className='w-full text-right'
-        >
-          <Link
-            href={`/mypage/${ userData.user_id }`}
-            className='shadow bg-gray-300 text-gray-800 p-2 px-6 rounded hover:bg-gray-800 hover:text-gray-50'
-          >
-            マイページ
-          </Link>
-        </div>
-      }
       <Tabs 
         defaultValue='info1' 
         defaultChecked

@@ -1,4 +1,5 @@
 import { prisma } from '@lib/prisma';
+import { UserAndStudent } from '@/types/form';
 
 // ==================================================
 // User Table
@@ -7,6 +8,19 @@ export async function getUserWithClerkId(clerkId: string) {
   return await prisma.user.findUnique({
     where: {
       clerk_id: clerkId
+    }
+  });
+}
+
+export async function getUserWithStudent(userId: string) {
+  return await prisma.user.findUnique({
+    where: {
+      user_id: userId
+    },
+    include: {
+      Student: {
+
+      },
     }
   });
 }
@@ -43,6 +57,52 @@ export async function createUserWithStudent(
     error: undefined,
     success: true,
     values: result.user
+  };
+}
+
+export async function editUserWithStudent(
+  userId: string, 
+  username: string, 
+  email: string,
+  admissionYear: number,
+  schoolName: string,
+  studentNumber: string,
+) {
+  const result = await prisma.$transaction(async (tx) => {
+    const user = await tx.user.update({
+      where: {
+        user_id: userId,
+      },
+      data: {
+        name: username,
+        email: email
+      }
+    });
+    const student = await tx.student.update({
+      where: {
+        user_id: userId,
+      },
+      data: {
+        admission_year: admissionYear,
+        school_name: schoolName,
+        student_number: studentNumber,
+      }
+    });
+    return { user, student };
+  });
+
+  const values:UserAndStudent = {
+    userId: result.user.user_id,
+    username: result.user.name,
+    email: result.user.email,
+    admissionYear: result.student.admission_year,
+    schoolName: result.student.school_name,
+    studentNumber: Number(result.student.student_number),
+  }
+  return {
+    messages: "データベースへの登録に成功。",
+    success: true,
+    values: values
   };
 }
 

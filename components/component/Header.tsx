@@ -6,9 +6,17 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs';
-
+import { auth } from "@clerk/nextjs/server";
+import { getUserWithClerkId } from "@lib/dbController";
+import { InternalLink } from "@components/ui/myLink";
 
 export default async function Header() {
+  const { userId } = await auth();
+  let user;
+  if (userId) {
+    user = await getUserWithClerkId(userId);
+  }
+
   return (
     <header className="sticky top-0 z-50 bg-slate-800 text-white">
       <nav>
@@ -24,7 +32,16 @@ export default async function Header() {
           </li>
           <li className="mx-6 font-semibold">
             <SignedIn>
-              <UserButton />
+              <ul
+                className="flex items-center gap-2"
+              >
+                <li>
+                  <InternalLink text="マイページ" href={ `/mypage/${ user?.user_id }` }/>        
+                </li>
+                <li>
+                  <UserButton />
+                </li>
+              </ul>
             </SignedIn>
             <SignedOut>
               <div className="flex items-center">

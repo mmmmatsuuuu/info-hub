@@ -12,6 +12,10 @@ export default async function RootLayout({
   return (
     <ClerkProvider>
       <html lang="ja">
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>info-hub</title>
+        </head>
         <body
           className='w-screen h-screen bg-white'
         >
