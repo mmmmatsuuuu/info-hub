@@ -16,7 +16,7 @@ export async function LessonCard({
   if (!userId) {
     progress = "";
   } else {
-    progress = "実施回数: 3回"
+    progress = "実施回数: [実装中]"
   }
 
   return (
@@ -45,6 +45,8 @@ export async function LessonCard({
         >
           <InternalLink 
             href={ `/lesson/${ lessonId }` }
+            text="開く"
+            cls="px-8"
           />
         </div>
       </div>
