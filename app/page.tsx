@@ -7,7 +7,6 @@ import Footer from '@components/component/Footer';
 import { auth } from "@clerk/nextjs/server";
 import { getUserWithClerkId } from '@lib/dbController';
 import { redirect } from 'next/navigation';
-import Link from 'next/link';
 
 export default async function Home() {
   // ユーザデータがない場合、registerページにリダイレクト

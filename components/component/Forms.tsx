@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useActionState, useOptimistic } from "react";
+import React, { useEffect, useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { Input } from "@components/ui/input";
 import { addUserAction, editUserAction } from "@lib/actions";
