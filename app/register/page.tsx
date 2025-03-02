@@ -1,7 +1,7 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Header1 } from "@components/ui/title";
-import UserRegister from '@components/component/Register';
+import { CreateUserForm } from '@components/component/Forms';
 
 export default async function Register() {
 
@@ -20,7 +20,7 @@ export default async function Register() {
     >
       <Header1 title="ユーザ情報の登録" />
       <p>最初に基本情報を登録しましょう。</p>
-      <UserRegister
+      <CreateUserForm
         username={ username }
         email={ email }
       />

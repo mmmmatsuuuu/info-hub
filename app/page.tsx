@@ -4,7 +4,7 @@ import { Header1 } from '@components/ui/title';
 import { LessonList } from '@components/component/LessonList';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import Footer from '@components/component/Footer';
-import { auth, OrganizationMembershipPublicUserData } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { getUserWithClerkId } from '@lib/dbController';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
