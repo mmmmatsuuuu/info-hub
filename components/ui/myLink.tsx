@@ -1,15 +1,18 @@
 import Link from "@node_modules/next/link";
 
+const btnClass = "rounded shadow p-2 bg-slate-900 text-slate-50 hover:bg-slate-600"
+
 export function InternalLink({
-  href, text
+  href, text, cls,
 }: {
   href: string,
-  text?: string
+  text?: string,
+  cls?: string,
 }) {
   return (
     <Link
       href={ href }
-      className="rounded shadow bg-gray-200 text-gray-500 hover:bg-gray-700 hover:text-white px-12 py-4"
+      className={ `${btnClass} ${cls}` }
     >
       { text || "開く" }
     </Link>
@@ -17,16 +20,17 @@ export function InternalLink({
 }
 
 export function ExternalLink({
-  href, text
+  href, text, cls
 }: {
   href: string,
-  text?: string
+  text?: string,
+  cls?:string,
 }) {
   return (
     <Link
       href={ href }
       rel="noopener noreferrer" target="_blank"
-      className="rounded shadow bg-gray-200 text-gray-500 hover:bg-gray-700 hover:text-white px-12 py-4"
+      className={ `${btnClass} ${cls}` }
     >
       { text || "開く" }
     </Link>

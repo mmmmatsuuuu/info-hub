@@ -1,14 +1,22 @@
 import Link from "next/link";
 import {
-  // SignInButton,
+  SignInButton,
   SignedIn,
-  // SignUpButton,
+  SignUpButton,
   SignedOut,
-  UserButton
+  UserButton,
 } from '@clerk/nextjs';
+import { auth } from "@clerk/nextjs/server";
+import { getUserWithClerkId } from "@lib/dbController";
+import { InternalLink } from "@components/ui/myLink";
 
+export default async function Header() {
+  const { userId } = await auth();
+  let user;
+  if (userId) {
+    user = await getUserWithClerkId(userId);
+  }
 
-export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-slate-800 text-white">
       <nav>
@@ -24,17 +32,38 @@ export default function Header() {
           </li>
           <li className="mx-6 font-semibold">
             <SignedIn>
-              <UserButton />
+              <ul
+                className="flex items-center gap-2"
+              >
+                <li>
+                  <InternalLink text="マイページ" href={ `/mypage/${ user?.user_id }` }/>        
+                </li>
+                <li>
+                  <UserButton />
+                </li>
+              </ul>
             </SignedIn>
             <SignedOut>
-              {/* <div className="flex items-center">
+              <div className="flex items-center">
                 <div className="mr-4">
-                  <SignInButton />
+                  <SignInButton>
+                    <div
+                      className="bg-white rounded-md text-gray-800 text-center border border-gray-500 p-2 w-24 cursor-pointer text-sm hover:bg-gray-800 hover:text-white"
+                    >
+                      ログイン
+                    </div>
+                  </SignInButton>
                 </div>
                 <div className="mr-4">
-                  <SignUpButton />
+                  <SignUpButton>
+                    <div
+                      className="bg-white rounded-md text-gray-800 text-center border border-gray-500 p-2 w-24 cursor-pointer text-sm hover:bg-gray-800 hover:text-white"
+                    >
+                      登録
+                    </div>
+                  </SignUpButton>
                 </div>
-              </div> */}
+              </div>
             </SignedOut>
           </li>
         </ul>

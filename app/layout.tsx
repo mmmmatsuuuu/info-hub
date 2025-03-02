@@ -4,14 +4,18 @@ import {
 import './globals.css';
 import Header from '@components/component/Header';
 
-export default function RootLayout({
-  children,
+export default async function RootLayout({
+  children
 }: {
-  children: React.ReactNode
+  children: React.ReactNode,
 }) {
   return (
     <ClerkProvider>
       <html lang="ja">
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>info-hub</title>
+        </head>
         <body
           className='w-screen h-screen bg-white'
         >

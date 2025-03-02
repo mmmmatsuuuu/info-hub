@@ -1,12 +1,21 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import { getYoutubeId } from '@lib/regax';
 import { Content } from '@node_modules/@prisma/client';
+import { auth } from '@clerk/nextjs/server';
 
-export function Movie({
+export async function Movie({
   contents
 }: {
   contents: Content[]
 }) {
+  const { userId } = await auth();
+  let progress;
+
+  if (!userId) {
+    progress = "";
+  } else {
+    progress = "視聴回数: 3回"
+  }
   return (
     <Tabs
       defaultValue={ contents[0].content_id }
@@ -36,6 +45,15 @@ export function Movie({
             <div
               className='p-2 border rounded-b-md text-sm text-gray-500'
             >
+              <div
+                className='flex flex-row-reverse'
+              >
+                <div
+                  className='bg-gray-200 rounded p-1'
+                >
+                  { progress }
+                </div>
+              </div>
               <p>＜動画の見方＞ </p>
               <ul className='list-inside list-disc pl-6'>
                 <li>ノートを準備して動画の内容をまとめられるようにする</li>

@@ -7,20 +7,34 @@ import { Movie } from "@components/component/Movie";
 import { Quiz } from "@components/component/Quiz";
 import { Others } from "@components/component/Others";
 import { NotFoundWithRedirect } from "@components/ui/notFound";
+import Footer from "@components/component/Footer";
+import { auth } from "@clerk/nextjs/server";
+import { getUserWithClerkId } from '@lib/dbController';
+import { redirect } from 'next/navigation';
 
 export default async function LessonPage({
   params
 }: {
   params: Promise<{ lesson_id: string }>
 }) {
+  // ユーザデータがない場合、registerページにリダイレクト
+  const { userId } = await auth();
+  if (userId) {
+    const userData = await getUserWithClerkId(userId);
+    if (!userData) {
+      return redirect("/register");
+    }
+  }
+
+  // レッスンが見つからなった場合の処理
   const p = await params;
   const lesson = await getLesson(p.lesson_id);
-
   if (!lesson) {
     return (
       <NotFoundWithRedirect text="レッスンが見つかりませんでした。" href="/" />
     )
   }
+
   return (
     <SidebarProvider
       defaultOpen={ true }
@@ -58,6 +72,7 @@ export default async function LessonPage({
             </InnerCard>
           </div>
         </OuterCard>
+        <Footer />
       </main>
     </SidebarProvider>
   )
