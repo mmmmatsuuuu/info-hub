@@ -7,7 +7,7 @@ import {
   UserButton,
 } from '@clerk/nextjs';
 import { auth } from "@clerk/nextjs/server";
-import { getUserWithClerkId } from "@lib/dbController";
+import { getUserWithClerkId } from "@lib/dbController/user";
 import { InternalLink } from "@components/ui/myLink";
 
 export default async function Header() {

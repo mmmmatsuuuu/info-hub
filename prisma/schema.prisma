@@ -7,10 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserType {
+  admin
+  teacher
+  student
+}
+
 model User {
   user_id    String   @id @default(uuid()) @map("user_id")
   clerk_id   String   @unique
-  type       String   // admin || teacher || student
+  type       UserType @default(student)
   name       String
   email      String   @unique
   created_at DateTime @default(now())
@@ -47,6 +53,7 @@ model Subject {
   subject_id  String   @id @default(uuid()) @map("subject_id")
   subject_name String
   description  String?
+  is_public    Boolean  @default(false)
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
@@ -59,6 +66,7 @@ model Unit {
   unit_name    String
   subject_id   String
   description  String?
+  is_public    Boolean  @default(false)
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
@@ -70,6 +78,7 @@ model Lesson {
   lesson_id   String   @id @default(uuid()) @map("lesson_id")
   title       String
   description String?
+  is_public   Boolean  @default(false)
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
@@ -78,11 +87,18 @@ model Lesson {
   unit_id     String
 }
 
+enum ContentType {
+  movie
+  quiz
+  other
+}
+
 model Content {
   content_id  String   @id @default(uuid()) @map("content_id")
   title       String
   description String?
-  type        String
+  type        ContentType
+  is_public   Boolean  @default(false)
   url         String // movie || quiz || other
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt

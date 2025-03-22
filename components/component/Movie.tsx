@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import { getYoutubeId } from '@lib/regax';
 import { Content } from '@node_modules/@prisma/client';
 import { auth } from '@clerk/nextjs/server';
+import { NotFound } from '@components/ui/notFound';
 
 export async function Movie({
   contents
@@ -10,6 +11,12 @@ export async function Movie({
 }) {
   const { userId } = await auth();
   let progress;
+
+  if (contents.length == 0) {
+      return (
+        <NotFound text="このレッスンで使用する動画はありません。" />
+      );
+    }
 
   if (!userId) {
     progress = "";

@@ -5,11 +5,10 @@ import { LessonList } from '@components/component/LessonList';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import Footer from '@components/component/Footer';
 import { auth } from "@clerk/nextjs/server";
-import { getUserWithClerkId } from '@lib/dbController';
+import { getUserWithClerkId } from '@lib/dbController/user';
 import { redirect } from 'next/navigation';
-import Link from 'next/link';
 
-export default async function Home() {
+export default async function HomePage() {
   // ユーザデータがない場合、registerページにリダイレクト
   const { userId } = await auth();
   let userData;

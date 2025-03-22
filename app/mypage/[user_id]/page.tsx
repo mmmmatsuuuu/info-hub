@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { getUserWithStudent } from "@lib/dbController";
+import { getUserWithStudent } from "@lib/dbController/user";
 import { redirect } from "next/navigation";
 import { OuterCard } from "@components/ui/card";
 import { Header1, Header2 } from "@components/ui/title";
@@ -22,10 +22,10 @@ export default async function MyPage({
   }
   return(
     <div
-      className="w-full mt-12"
+      className="w-full mt-12 p-4 flex flex-col gap-4"
     >
       <div
-        className="w-full mb-4"
+        className="w-full"
       >
         <Header1 title="マイページ" />
       </div>
@@ -44,6 +44,7 @@ export default async function MyPage({
               <td>
                 { userData.type === "student" ? "生徒": "" }
                 { userData.type === "teacher" ? "先生": "" }
+                { userData.type === "admin" ? "管理者": "" }
               </td>
             </tr>
             <tr className="border-b">
@@ -70,6 +71,17 @@ export default async function MyPage({
           <InternalLink href={`/mypage/${ userId }/edit`} text="編集" cls="px-8"/>
         </div>
       </OuterCard>
+      {userData.type === "admin" && (
+        <OuterCard>
+          <Header2 title="コンテンツマネージャー"/>
+          <div
+            className="m-2 flex gap-4 justify-end"
+          >
+            <p>ここで、教科や単元のコンテンツを管理します。</p>
+            <InternalLink href="/content_manager" text="コンテンツマネージャー" />
+          </div>
+        </OuterCard>
+      )}
     </div>
   )
 }

@@ -1,9 +1,9 @@
 import { Header2, Header3 } from '@components/ui/title';
-import { getSubject } from '@lib/dbController';
+import { getSubjectWithPublicUnits } from '@lib/dbController/subject';
 import { LessonCard, SmallLessonCard } from './LessonCard';
 
 export async function LessonList({ subjectId }: { subjectId: string }) {
-  const subject = await getSubject(subjectId);
+  const subject = await getSubjectWithPublicUnits(subjectId);
 
   if (!subject) {
     return null;
@@ -44,7 +44,7 @@ export async function LessonList({ subjectId }: { subjectId: string }) {
 }
 
 export async function SmallLessonList({ subjectId }: { subjectId: string }) {
-  const subject = await getSubject(subjectId);
+  const subject = await getSubjectWithPublicUnits(subjectId);
 
   if (!subject) {
     return null;
@@ -52,13 +52,13 @@ export async function SmallLessonList({ subjectId }: { subjectId: string }) {
 
   return (
     <div
-      className='' 
+      className='border-l border-slate-400 p-1' 
     >
       {subject.Units.map((unit) => {
         return (
           <div
             key={unit.unit_id}
-            className='p-2 border-b border-gray-400'
+            className='p-2 border-b border-slate-300'
           >
             <Header3 title={ unit.unit_name } />
             <div

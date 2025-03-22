@@ -1,7 +1,7 @@
 "use server";
 import { auth } from "@clerk/nextjs/server";
-import { createUserWithStudent, editUserWithStudent } from "./dbController";
-import { ValidateUserAndStudent } from "./validate";
+import { createUserWithStudent, editUserWithStudent } from "../dbController/user";
+import { ValidateUserAndStudent } from "../validate";
 import { FormState, UserAndStudent, MessageUserAndStudent } from "@/types/form";
 
 export async function addUserAction(
@@ -20,7 +20,7 @@ export async function addUserAction(
   
     // バリデーション実施
     const validateFields = ValidateUserAndStudent(rawData);
-    console.log(validateFields);
+    
     // バリデーション失敗時の処理
     if (!validateFields.success) {
       const errors = validateFields.error.flatten().fieldErrors;
@@ -33,7 +33,7 @@ export async function addUserAction(
           studentNumber: errors.studentNumber ? errors.studentNumber.join(", ") : undefined,
         },
         values: rawData,
-        success: false,
+        isSuccess: false,
       }
     }
     
@@ -41,7 +41,7 @@ export async function addUserAction(
     const { userId } = await auth();
     if (!userId) {
       return {
-        success: false,
+        isSuccess: false,
         messages: {
           other: "ユーザ認証でエラーが発生しました。ログインか登録を済ませてください。"
         },
@@ -58,25 +58,11 @@ export async function addUserAction(
       String(validateFields.data.studentNumber),
     )
     // 結果を返す
-    const returnObj = {
-      success: res.success,
-      values: res.values,
-      messages: {},
-    };
-    if (res.success) {
-      returnObj.messages = {
-        other: "登録に成功しました。"
-      }
-    } else {
-      returnObj.messages = {
-        other: String(res.error)
-      }
-    }
-    return returnObj;
+    return res;
   } catch (error) {
     // エラーハンドリング
     return {
-      success: false,
+      isSuccess: false,
       messages: {
         other: String(error),
       },
@@ -84,7 +70,6 @@ export async function addUserAction(
     }
   }
 }
-
 
 export async function editUserAction(
   prevState: FormState<UserAndStudent, MessageUserAndStudent>,
@@ -108,7 +93,7 @@ export async function editUserAction(
           userId: "userIdが定義されていません。",
         },
         values: rawData,
-        success: false,
+        isSuccess: false,
       }
     }
     // バリデーション失敗時の処理
@@ -123,7 +108,7 @@ export async function editUserAction(
           studentNumber: errors.studentNumber ? errors.studentNumber.join(", ") : undefined,
         },
         values: rawData,
-        success: false,
+        isSuccess: false,
       }
     }
     // データベース登録処理
@@ -138,7 +123,7 @@ export async function editUserAction(
     console.log(res);
     // 結果を返す
     return {
-      success: res.success,
+      isSuccess: res.success,
       values: res.values,
       messages: {
         other: res.messages,
@@ -147,7 +132,7 @@ export async function editUserAction(
   } catch (error) {
     // エラーハンドリング
     return {
-      success: false,
+      isSuccess: false,
       messages: {
         other: String(error),
       },

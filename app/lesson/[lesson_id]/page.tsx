@@ -1,4 +1,4 @@
-import { getLesson } from "@lib/dbController";
+import { getPublicLesson } from "@lib/dbController/lesson";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@components/component/Sidebar";
 import { Header1, Header2 } from "@components/ui/title";
@@ -9,7 +9,7 @@ import { Others } from "@components/component/Others";
 import { NotFoundWithRedirect } from "@components/ui/notFound";
 import Footer from "@components/component/Footer";
 import { auth } from "@clerk/nextjs/server";
-import { getUserWithClerkId } from '@lib/dbController';
+import { getUserWithClerkId } from '@lib/dbController/user';
 import { redirect } from 'next/navigation';
 
 export default async function LessonPage({
@@ -28,12 +28,14 @@ export default async function LessonPage({
 
   // レッスンが見つからなった場合の処理
   const p = await params;
-  const lesson = await getLesson(p.lesson_id);
-  if (!lesson) {
+  const res = await getPublicLesson(p.lesson_id);
+  const lesson = res.values;
+  if (!res.isSuccess || !lesson ) {
     return (
       <NotFoundWithRedirect text="レッスンが見つかりませんでした。" href="/" />
     )
   }
+
 
   return (
     <SidebarProvider
