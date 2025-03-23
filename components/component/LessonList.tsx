@@ -1,36 +1,50 @@
 import { Header2, Header3 } from '@components/ui/title';
-import { getSubject } from '@lib/dbController';
+import { getSubjectWithPublicUnits } from '@lib/dbController/subject';
 import { LessonCard, SmallLessonCard } from './LessonCard';
+import { NotFound } from '@components/ui/notFound';
 
 export async function LessonList({ subjectId }: { subjectId: string }) {
-  const subject = await getSubject(subjectId);
+  const res = await getSubjectWithPublicUnits(subjectId);
 
-  if (!subject) {
-    return null;
+  if (res.isSuccess == false) {
+    return (
+      <NotFound
+        text='データの取得に失敗しました。もう一度読み込み直してください。'
+      />
+    )
   }
+  if (!res.values) {
+    return (
+      <NotFound
+        text='データの取得に失敗しました。もう一度読み込み直してください。'
+      />
+    )
+  }
+
+  const subject = res.values;
 
   return (
     <div
       className='' 
     >
-      {subject.Units.map((unit) => {
+      {subject.units.map((unit) => {
         return (
           <div
-            key={unit.unit_id}
+            key={unit.unitId}
             className='p-2 py-4 border-b border-gray-400 pb-10'
           >
-            <Header2 title={ unit.unit_name } />
+            <Header2 title={ unit.unitName } />
             <p className='text-gray-600'>
               {unit.description}
             </p>
             <div
               className='flex flex-col gap-4'
             >
-              {unit.Lessons.map((lesson) => {
+              {unit.lessons.map((lesson) => {
                 return (
                   <LessonCard
-                    key={ lesson.lesson_id }
-                    lessonId={ lesson.lesson_id }
+                    key={ lesson.lessonId }
+                    lessonId={ lesson.lessonId }
                     title={ lesson.title }
                   />
                 );
@@ -44,31 +58,44 @@ export async function LessonList({ subjectId }: { subjectId: string }) {
 }
 
 export async function SmallLessonList({ subjectId }: { subjectId: string }) {
-  const subject = await getSubject(subjectId);
+  const res = await getSubjectWithPublicUnits(subjectId);
 
-  if (!subject) {
-    return null;
+  if (res.isSuccess == false) {
+    return (
+      <NotFound
+        text='データの取得に失敗しました。もう一度読み込み直してください。'
+      />
+    )
   }
+  if (!res.values) {
+    return (
+      <NotFound
+        text='データの取得に失敗しました。もう一度読み込み直してください。'
+      />
+    )
+  }
+
+  const subject = res.values;
 
   return (
     <div
-      className='' 
+      className='border-l border-slate-400 p-1' 
     >
-      {subject.Units.map((unit) => {
+      {subject.units.map((unit) => {
         return (
           <div
-            key={unit.unit_id}
-            className='p-2 border-b border-gray-400'
+            key={unit.unitId}
+            className='p-2 border-b border-slate-300'
           >
-            <Header3 title={ unit.unit_name } />
+            <Header3 title={ unit.unitName } />
             <div
               className='flex flex-col gap-1'
             >
-              {unit.Lessons.map((lesson) => {
+              {unit.lessons.map((lesson) => {
                 return (
                   <SmallLessonCard
-                    key={ lesson.lesson_id }
-                    lessonId={ lesson.lesson_id }
+                    key={ lesson.lessonId }
+                    lessonId={ lesson.lessonId }
                     title={ lesson.title }
                   />
                 );

@@ -1,9 +1,9 @@
 import { auth } from "@clerk/nextjs/server";
-import { getUserWithStudent } from "@lib/dbController";
+import { getUserWithStudent } from "@lib/dbController/user";
 import { redirect } from "next/navigation";
-import { EditStudentForm } from "@components/component/Forms";
+import { EditStudentForm } from "@components/component/forms/userForms";
 
-export default async function MyPage({
+export default async function EditMyPage({
   params
 }: {
   params: Promise<{ user_id: string }>
@@ -13,22 +13,28 @@ export default async function MyPage({
   const userId = (await params).user_id;
   let userData;
   if (userId && user.userId) {
-    userData = await getUserWithStudent(userId);
+    const value = await getUserWithStudent(userId);
+    if (value.isSuccess == false) {
+      return redirect("/");
+    }
+    userData = value.values;
   }
+
   if (!userData) {
     return redirect("/register");
   }
   return(
     <div
-      className="w-full"
+      className="w-full p-4"
     >
       <EditStudentForm 
-        userId={ userData.user_id }
-        username={ userData.name }
+        userId={ userData.userId }
+        username={ userData.username }
         email={ userData.email }
-        schoolName={ userData.Student? userData.Student.school_name : ""}
-        admissionYear={ userData.Student? userData.Student.admission_year : 1900 }
-        studentNumber={ userData.Student? Number(userData.Student.student_number) : 1101 }
+        type={ userData.type }
+        schoolName={ userData.schoolName }
+        admissionYear={ userData.admissionYear }
+        studentNumber={ Number(userData.studentNumber) }
       />
     </div>
   )

@@ -1,4 +1,4 @@
-import { Content } from "@node_modules/@prisma/client";
+import { Content } from "@/types/dbOperation";
 import { InnerCard } from "@components/ui/card";
 import { ExternalLink } from "@components/ui/myLink";
 import { Header3 } from "@components/ui/title";
@@ -20,7 +20,7 @@ export function Quiz({
       { contents.map(c => {
         return (
           <InnerCard
-            key={c.content_id}
+            key={c.contentId}
           >
             <div
               className="flex items-center p-2"

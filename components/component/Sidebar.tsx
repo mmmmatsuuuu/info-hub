@@ -14,13 +14,13 @@ export default function AppSidebar() {
       >
         <div>
           <div
-            className="p-2 m-2 mb-4 rounded-md border-l-2 border-gray-400"
+            className="p-2 m-2 mb-4 rounded-md border-gray-400"
           >
             <Header3 title="情報Ⅰ" />
             <SmallLessonList subjectId="1" />
           </div>
           <div
-            className="p-2 m-2 rounded-md border-l-2 border-gray-400"
+            className="p-2 m-2 rounded-md border-gray-400"
           >
             <Header3 title="情報Ⅱ" />
             <SmallLessonList subjectId="2" />

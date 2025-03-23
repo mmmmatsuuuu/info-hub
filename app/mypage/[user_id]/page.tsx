@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { getUserWithStudent } from "@lib/dbController";
+import { getUserWithStudent } from "@lib/dbController/user";
 import { redirect } from "next/navigation";
 import { OuterCard } from "@components/ui/card";
 import { Header1, Header2 } from "@components/ui/title";
@@ -15,17 +15,21 @@ export default async function MyPage({
   const userId = (await params).user_id;
   let userData;
   if (userId && user.userId) {
-    userData = await getUserWithStudent(userId);
+    const res = await getUserWithStudent(userId);
+    if (res.isSuccess = false) {
+      return redirect("/register");
+    }
+    userData = res.values;
   }
   if (!userData) {
     return redirect("/register");
   }
   return(
     <div
-      className="w-full mt-12"
+      className="w-full mt-12 p-4 flex flex-col gap-4"
     >
       <div
-        className="w-full mb-4"
+        className="w-full"
       >
         <Header1 title="マイページ" />
       </div>
@@ -37,13 +41,14 @@ export default async function MyPage({
           <tbody>
             <tr className="border-b">
               <td>ユーザ名</td>
-              <td>{ userData.name }</td>
+              <td>{ userData.username }</td>
             </tr>
             <tr className="border-b">
               <td>タイプ</td>
               <td>
                 { userData.type === "student" ? "生徒": "" }
                 { userData.type === "teacher" ? "先生": "" }
+                { userData.type === "admin" ? "管理者": "" }
               </td>
             </tr>
             <tr className="border-b">
@@ -52,15 +57,15 @@ export default async function MyPage({
             </tr>
             <tr className="border-b">
               <td>学校名</td>
-              <td>{ userData.Student? userData.Student.school_name : "" }</td>
+              <td>{ userData.schoolName }</td>
             </tr>
             <tr className="border-b">
               <td>入学年度</td>
-              <td>{ userData.Student? userData.Student.admission_year : 1900 }</td>
+              <td>{ userData.admissionYear }</td>
             </tr>
             <tr className="border-b">
               <td>学籍番号</td>
-              <td>{ userData.Student? Number(userData.Student.student_number) : 1101 }</td>
+              <td>{ Number(userData.studentNumber) }</td>
             </tr>
           </tbody>
         </table>
@@ -70,6 +75,17 @@ export default async function MyPage({
           <InternalLink href={`/mypage/${ userId }/edit`} text="編集" cls="px-8"/>
         </div>
       </OuterCard>
+      {userData.type === "admin" && (
+        <OuterCard>
+          <Header2 title="コンテンツマネージャー"/>
+          <div
+            className="m-2 flex gap-4 justify-end"
+          >
+            <p>ここで、教科や単元のコンテンツを管理します。</p>
+            <InternalLink href="/content_manager" text="コンテンツマネージャー" />
+          </div>
+        </OuterCard>
+      )}
     </div>
   )
 }

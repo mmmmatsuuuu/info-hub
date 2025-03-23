@@ -21,7 +21,7 @@ export default async function RootLayout({
         >
           <Header />
           <div 
-            className='max-w-6xl mx-auto flex flex-row h-[calc(100vh-64px)] overflow-y-hidden relative bg-white'
+            className='flex flex-row h-[calc(100vh-64px)] overflow-y-hidden relative bg-white'
           >
             {children}
           </div>

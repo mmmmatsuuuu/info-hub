@@ -7,7 +7,7 @@ export function Header1({
 }) {
   return (
     <div
-      className={ `w-full border-b-2 ${ borderColor || "border-gray-400"} mt-6 mb-2` }
+      className={ `w-full border-b-2 ${ borderColor || "border-gray-400"} my-2` }
     >
       <h1
         className={ `text-2xl font-bold ${ textColor || "text-gray-600"}` }
@@ -26,7 +26,7 @@ export function Header2({
 }) {
   return (
     <h2
-      className={ `text-xl font-bold ${ textColor || "text-gray-600"} mt-4 mb-1` }
+      className={ `text-xl font-bold ${ textColor || "text-gray-600"} my-1` }
     >
       { title }
     </h2>
@@ -41,7 +41,7 @@ export function Header3({
 }) {
   return (
     <h3
-      className={ `text-md font-bold ${ textColor || "text-gray-500"} mt-2 mb-1` }
+      className={ `text-md font-bold ${ textColor || "text-gray-500"} my-1` }
     >
       { title }
     </h3>

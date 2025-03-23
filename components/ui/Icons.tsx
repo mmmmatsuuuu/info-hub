@@ -56,3 +56,102 @@ export function ExclamationIcon({
     </svg>
   )
 }
+
+export function ArrowForwardIcon({
+  width, height, fill, className
+}: Icon) {
+  return (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      className={ className ? className : ""} 
+      height={ height ? height: "24px"} 
+      viewBox="0 -960 960 960" 
+      width={ width ? width: "24px"} 
+      fill={ fill ? fill: "#e3e3e3"}
+    >
+      <path d="m321-80-71-71 329-329-329-329 71-71 400 400L321-80Z"/>
+    </svg>
+  )
+}
+
+export function ArrowBackIcon({
+  width, height, fill, className
+}: Icon) {
+  return (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      className={ className ? className : ""} 
+      height={ height ? height: "24px"} 
+      viewBox="0 -960 960 960" 
+      width={ width ? width: "24px"} 
+      fill={ fill ? fill: "#e3e3e3"}
+    >
+      <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/>
+    </svg>
+  )
+}
+export function MovieIcon({
+  width, height, fill, className
+}: Icon) {
+  return (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      className={ className ? className : ""} 
+      height={ height ? height: "24px"} 
+      viewBox="0 -960 960 960" 
+      width={ width ? width: "24px"} 
+      fill={ fill ? fill: "#e3e3e3"}
+    >
+      <path d="m380-300 280-180-280-180v360ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/>
+    </svg>
+  )
+}
+export function QuizIcon({
+  width, height, fill, className
+}: Icon) {
+  return (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      className={ className ? className : ""} 
+      height={ height ? height: "24px"} 
+      viewBox="0 -960 960 960" 
+      width={ width ? width: "24px"} 
+      fill={ fill ? fill: "#e3e3e3"}
+    >
+      <path d="M560-360q17 0 29.5-12.5T602-402q0-17-12.5-29.5T560-444q-17 0-29.5 12.5T518-402q0 17 12.5 29.5T560-360Zm-30-128h60q0-29 6-42.5t28-35.5q30-30 40-48.5t10-43.5q0-45-31.5-73.5T560-760q-41 0-71.5 23T446-676l54 22q9-25 24.5-37.5T560-704q24 0 39 13.5t15 36.5q0 14-8 26.5T578-596q-33 29-40.5 45.5T530-488ZM320-240q-33 0-56.5-23.5T240-320v-480q0-33 23.5-56.5T320-880h480q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H320Zm0-80h480v-480H320v480ZM160-80q-33 0-56.5-23.5T80-160v-560h80v560h560v80H160Zm160-720v480-480Z"/>
+    </svg>
+  )
+}
+export function OtherContentIcon({
+  width, height, fill, className
+}: Icon) {
+  return (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      className={ className ? className : ""} 
+      height={ height ? height: "24px"} 
+      viewBox="0 -960 960 960" 
+      width={ width ? width: "24px"} 
+      fill={ fill ? fill: "#e3e3e3"}
+    >
+      <path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z"/>
+    </svg>
+  )
+}
+
+export function CloseIcon({
+  width, height, fill, className
+}: Icon) {
+  return (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      className={ className ? className : ""} 
+      height={ height ? height: "24px"} 
+      viewBox="0 -960 960 960" 
+      width={ width ? width: "24px"} 
+      fill={ fill ? fill: "#e3e3e3"}
+    >
+      <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+    </svg>
+  )
+}

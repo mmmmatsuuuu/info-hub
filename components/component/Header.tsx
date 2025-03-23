@@ -7,14 +7,17 @@ import {
   UserButton,
 } from '@clerk/nextjs';
 import { auth } from "@clerk/nextjs/server";
-import { getUserWithClerkId } from "@lib/dbController";
+import { getUserWithClerkId } from "@lib/dbController/user";
 import { InternalLink } from "@components/ui/myLink";
 
 export default async function Header() {
   const { userId } = await auth();
   let user;
   if (userId) {
-    user = await getUserWithClerkId(userId);
+    const res = await getUserWithClerkId(userId);
+    if (res.isSuccess == true) {
+      user = res.values;
+    }
   }
 
   return (
@@ -36,7 +39,7 @@ export default async function Header() {
                 className="flex items-center gap-2"
               >
                 <li>
-                  <InternalLink text="マイページ" href={ `/mypage/${ user?.user_id }` }/>        
+                  <InternalLink text="マイページ" href={ `/mypage/${ user?.userId }` }/>        
                 </li>
                 <li>
                   <UserButton />

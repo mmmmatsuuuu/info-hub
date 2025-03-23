@@ -1,7 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import { getYoutubeId } from '@lib/regax';
-import { Content } from '@node_modules/@prisma/client';
+import { Content } from '@/types/dbOperation';
 import { auth } from '@clerk/nextjs/server';
+import { NotFound } from '@components/ui/notFound';
 
 export async function Movie({
   contents
@@ -11,6 +12,12 @@ export async function Movie({
   const { userId } = await auth();
   let progress;
 
+  if (contents.length == 0) {
+      return (
+        <NotFound text="このレッスンで使用する動画はありません。" />
+      );
+    }
+
   if (!userId) {
     progress = "";
   } else {
@@ -18,14 +25,14 @@ export async function Movie({
   }
   return (
     <Tabs
-      defaultValue={ contents[0].content_id }
+      defaultValue={ contents[0].contentId }
     >
       <TabsList>
         { contents.map(c => {
           return (
             <TabsTrigger
-              key={ c.content_id }
-              value={ c.content_id }
+              key={ c.contentId }
+              value={ c.contentId }
               className='font-bold'
             >
               { c.title }
@@ -36,8 +43,8 @@ export async function Movie({
       { contents.map(c => {
         return (
           <TabsContent
-            key={ c.content_id }
-            value={ c.content_id }
+            key={ c.contentId }
+            value={ c.contentId }
           >
             <VideoPlayer
               url={ c.url }
