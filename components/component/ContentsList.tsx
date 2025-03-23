@@ -134,21 +134,29 @@ function DataColumn({
           </Link>
         </div>
         <div
-          className="text-xs p-1"
+          className="text-xs flex"
         >
-          登録授業:
-          {
-            content.lessons.map(l => {
-              return (
-                <span 
-                  key={ l.lessonId }
-                  className="border border-gray-400 text-gray-400 rounded p-1 mx-1"
-                >
-                  { l.lessonId } - { l.title }
-                </span>
-              )
-            })
-          }
+          <div
+            className="w-[64px]"
+          >
+            登録授業:
+          </div>
+          <div
+            className="flex gap-1 flex-wrap"
+          >
+            {
+              content.lessons.map(l => {
+                return (
+                  <span 
+                    key={ l.lessonId }
+                    className="border border-gray-400 text-gray-400 rounded p-1 mx-1"
+                  >
+                    { l.lessonId } - { l.title }
+                  </span>
+                )
+              })
+            }
+          </div>
         </div>
       </div>
       <div

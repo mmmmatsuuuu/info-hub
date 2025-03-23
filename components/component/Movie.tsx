@@ -21,7 +21,7 @@ export async function Movie({
   if (!userId) {
     progress = "";
   } else {
-    progress = "視聴回数: 3回"
+    progress = "視聴回数: [実装中]"
   }
   return (
     <Tabs
