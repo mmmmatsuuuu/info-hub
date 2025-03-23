@@ -29,12 +29,17 @@ export function Quiz({
                 className="grow"
               >
                 <Header3 title={ c.title } />
-                <p>
+                <p
+                  className="text-xs"
+                >
                   { c.description }
                 </p>
               </div>
-              <div>
+              <div
+                className="w-[96px]"
+              >
                 <ExternalLink
+                  cls="w-full"
                   href={ c.url }
                 />
               </div>
