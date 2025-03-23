@@ -1,6 +1,5 @@
-import { string, z } from "@node_modules/zod";
-import { UserAndStudent, Subject, Unit, Content, Lesson, LessonContent } from "@/types/form";
-import { Description } from "@node_modules/@radix-ui/react-dialog/dist/index.mjs";
+import { z } from "@node_modules/zod";
+import { UserAndStudent, Subject, Unit, Content, Lesson, LessonContent } from "@/types/dbOperation";
 
 export function ValidateUserAndStudent(
   data: UserAndStudent
@@ -17,6 +16,8 @@ export function ValidateUserAndStudent(
     email: z
       .string()
       .email("正しいメールアドレスではありません。"),
+    type: z
+      .enum(["student"]),
     schoolName: z
       .string()
       .min(1, "学校名を入力してください。"),

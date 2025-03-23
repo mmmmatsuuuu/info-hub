@@ -1,14 +1,14 @@
 import { auth } from "@clerk/nextjs/server";
 import { InnerCard } from "@components/ui/card";
 import { InternalLink } from "@components/ui/myLink";
-import { NotFoundWithRedirect } from "@components/ui/notFound";
+import { NotFound, NotFoundWithRedirect } from "@components/ui/notFound";
 import { Header1, Header2 } from "@components/ui/title";
 import { getSubject } from "@lib/dbController/subject";
 import { getUnitWithLessons, getUnits } from "@lib/dbController/unit";
 import { getUserWithClerkId } from "@lib/dbController/user";
 import { ContentManagerBreadcrumbs } from "@components/component/breadcrumbs";
 import { CreateLessonForm, EditLessonForm, DeleteLessonForm } from "@components/component/forms/lessonForms";
-import { Lesson, OptionProps } from "@/types/form";
+import { Lesson, OptionProps } from "@/types/dbOperation";
 import { BreadCrumb } from "@/types/common";
 
 export default async function ContentManagePage({
@@ -28,7 +28,7 @@ export default async function ContentManagePage({
   }
 
   const user = await getUserWithClerkId(userId);
-  if (user == null) {
+  if (user.isSuccess == false) {
     return (
       <NotFoundWithRedirect
         text="ユーザ登録が済んでいません。ユーザ登録をしてください。"
@@ -36,7 +36,7 @@ export default async function ContentManagePage({
       />
     );
   }
-  if (user.type != "admin") {
+  if (user.values.type != "admin") {
     return (
       <NotFoundWithRedirect
         text="管理者権限がありません。"
@@ -55,22 +55,22 @@ export default async function ContentManagePage({
   if (!res.isSuccess || !unit) {
     return (
       <NotFoundWithRedirect
-        text={ res.messages }
+        text={ res.messages.other || "" }
         href="/"
       />
     )
   }
 
-  const subject = await getSubject(subjectId);
-
-  if (!subject) {
+  const subjectRes = await getSubject(subjectId);
+  if (subjectRes.isSuccess == false) {
     return (
       <NotFoundWithRedirect
-        text="科目が存在しません。"
+        text="エラーが発生しました。"
         href="/"
       />
     )
   }
+  const subject = subjectRes.values;
 
   const breadcrumbs: BreadCrumb[] = [
     {
@@ -79,20 +79,29 @@ export default async function ContentManagePage({
     },
     {
       path: `/content_manager/${ subjectId }`,
-      name: subject.subject_name,
+      name: subject.subjectName,
     },
     {
       path: `/content_manager/${ subjectId }/${ unitId }`,
-      name: unit.unit_name,
+      name: unit.unitName,
     },
   ];
 
-  const units = await getUnits();
+  const unitsRes = await getUnits();
+  if (unitsRes.isSuccess == false) {
+    return (
+      <NotFoundWithRedirect
+        text="エラーが発生しました。"
+        href="/"
+      />
+    )
+  }
+  const units = unitsRes.values;
   const options:OptionProps[] = [];
   units.map(s => {
     var val:OptionProps = {
-      label: s.unit_name,
-      value: s.unit_id,
+      label: s.unitName,
+      value: s.unitId,
     }
     options.push(val);
   });
@@ -118,14 +127,14 @@ export default async function ContentManagePage({
       </div>
       <Header1 title="授業管理" />
       <InnerCard>
-        <Header2 title={ unit.unit_name } />
+        <Header2 title={ unit.unitName } />
         <p>{ unit?.description }</p>
       </InnerCard>
       <div
         className="flex justify-end"
       >
         <CreateLessonForm 
-          defaultValue={ unit.unit_id }
+          defaultValue={ unit.unitId }
           options={ options }
         />
       </div>
@@ -158,23 +167,29 @@ export default async function ContentManagePage({
         <div
           className="overflow-y-scroll"
         >
-          { unit.Lessons.map(l => {
-            const lesson:Lesson = {
-              lessonId: l.lesson_id,
-              title: l.title,
-              description: l.description || "",
-              isPublic: l.is_public,
-              unitId: l.unit_id
-            }
-            return (
-              <DataColumn
-                key={ l.lesson_id }
-                lesson={ lesson }
-                options={ options }
-                link={`/content_manager/${ subjectId }/${ unitId }/${ l.lesson_id }`}
-              />
-            )
-          })}
+          { 
+            unit.lessons.length > 0
+            ?
+            unit.lessons.map(l => {
+              const lesson:Lesson = {
+                lessonId: l.lessonId,
+                title: l.title,
+                description: l.description || "",
+                isPublic: l.isPublic,
+                unitId: l.unitId
+              }
+              return (
+                <DataColumn
+                  key={ l.lessonId }
+                  lesson={ lesson }
+                  options={ options }
+                  link={`/content_manager/${ subjectId }/${ unitId }/${ l.lessonId }`}
+                />
+              )
+            })
+            :
+            <NotFound text="データがありません" />
+          }
         </div>
       </div>
     </div>

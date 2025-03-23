@@ -1,7 +1,5 @@
 import { prisma } from '@lib/prisma';
-import { Content } from '@prisma/client';
-import { dbControllerType } from '@/types/dbData';
-import { Lesson, MessageLesson, FormState } from '@/types/form';
+import { Lesson, MessageLesson, LessonAndContents, MessageLessonAndContents, Content, OperationResult } from '@/types/dbOperation';
 
 export async function getSimpleLesson(lessonId: string) {
   try {
@@ -15,31 +13,29 @@ export async function getSimpleLesson(lessonId: string) {
   }
 }
 
-type LessonPreview = {
-  unit_id: string;
-  description: string | null;
-  is_public: boolean;
-  created_at: Date;
-  updated_at: Date;
-  lesson_id: string;
-  title: string;
-  movies: Content[],
-  quiz: Content[],
-  others: Content[],
-}
-type ResLesson = dbControllerType<LessonPreview | null, any>;
 export async function getLesson(
   lessonId: string
-): Promise<ResLesson> {
-  const res:ResLesson = {
+): Promise<OperationResult<LessonAndContents, MessageLessonAndContents>> {
+  const res:OperationResult<LessonAndContents, MessageLessonAndContents> = {
     isSuccess: false,
-    values: null,
-    messages: {},
-  }
+    values: {
+      unit_id: "",
+      title: "",
+      description: "",
+      lesson_id: "",
+      is_public: false,
+      movies: [],
+      quiz: [],
+      others: [],
+    },
+    messages: {
+      other: ""
+    },
+  };
   try {
-    const movies = [];
-    const quiz = [];
-    const others = [];
+    const movies:Content[] = [];
+    const quiz:Content[] = [];
+    const others:Content[] = [];
     const lesson = await prisma.lesson.findUnique({
       where: {
         lesson_id: lessonId
@@ -57,6 +53,7 @@ export async function getLesson(
     });
     if (!lesson) {
       res.messages.other = "授業が見つかりません。";
+      res.isSuccess = true;
       return res;
     }
   
@@ -69,29 +66,49 @@ export async function getLesson(
       if (content) {
         switch (content.type) {
           case "movie":
-            movies.push(content);
+            movies.push({
+              contentId: content.content_id,
+              title: content.title,
+              description: content.description || "",
+              type: content.type,
+              isPublic: content.is_public,
+              url: content.url,
+            });
             break;
           case "quiz":
-            quiz.push(content);
+            quiz.push({
+              contentId: content.content_id,
+              title: content.title,
+              description: content.description || "",
+              type: content.type,
+              isPublic: content.is_public,
+              url: content.url,
+            });
             break;
           default:
-            others.push(content);
+            others.push({
+              contentId: content.content_id,
+              title: content.title,
+              description: content.description || "",
+              type: content.type,
+              isPublic: content.is_public,
+              url: content.url,
+            });
             break;
         }
       }
     }
     res.values = {
       unit_id: lesson.unit_id,
-      description: lesson.description,
+      description: lesson.description || "",
       is_public: lesson.is_public,
       lesson_id: lesson.lesson_id,
       title: lesson.title,
-      created_at: lesson.created_at,
-      updated_at: lesson.updated_at,
       movies: movies,
       quiz: quiz,
       others: others,
     }
+     res.messages.other = "授業を取得しました。";
     res.isSuccess = true;
     return res;
   } catch (error) {
@@ -103,16 +120,27 @@ export async function getLesson(
 }
 export async function getPublicLesson(
   lessonId: string
-): Promise<ResLesson> {
-  const res:ResLesson = {
+): Promise<OperationResult<LessonAndContents, MessageLessonAndContents>> {
+  const res:OperationResult<LessonAndContents, MessageLessonAndContents> = {
     isSuccess: false,
-    values: null,
-    messages: {},
-  }
+    values: {
+      unit_id: "",
+      title: "",
+      description: "",
+      lesson_id: "",
+      is_public: false,
+      movies: [],
+      quiz: [],
+      others: [],
+    },
+    messages: {
+      other: ""
+    },
+  };
   try {
-    const movies = [];
-    const quiz = [];
-    const others = [];
+    const movies:Content[] = [];
+    const quiz:Content[] = [];
+    const others:Content[] = [];
     const lesson = await prisma.lesson.findUnique({
       where: {
         lesson_id: lessonId
@@ -130,6 +158,7 @@ export async function getPublicLesson(
     });
     if (!lesson) {
       res.messages.other = "授業が見つかりません。";
+      res.isSuccess = true;
       return res;
     }
   
@@ -143,29 +172,49 @@ export async function getPublicLesson(
       if (content) {
         switch (content.type) {
           case "movie":
-            movies.push(content);
+            movies.push({
+              contentId: content.content_id,
+              title: content.title,
+              description: content.description || "",
+              type: content.type,
+              isPublic: content.is_public,
+              url: content.url,
+            });
             break;
           case "quiz":
-            quiz.push(content);
+            quiz.push({
+              contentId: content.content_id,
+              title: content.title,
+              description: content.description || "",
+              type: content.type,
+              isPublic: content.is_public,
+              url: content.url,
+            });
             break;
           default:
-            others.push(content);
+            others.push({
+              contentId: content.content_id,
+              title: content.title,
+              description: content.description || "",
+              type: content.type,
+              isPublic: content.is_public,
+              url: content.url,
+            });
             break;
         }
       }
     }
     res.values = {
       unit_id: lesson.unit_id,
-      description: lesson.description,
+      description: lesson.description || "",
       is_public: lesson.is_public,
       lesson_id: lesson.lesson_id,
       title: lesson.title,
-      created_at: lesson.created_at,
-      updated_at: lesson.updated_at,
       movies: movies,
       quiz: quiz,
       others: others,
     }
+    res.messages.other = "授業を取得しました。";
     res.isSuccess = true;
     return res;
   } catch (error) {
@@ -183,8 +232,8 @@ export async function createLesson(
   description: string,
   isPublic: boolean,
   unitId: string,
-):Promise<FormState<Lesson, MessageLesson>> {
-  const res:FormState<Lesson, MessageLesson> = {
+):Promise<OperationResult<Lesson, MessageLesson>> {
+  const res:OperationResult<Lesson, MessageLesson> = {
     isSuccess: false,
     values: {
       lessonId: "",
@@ -207,8 +256,6 @@ export async function createLesson(
         unit_id: unitId,
       }
     });
-    res.isSuccess = true;
-    res.messages.other = "登録に成功しました。";
     res.values = {
       lessonId: value.lesson_id,
       title: value.title,
@@ -216,6 +263,8 @@ export async function createLesson(
       isPublic: value.is_public,
       unitId: value.unit_id
     };
+    res.messages.other = "登録に成功しました。";
+    res.isSuccess = true;
     return res;
   } catch (error) {
     res.messages.other = String(error);
@@ -225,8 +274,10 @@ export async function createLesson(
   }
 }
 // 編集
-export async function editLesson(lesson: Lesson):Promise<FormState<Lesson, MessageLesson>> {
-  const res:FormState<Lesson, MessageLesson> = {
+export async function editLesson(
+  lesson: Lesson
+):Promise<OperationResult<Lesson, MessageLesson>> {
+  const res:OperationResult<Lesson, MessageLesson> = {
     isSuccess: false,
     values: lesson,
     messages: {
@@ -245,7 +296,6 @@ export async function editLesson(lesson: Lesson):Promise<FormState<Lesson, Messa
         unit_id: lesson.unitId
       }
     });
-    res.isSuccess = true;
     res.values = {
       lessonId: value.lesson_id,
       title: value.title,
@@ -254,6 +304,7 @@ export async function editLesson(lesson: Lesson):Promise<FormState<Lesson, Messa
       unitId: value.unit_id
     };
     res.messages.other = "更新に成功しました。";
+    res.isSuccess = true;
     return res;
   } catch(error) {
     res.messages.other = String(error);
@@ -264,8 +315,10 @@ export async function editLesson(lesson: Lesson):Promise<FormState<Lesson, Messa
 }
 
 // 削除
-export async function deleteLesson(lessonId: string):Promise<FormState<Lesson, MessageLesson>> {
-  const res:FormState<Lesson, MessageLesson> = {
+export async function deleteLesson(
+  lessonId: string
+):Promise<OperationResult<Lesson, MessageLesson>> {
+  const res:OperationResult<Lesson, MessageLesson> = {
     isSuccess: false,
     values: {
       lessonId: "",
@@ -284,7 +337,6 @@ export async function deleteLesson(lessonId: string):Promise<FormState<Lesson, M
         lesson_id: lessonId,
       }
     });
-    res.isSuccess = true;
     res.values = {
       lessonId: value.lesson_id,
       title: value.title,
@@ -293,6 +345,7 @@ export async function deleteLesson(lessonId: string):Promise<FormState<Lesson, M
       unitId: value.unit_id
     };
     res.messages.other = "削除に成功しました。";
+    res.isSuccess = true;
     return res;
   } catch(error) {
     res.messages.other = String(error);

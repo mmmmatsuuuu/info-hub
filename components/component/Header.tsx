@@ -14,7 +14,10 @@ export default async function Header() {
   const { userId } = await auth();
   let user;
   if (userId) {
-    user = await getUserWithClerkId(userId);
+    const res = await getUserWithClerkId(userId);
+    if (res.isSuccess == true) {
+      user = res.values;
+    }
   }
 
   return (
@@ -36,7 +39,7 @@ export default async function Header() {
                 className="flex items-center gap-2"
               >
                 <li>
-                  <InternalLink text="マイページ" href={ `/mypage/${ user?.user_id }` }/>        
+                  <InternalLink text="マイページ" href={ `/mypage/${ user?.userId }` }/>        
                 </li>
                 <li>
                   <UserButton />

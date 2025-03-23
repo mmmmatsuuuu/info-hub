@@ -2,17 +2,33 @@
 import { auth } from "@clerk/nextjs/server";
 import { createUserWithStudent, editUserWithStudent } from "../dbController/user";
 import { ValidateUserAndStudent } from "../validate";
-import { FormState, UserAndStudent, MessageUserAndStudent } from "@/types/form";
+import { OperationResult, UserAndStudent, MessageUserAndStudent } from "@/types/dbOperation";
 
 export async function addUserAction(
-  prevState: FormState, 
+  prevState: OperationResult, 
   formData:FormData
-): Promise<FormState<UserAndStudent, MessageUserAndStudent>> {
+): Promise<OperationResult<UserAndStudent, MessageUserAndStudent>> {
+  const res: OperationResult<UserAndStudent, MessageUserAndStudent> = {
+    isSuccess: false,
+    values: {
+      userId: "",
+      username: "",
+      email: "",
+      type: "student",
+      schoolName: "",
+      admissionYear: 0,
+      studentNumber: 0,
+    },
+    messages: {
+      other: "",
+    }
+  };
   try {
     // データ取得と整形
     const rawData = {
       username: formData.get("username") as string,
       email: formData.get("email") as string,
+      type: "student",
       schoolName: formData.get("school_name") as string,
       admissionYear: Number(formData.get("admission_year") as string),
       studentNumber: Number(formData.get("student_number") as string),
@@ -24,32 +40,25 @@ export async function addUserAction(
     // バリデーション失敗時の処理
     if (!validateFields.success) {
       const errors = validateFields.error.flatten().fieldErrors;
-      return {
-        messages: {
-          username: errors.username ? errors.username.join(", ") : undefined,
-          email: errors.email ? errors.email.join(", ") : undefined,
-          admissionYear: errors.admissionYear ? errors.admissionYear.join(", ") : undefined,
-          schoolName: errors.schoolName ? errors.schoolName.join(", ") : undefined,
-          studentNumber: errors.studentNumber ? errors.studentNumber.join(", ") : undefined,
-        },
-        values: rawData,
-        isSuccess: false,
-      }
+      res.messages.username = errors.username ? errors.username.join(", ") : undefined;
+      res.messages.email = errors.email ? errors.email.join(", ") : undefined;
+      res.messages.type = errors.type ? errors.type.join(", ") : undefined;
+      res.messages.admissionYear = errors.admissionYear ? errors.admissionYear.join(", ") : undefined;
+      res.messages.schoolName = errors.schoolName ? errors.schoolName.join(", ") : undefined;
+      res.messages.studentNumber = errors.studentNumber ? errors.studentNumber.join(", ") : undefined;
+      res.isSuccess = false;
+      return res;
     }
     
     // 認証済みのユーザか確認
     const { userId } = await auth();
     if (!userId) {
-      return {
-        isSuccess: false,
-        messages: {
-          other: "ユーザ認証でエラーが発生しました。ログインか登録を済ませてください。"
-        },
-        values: {},
-      }
+      res.isSuccess = false;
+      res.messages.other = "ユーザ認証でエラーが発生しました。ログインか登録を済ませてください。";
+      return res;
     }
     // データベース登録処理
-    const res = await createUserWithStudent(
+    const value = await createUserWithStudent(
       userId,
       validateFields.data.username,
       validateFields.data.email,
@@ -58,29 +67,43 @@ export async function addUserAction(
       String(validateFields.data.studentNumber),
     )
     // 結果を返す
+    res.isSuccess = value.isSuccess;
+    res.messages = value.messages;
+    res.values = value.values;
     return res;
   } catch (error) {
     // エラーハンドリング
-    return {
-      isSuccess: false,
-      messages: {
-        other: String(error),
-      },
-      values: {},
-    }
+    res.messages.other = String(error);
+    return res;
   }
 }
 
 export async function editUserAction(
-  prevState: FormState<UserAndStudent, MessageUserAndStudent>,
+  prevState: OperationResult<UserAndStudent, MessageUserAndStudent>,
   formData: FormData
-): Promise<FormState<UserAndStudent, MessageUserAndStudent>> {
+): Promise<OperationResult<UserAndStudent, MessageUserAndStudent>> {
+  const res: OperationResult<UserAndStudent, MessageUserAndStudent> = {
+    isSuccess: false,
+    values: {
+      userId: "",
+      username: "",
+      email: "",
+      type: "student",
+      schoolName: "",
+      admissionYear: 0,
+      studentNumber: 0,
+    },
+    messages: {
+      other: "",
+    }
+  };
   try {
     // データ取得と整形
     const rawData = {
       userId: formData.get("user_id") as string,
       username: formData.get("username") as string,
       email: formData.get("email") as string,
+      type: "student",
       schoolName: formData.get("school_name") as string,
       admissionYear: Number(formData.get("admission_year") as string),
       studentNumber: Number(formData.get("student_number") as string),
@@ -99,20 +122,20 @@ export async function editUserAction(
     // バリデーション失敗時の処理
     if (!validateFields.success) {
       const errors = validateFields.error.flatten().fieldErrors;
-      return {
-        messages: {
-          username: errors.username ? errors.username.join(", ") : undefined,
-          email: errors.email ? errors.email.join(", ") : undefined,
-          admissionYear: errors.admissionYear ? errors.admissionYear.join(", ") : undefined,
-          schoolName: errors.schoolName ? errors.schoolName.join(", ") : undefined,
-          studentNumber: errors.studentNumber ? errors.studentNumber.join(", ") : undefined,
-        },
-        values: rawData,
-        isSuccess: false,
-      }
+      res.messages = {
+        username: errors.username ? errors.username.join(", ") : undefined,
+        email: errors.email ? errors.email.join(", ") : undefined,
+        type: errors.type ? errors.type.join(", ") : undefined,
+        admissionYear: errors.admissionYear ? errors.admissionYear.join(", ") : undefined,
+        schoolName: errors.schoolName ? errors.schoolName.join(", ") : undefined,
+        studentNumber: errors.studentNumber ? errors.studentNumber.join(", ") : undefined,
+      };
+      res.values = rawData;
+      res.isSuccess = false;
+      return res;
     }
     // データベース登録処理
-    const res = await editUserWithStudent(
+    const value = await editUserWithStudent(
       rawData.userId,
       validateFields.data.username,
       validateFields.data.email,
@@ -120,23 +143,14 @@ export async function editUserAction(
       validateFields.data.schoolName,
       String(validateFields.data.studentNumber),
     )
-    console.log(res);
     // 結果を返す
-    return {
-      isSuccess: res.success,
-      values: res.values,
-      messages: {
-        other: res.messages,
-      },
-    }
+    res.isSuccess = value.isSuccess;
+    res.values = value.values;
+    res.messages = value.messages;
+    return res;
   } catch (error) {
     // エラーハンドリング
-    return {
-      isSuccess: false,
-      messages: {
-        other: String(error),
-      },
-      values: {},
-    }
+    res.messages.other = String(error);
+    return res;
   }
 }

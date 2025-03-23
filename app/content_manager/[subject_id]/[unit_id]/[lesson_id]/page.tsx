@@ -12,7 +12,7 @@ import { ContentManagerBreadcrumbs } from "@components/component/breadcrumbs";
 import { BreadCrumb } from "@/types/common";
 import { TypeIcon } from "@components/component/contentType";
 import { CreateLessonContentForm, DeleteLessonContentForm } from "@components/component/forms/lessonContentForms";
-import { Content, LessonContent, OptionProps } from "@/types/form";
+import { Content, LessonContent, OptionProps } from "@/types/dbOperation";
 import { ExternalLink } from "@components/ui/myLink";
 
 export default async function ContentManagePage({
@@ -32,7 +32,7 @@ export default async function ContentManagePage({
   }
 
   const user = await getUserWithClerkId(userId);
-  if (user == null) {
+  if (user.isSuccess == false) {
     return (
       <NotFoundWithRedirect
         text="ユーザ登録が済んでいません。ユーザ登録をしてください。"
@@ -40,7 +40,7 @@ export default async function ContentManagePage({
       />
     );
   }
-  if (user.type != "admin") {
+  if (user.values.type != "admin") {
     return (
       <NotFoundWithRedirect
         text="管理者権限がありません。"
@@ -55,24 +55,28 @@ export default async function ContentManagePage({
   const unitId = p.unit_id;
 
   // データの取得
-  const subject = await getSubject(subjectId);
-  if (!subject) {
+  const subjectRes = await getSubject(subjectId);
+  if (subjectRes.isSuccess = false) {
     return (
       <NotFoundWithRedirect
-        text="科目がありません。"
+        text="エラーが発生しました。"
         href="/"
       />
     )
   }
-  const unit = await getUnit(unitId);
-  if (!unit) {
+  const subject = subjectRes.values;
+
+  const unitRes = await getUnit(unitId);
+  if (unitRes.isSuccess == false) {
     return (
       <NotFoundWithRedirect
-        text="単元がありません。"
+        text="エラーが発生しました。"
         href="/"
       />
     )
   }
+  const unit = unitRes.values;
+
   const res = await getLesson(lessonId);
   const lesson = res.values;
   if (!lesson ) {
@@ -93,11 +97,11 @@ export default async function ContentManagePage({
     },
     {
       path: `/content_manager/${ subjectId }`,
-      name: subject.subject_name,
+      name: subject.subjectName,
     },
     {
       path: `/content_manager/${ subjectId }/${ unitId }`,
-      name: unit.unit_name,
+      name: unit.unitName,
     },
     {
       path: `/content_manager/${ subjectId }/${ unitId }/${ lessonId }`,
@@ -105,10 +109,19 @@ export default async function ContentManagePage({
     },
   ];
 
-  const datas = await getNotLessonContents(lessonId);
+  const res2 = await getNotLessonContents(lessonId);
+  if (res2.isSuccess == false) {
+    return (
+      <NotFoundWithRedirect
+        text="エラーが発生しました。"
+        href="/"
+      />
+    )
+  }
+  const datas = res2.values;
 
   const options:OptionProps[] = [];
-  if (datas) {
+  if (datas.length > 0) {
     datas.map(d => {
       var value:OptionProps = {
         label: <OptionLabel content={ d } />,
@@ -186,15 +199,16 @@ export default async function ContentManagePage({
         >
           { lesson.movies.map(c => {
             const content:Content = {
-              contentId: c.content_id,
+              contentId: c.contentId,
               title: c.title,
               description: c.description || "",
-              isPublic: c.is_public,
+              isPublic: c.isPublic,
               url: c.url,
               type: c.type
             }
             return (
               <DataColumn
+                key={ content.contentId }
                 lessonId={ lessonId }
                 content={ content }
               />
@@ -202,15 +216,16 @@ export default async function ContentManagePage({
           })}
           { lesson.quiz.map(c => {
             const content:Content = {
-              contentId: c.content_id,
+              contentId: c.contentId,
               title: c.title,
               description: c.description || "",
-              isPublic: c.is_public,
+              isPublic: c.isPublic,
               url: c.url,
               type: c.type
             }
             return (
               <DataColumn
+                key={ content.contentId }
                 lessonId={ lessonId }
                 content={ content }
               />
@@ -218,15 +233,16 @@ export default async function ContentManagePage({
           })}
           { lesson.others.map(c => {
             const content:Content = {
-              contentId: c.content_id,
+              contentId: c.contentId,
               title: c.title,
               description: c.description || "",
-              isPublic: c.is_public,
+              isPublic: c.isPublic,
               url: c.url,
               type: c.type
             }
             return (
               <DataColumn
+              key={ content.contentId }
                 lessonId={ lessonId }
                 content={ content }
               />

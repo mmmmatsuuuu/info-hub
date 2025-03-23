@@ -1,47 +1,107 @@
 import { prisma } from '@lib/prisma';
-import { Prisma } from '@prisma/client';
-import { Unit, MessageUnit, FormState } from '@/types/form';
+import { Unit, MessageUnit, UnitAndLessons, MessageUnitAndLessons, OperationResult } from '@/types/dbOperation';
 
-export async function getUnit(unitId: string) {
+export async function getUnit(
+  unitId: string
+) :Promise<OperationResult<Unit, MessageUnit>> {
+  const res:OperationResult<Unit, MessageUnit> = {
+    isSuccess: false,
+    values: {
+      unitId: "",
+      unitName: "",
+      subjectId: "",
+      description: "",
+      isPublic: false,
+    },
+    messages: {
+      other: "単元の取得",
+    },
+  };
   try {
-    return await prisma.unit.findUnique({
+    const value = await prisma.unit.findUnique({
       where: {
         unit_id: unitId,
       }
     });
-  } finally {
-    await prisma.$disconnect();
-  }
-}
-
-export async function getUnits() {
-  try {
-    return await prisma.unit.findMany({});
-  } finally {
-    await prisma.$disconnect();
-  }
-}
-
-type UnitPreview = Prisma.UnitGetPayload<{
-  include: {
-    Lessons: {
+    if (value == null) {
+      res.messages.other = "単元が見つかりません。";
+      res.isSuccess = true;
+      return res;
     }
+    res.values = {
+      unitId: value.unit_id,
+      unitName: value.unit_name,
+      subjectId: value.subject_id,
+      description: value.description || "",
+      isPublic: value.is_public,
+    };
+    res.messages.other = "単元を取得しました。";
+    res.isSuccess = true;
+    return res;
+  } catch (error) {
+    res.messages.other = String(error);
+    return res;
+  } finally {
+    await prisma.$disconnect();
   }
-}>
-type UnitWithLessonType = FormState<UnitPreview | null, any>;
+}
+
+export async function getUnits(
+
+) :Promise<OperationResult<Unit[], MessageUnit>> {
+  const res:OperationResult<Unit[], MessageUnit> = {
+    isSuccess: false,
+    values: [],
+    messages: {
+      other: "単元の取得",
+    },
+  };
+  try {
+    const value = await prisma.unit.findMany({});
+    if (value.length == 0) {
+      res.messages.other = "単元が見つかりません。";
+      res.isSuccess = true;
+      return res;
+    }
+    value.map(v => {
+      res.values.push({
+        unitId: v.unit_id,
+        unitName: v.unit_name,
+        subjectId: v.subject_id,
+        description: v.description || "",
+        isPublic: v.is_public,
+      })
+    });
+    res.messages.other = "取得しました。";
+    res.isSuccess = true;
+    return res;
+  } catch (error) {
+    res.messages.other = String(error);
+    return res;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
 
 export async function getUnitWithLessons(
   unitId: string
-): Promise<UnitWithLessonType> {
-  const rtn:UnitWithLessonType = {
+): Promise<OperationResult<UnitAndLessons, MessageUnitAndLessons>> {
+  const res:OperationResult<UnitAndLessons, MessageUnitAndLessons> = {
     isSuccess: false,
-    values: null,
-    messages: {
-      other: "",
+    values: {
+      unitId: "",
+      unitName: "",
+      subjectId: "",
+      description: "",
+      isPublic: false,
+      lessons: [],
     },
-  }
+    messages: {
+      other: "授業データ込みの単元を取得",
+    },
+  };
   try {
-    const unit = await prisma.unit.findUnique({
+    const value = await prisma.unit.findUnique({
       where: {
         unit_id: unitId
       },
@@ -50,17 +110,36 @@ export async function getUnitWithLessons(
         }
       }
     });
-    if (!unit) {
-      rtn.messages = "データが取得できませんでした。";
-      return rtn;
+    if (value == null) {
+      res.messages.other = "単元が見つかりません。";
+      res.isSuccess = true;
+      return res;
     }
-    rtn.values = unit;
-    rtn.isSuccess = true;
-    rtn.messages = "データの取得に成功しました。";
-    return rtn;
+    res.values = {
+      unitId: value.unit_id,
+      unitName: value.unit_name,
+      subjectId: value.subject_id,
+      description: value.description || "",
+      isPublic: value.is_public,
+      lessons: [],
+    }
+    if (value.Lessons.length > 0) {
+      value.Lessons.map(l => {
+        res.values.lessons.push({
+          lessonId: l.lesson_id,
+          title: l.title,
+          description: l.description || "",
+          isPublic: l.is_public,
+          unitId: l.unit_id,
+        });
+      });
+    }
+    res.messages.other = "単元を取得しました";
+    res.isSuccess = true;
+    return res;
   } catch (error) {
-    rtn.messages = String(error);
-    return rtn;
+    res.messages.other = String(error);
+    return res;
   } finally {
     await prisma.$disconnect();
   }
@@ -75,8 +154,8 @@ export async function createUnit(
   subjectId: string,
   description: string,
   isPublic: boolean,
-):Promise<FormState<Unit, MessageUnit>> {
-  const res:FormState<Unit, MessageUnit> = {
+) :Promise<OperationResult<Unit, MessageUnit>> {
+  const res:OperationResult<Unit, MessageUnit> = {
     isSuccess: false,
     values: {
       unitId: "",
@@ -86,9 +165,9 @@ export async function createUnit(
       isPublic: false,
     },
     messages: {
-      other: "これはdbController(単元作成)"
+      other: "単元の取得",
     },
-  }
+  };
   try {
     const value = await prisma.unit.create({
       data: {
@@ -117,14 +196,22 @@ export async function createUnit(
   }
 }
 // 編集
-export async function editUnit(unit: Unit):Promise<FormState<Unit, MessageUnit>> {
-  const res:FormState<Unit, MessageUnit> = {
+export async function editUnit(
+  unit: Unit
+) :Promise<OperationResult<Unit, MessageUnit>> {
+  const res:OperationResult<Unit, MessageUnit> = {
     isSuccess: false,
-    values: unit,
-    messages: {
-      other: "これはdbController(単元編集)"
+    values: {
+      unitId: "",
+      unitName: "",
+      subjectId: "",
+      description: "",
+      isPublic: false,
     },
-  }
+    messages: {
+      other: "単元の取得",
+    },
+  };
   try {
     const value = await prisma.unit.update({
       where: {
@@ -144,8 +231,8 @@ export async function editUnit(unit: Unit):Promise<FormState<Unit, MessageUnit>>
       description: value.description || "",
       isPublic: value.is_public,
     }
-    res.isSuccess = true;
     res.messages.other = "更新に成功しました。";
+    res.isSuccess = true;
     return res;
   } catch (error) {
     res.messages.other = String(error);
@@ -158,8 +245,8 @@ export async function editUnit(unit: Unit):Promise<FormState<Unit, MessageUnit>>
 // 削除
 export async function deleteUnit(
   unitId: string
-):Promise<FormState<Unit, MessageUnit>> {
-  const res:FormState<Unit, MessageUnit> = {
+) :Promise<OperationResult<Unit, MessageUnit>> {
+  const res:OperationResult<Unit, MessageUnit> = {
     isSuccess: false,
     values: {
       unitId: "",
@@ -169,9 +256,9 @@ export async function deleteUnit(
       isPublic: false,
     },
     messages: {
-      other: "これはdbController(単元削除)"
+      other: "単元の取得",
     },
-  }
+  };
   try {
     const value = await prisma.unit.delete({
       where: {
@@ -185,8 +272,8 @@ export async function deleteUnit(
       description: value.description || "",
       isPublic: value.is_public,
     }
-    res.isSuccess = true;
     res.messages.other = "削除に成功しました。";
+    res.isSuccess = true;
     return res;
   } catch (error) {
     res.messages.other = String(error);

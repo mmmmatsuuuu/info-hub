@@ -15,7 +15,7 @@ export default async function RegisterPage() {
 
   // ユーザ情報がある場合
   const data = await getUserWithClerkId(user.id);
-  if (data) {
+  if (data.isSuccess == false) {
     return redirect("/");
   }
   const username = user.username ? user.username : "";
@@ -30,6 +30,10 @@ export default async function RegisterPage() {
       <CreateUserForm
         username={ username }
         email={ email }
+        type='student'
+        schoolName=''
+        admissionYear={ 0 }
+        studentNumber={ 0 }
       />
     </div>
   )

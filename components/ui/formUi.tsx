@@ -4,7 +4,7 @@ import { useFormStatus } from "react-dom";
 import { Input } from "@components/ui/input";
 import { LoadingIcon, ErrorIcon, ExclamationIcon } from "@components/ui/Icons";
 import { InternalLink } from "./myLink";
-import { OptionProps } from "@/types/form";
+import { OptionProps } from "@/types/dbOperation";
 
 export function Button({
   children, cls, onClick,

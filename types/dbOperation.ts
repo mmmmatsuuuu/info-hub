@@ -1,9 +1,9 @@
 import React from "@node_modules/@types/react";
 
-export type FormState<Tvalues=any, Tmessage=any> = {
+export type OperationResult<Tvalues=unknown, Tmessages=unknown> = {
   isSuccess: boolean;
   values: Tvalues;
-  messages: Tmessage;
+  messages: Tmessages;
 }
 
 export type OptionProps = {
@@ -11,10 +11,28 @@ export type OptionProps = {
   value: string,
 }
 
+export type User = {
+  userId: string,
+  clerkId: string,
+  type: string,
+  name: string,
+  email: string,
+}
+
+export type MessageUser = {
+  userId?: string,
+  clerkId?: string,
+  type?: string,
+  name?: string,
+  email?: string,
+  other?: string,
+}
+
 export type UserAndStudent = {
   userId?: string;
   username?: string;
   email?: string;
+  type:string;
   schoolName?: string,
   admissionYear?: number,
   studentNumber?: number,
@@ -24,6 +42,7 @@ export type MessageUserAndStudent = {
   userId?: string;
   username?: string;
   email?: string;
+  type?: string;
   schoolName?: string;
   admissionYear?: string;
   studentNumber?: string;
@@ -45,6 +64,23 @@ export type MessageSubject = {
   other?: string;
 }
 
+export type SubjectAndUnits = {
+  subjectId: string;
+  subjectName: string;
+  description?: string;
+  isPublic: boolean;
+  units: UnitAndLessons[];
+}
+
+export type MessageSubjectAndUnits = {
+  subjectId?: string;
+  subjectName?: string;
+  description?: string;
+  isPublic?: string;
+  units?: string;
+  other?: string; 
+}
+
 export type Unit = {
   unitId: string;
   unitName: string;
@@ -60,6 +96,25 @@ export type MessageUnit = {
   description?: string;
   isPublic?: string;
   other?:string;
+}
+
+export type UnitAndLessons = {
+  unitId: string;
+  unitName: string;
+  subjectId: string;
+  description?: string;
+  isPublic: boolean;
+  lessons: Lesson[];
+}
+
+export type MessageUnitAndLessons = {
+  unitId?: string;
+  unitName?: string;
+  subjectId?: string;
+  description?: string;
+  isPublic?: string;
+  lessons?: string;
+  other?: string
 }
 
 export type Lesson = {
@@ -79,6 +134,30 @@ export type MessageLesson = {
   other?: string;
 }
 
+export type LessonAndContents = {
+  unit_id: string;
+  title: string;
+  description: string;
+  lesson_id: string;
+  is_public: boolean;
+  movies: Content[],
+  quiz: Content[],
+  others: Content[],
+}
+
+export type MessageLessonAndContents = {
+  unit_id?: string;
+  title?: string;
+  description?: string;
+  lesson_id?: string;
+  is_public?: string;
+  movies?: string,
+  quiz?: string,
+  others?: string,
+  other?: string,
+}
+
+
 export type Content = {
   contentId: string;
   title: string;
@@ -86,16 +165,6 @@ export type Content = {
   type: string;
   isPublic: boolean;
   url: string;
-}
-
-export type ContentWithLessons = {
-  contentId: string;
-  title: string;
-  description: string;
-  type: string;
-  isPublic: boolean;
-  url: string;
-  lessons: Lesson[];
 }
 
 export type MessageContent = {
@@ -107,6 +176,28 @@ export type MessageContent = {
   url?: string;
   other?: string;
 }
+
+export type ContentAndLessons = {
+  contentId: string;
+  title: string;
+  description: string;
+  type: string;
+  isPublic: boolean;
+  url: string;
+  lessons: Lesson[];
+}
+
+export type MessageContentAndLessons = {
+  contentId?: string;
+  title?: string;
+  description?: string;
+  type?: string;
+  isPublic?: string;
+  url?: string;
+  lessons?: string;
+  other?: string;
+}
+
 
 export type LessonContent = {
   lessonId: string;

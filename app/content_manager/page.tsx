@@ -1,11 +1,11 @@
 import { auth } from "@clerk/nextjs/server";
 import { InternalLink } from "@components/ui/myLink";
-import { NotFoundWithRedirect } from "@components/ui/notFound";
+import { NotFoundWithRedirect, NotFound } from "@components/ui/notFound";
 import { Header1 } from "@components/ui/title";
 import { getUserWithClerkId } from "@lib/dbController/user";
 import { getSubjects } from "@lib/dbController/subject";
 import { CreateSubjectForm, EditSubjectForm, DeleteSubjectForm } from "@components/component/forms/subjectForms";
-import { Subject } from "@/types/form";
+import { Subject } from "@/types/dbOperation";
 import { ContentManagerBreadcrumbs } from "@components/component/breadcrumbs";
 import { BreadCrumb } from "@/types/common";
 
@@ -22,7 +22,7 @@ export default async function ContentManagePage() {
   }
 
   const user = await getUserWithClerkId(userId);
-  if (user == null) {
+  if (!user.values) {
     return (
       <NotFoundWithRedirect
         text="ユーザ登録が済んでいません。ユーザ登録をしてください。"
@@ -30,7 +30,7 @@ export default async function ContentManagePage() {
       />
     );
   }
-  if (user.type != "admin") {
+  if (user.values.type != "admin") {
     return (
       <NotFoundWithRedirect
         text="管理者権限がありません。"
@@ -40,7 +40,9 @@ export default async function ContentManagePage() {
   }
 
   // データの取得
-  const subjects = await getSubjects();
+  const res = await getSubjects();
+
+  const subjects = res.values;
 
   // パンくずリストの作成
   const breadcrumbs:BreadCrumb[] = [{
@@ -104,21 +106,27 @@ export default async function ContentManagePage() {
           className="overflow-y-scroll"
         >
 
-        { subjects.map(s => {
-          const subject:Subject = {
-            subjectId: s.subject_id,
-            subjectName: s.subject_name,
-            description: s.description ? s.description : undefined,
-            isPublic: s.is_public
-          }
-          return (
-            <DataColumn
-              key={s.subject_id}
-              subject={ subject }
-              link={`/content_manager/${ s.subject_id }` }
-            />
-          )
-        })}
+        { 
+          subjects.length > 0
+          ?
+          subjects.map(s => {
+            const subject:Subject = {
+              subjectId: s.subjectId,
+              subjectName: s.subjectName,
+              description: s.description ? s.description : undefined,
+              isPublic: s.isPublic
+            }
+            return (
+              <DataColumn
+                key={s.subjectId}
+                subject={ subject }
+                link={`/content_manager/${ s.subjectId }` }
+              />
+            )
+          })
+          :
+          <NotFound text="データがありません。"/>
+        }
         </div>
       </div>
     </div>

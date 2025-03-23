@@ -1,14 +1,14 @@
 "use server";
 import { z } from "@node_modules/zod";
-import { FormState, Unit, MessageUnit } from "@/types/form";
+import { OperationResult, Unit, MessageUnit } from "@/types/dbOperation";
 import { createUnit, editUnit, deleteUnit } from "@lib/dbController/unit";
 import { ValidateUnit } from "@lib/validate";
 
 export async function createUnitAction(
-  prevState: FormState<Unit, MessageUnit>,
+  prevState: OperationResult<Unit, MessageUnit>,
   formData: FormData
-): Promise<FormState<Unit, MessageUnit>> {
-  const res:FormState<Unit, MessageUnit> = {
+): Promise<OperationResult<Unit, MessageUnit>> {
+  const res:OperationResult<Unit, MessageUnit> = {
     isSuccess: false,
     values: {
       unitId: "",
@@ -74,10 +74,10 @@ export async function createUnitAction(
 }
 
 export async function editUnitAction(
-  prevState: FormState<Unit, MessageUnit>,
+  prevState: OperationResult<Unit, MessageUnit>,
   formData: FormData
-): Promise<FormState<Unit, MessageUnit>> {
-  const res:FormState<Unit, MessageUnit> = {
+): Promise<OperationResult<Unit, MessageUnit>> {
+  const res:OperationResult<Unit, MessageUnit> = {
     isSuccess: false,
     values: {
       unitId: "",
@@ -139,10 +139,10 @@ export async function editUnitAction(
 }
 
 export async function deleteUnitAction(
-  prevState: FormState<Unit, MessageUnit>,
+  prevState: OperationResult<Unit, MessageUnit>,
   formData: FormData
-): Promise<FormState<Unit, MessageUnit>> {
-  const res:FormState<Unit, MessageUnit> = {
+): Promise<OperationResult<Unit, MessageUnit>> {
+  const res:OperationResult<Unit, MessageUnit> = {
     isSuccess: false,
     values: {
       unitId: "",

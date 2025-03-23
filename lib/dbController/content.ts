@@ -1,21 +1,49 @@
 import { prisma } from '@lib/prisma';
 import { ContentType } from '@node_modules/.prisma/client';
-import { Content, MessageContent, ContentWithLessons, Lesson,FormState } from '@/types/form';
+import { Content, MessageContent, ContentAndLessons, MessageContentAndLessons, OperationResult } from '@/types/dbOperation';
 
 // 取得
 export async function getContent(
   contentId: string
-) {
+):Promise<OperationResult<Content, MessageContent>> {
+  const res:OperationResult<Content, MessageContent> = {
+    isSuccess: false,
+    values: {
+      contentId: "",
+      title: "",
+      description: "",
+      type: "",
+      isPublic: false,
+      url: "",
+    },
+    messages: {
+      other: "",
+    },
+  };
   try {
-    const content = await prisma.content.findUnique({
+    const value = await prisma.content.findUnique({
       where: {
         content_id: contentId
       }
     });
-    return content;
-
-  } catch (e) {
-    return null;
+    if (value == null) {
+      res.messages.other = "コンテンツが見つかりません。";
+      return res;
+    }
+    res.values = {
+      contentId: value.content_id,
+      title: value.title,
+      description: value.description || "",
+      type: value.type,
+      isPublic: value.is_public,
+      url: value.url,
+    }
+    res.messages.other = "コンテンツを取得しました。";
+    res.isSuccess = true;
+    return res;
+  } catch (error) {
+    res.messages.other = String(error);
+    return res;
   } finally {
     await prisma.$disconnect();
   }
@@ -23,9 +51,16 @@ export async function getContent(
 
 export async function getAllContents(
 
-) {
+):Promise<OperationResult<ContentAndLessons[], MessageContentAndLessons>> {
+  const res:OperationResult<ContentAndLessons[], MessageContentAndLessons> = {
+    isSuccess: false,
+    values: [],
+    messages: {
+      other: "",
+    },
+  };
   try {
-    const datas = await prisma.content.findMany({
+    const value = await prisma.content.findMany({
       orderBy: {
         content_id: "asc",
       },
@@ -37,36 +72,39 @@ export async function getAllContents(
         }
       }
     });
-    
-    const contents:ContentWithLessons[] = [];
-  
-    datas.map(async d => {
-      const lessons:Lesson[] = [];
-      d.Lessons.map(l => {
-        const tempL:Lesson = {
-          lessonId: l.Lesson.lesson_id,
-          title: l.Lesson.title,
-          description: l.Lesson.description || "",
-          unitId: l.Lesson.unit_id,
-          isPublic: l.Lesson.is_public,
-        }
-        lessons.push(tempL);
-      })
-      const temp:ContentWithLessons = {
-        contentId: d.content_id,
-        title: d.title,
-        description: d.description || "",
-        type: d.type,
-        url: d.url,
-        isPublic: d.is_public,
-        lessons: lessons,
+    if (value.length == 0) {
+      res.messages.other = "コンテンツが見つかりません。";
+      return res;
+    }
+    value.map(v => {
+      if (v.Lessons.length > 0) {
+        const content:ContentAndLessons = {
+          contentId: v.content_id,
+          title: v.title,
+          description: v.description || "",
+          type: v.type,
+          isPublic: v.is_public,
+          url: v.url,
+          lessons: [],
+        };
+        v.Lessons.map(l => {
+          content.lessons.push({
+            lessonId: l.Lesson.lesson_id,
+            title: l.Lesson.title,
+            description: l.Lesson.description || "",
+            isPublic: l.Lesson.is_public,
+            unitId: l.Lesson.unit_id,
+          });
+        });
+        res.values.push(content);
       }
-      contents.push(temp);
-    })
-  
-    return contents;
-  } catch (e) {
-    return null;
+    });
+    res.messages.other = "データを取得しました。";
+    res.isSuccess = true;
+    return res;
+  } catch (error) {
+    res.messages.other = String(error);
+    return res;
   } finally {
     await prisma.$disconnect();
   }
@@ -74,7 +112,14 @@ export async function getAllContents(
 
 export async function getLessonContents(
   lessonId: string
-) {
+):Promise<OperationResult<Content[], MessageContent>> {
+  const res:OperationResult<Content[], MessageContent> = {
+    isSuccess: false,
+    values: [],
+    messages: {
+      other: "",
+    },
+  };
   try {
     const contentIds:string[] = [];
     const records = await prisma.lessonContent.findMany({
@@ -82,11 +127,16 @@ export async function getLessonContents(
         lesson_id: lessonId
       }
     });
+    if (records.length == 0) {
+      res.messages.other = "コンテンツが見つかりません。";
+      res.isSuccess = true;
+      return res;
+    }
     records.map(r => {
       contentIds.push(r.content_id);
-    })
-    const contents:Content[] = [];
-    const datas = await prisma.content.findMany({
+    });
+
+    const value = await prisma.content.findMany({
       where: {
         content_id: { in: contentIds }
       },
@@ -94,19 +144,27 @@ export async function getLessonContents(
         content_id: "asc",
       },
     });
-    datas.map(data => {
-      contents.push({
-        contentId: data.content_id,
-        title: data.title,
-        description: data.description || "",
-        isPublic: data.is_public,
-        type: data.type,
-        url: data.url,
+    if (value.length == 0) {
+      res.messages.other = "コンテンツが見つかりません。";
+      res.isSuccess = true;
+      return res;
+    }
+    value.map(v => {
+      res.values.push({
+        contentId: v.content_id,
+        title: v.title,
+        description: v.description || "",
+        isPublic: v.is_public,
+        type: v.type,
+        url: v.url,
       });
     });
-    return contents;
-  } catch (e) {
-    return null;
+    res.messages.other = "コンテンツを取得しました。";
+    res.isSuccess = true;
+    return res;
+  } catch (error) {
+    res.messages.other = String(error);
+    return res;
   } finally {
     await prisma.$disconnect();
   }
@@ -114,7 +172,14 @@ export async function getLessonContents(
 
 export async function getNotLessonContents(
   lessonId: string
-) {
+):Promise<OperationResult<Content[], MessageContent>> {
+  const res:OperationResult<Content[], MessageContent> = {
+    isSuccess: false,
+    values: [],
+    messages: {
+      other: "",
+    },
+  };
   try {
     const contentIds:string[] = [];
     const records = await prisma.lessonContent.findMany({
@@ -122,11 +187,16 @@ export async function getNotLessonContents(
         lesson_id: lessonId
       }
     });
+    if (records.length == 0) {
+      res.messages.other = "コンテンツが見つかりません。";
+      res.isSuccess = true;
+      return res;
+    }
+
     records.map(r => {
       contentIds.push(r.content_id);
-    })
-    const contents:Content[] = [];
-    const datas = await prisma.content.findMany({
+    });
+    const value = await prisma.content.findMany({
       where: {
         content_id: { notIn: contentIds }
       },
@@ -134,19 +204,27 @@ export async function getNotLessonContents(
         content_id: "asc",
       },
     });
-    datas.map(data => {
-      contents.push({
-        contentId: data.content_id,
-        title: data.title,
-        description: data.description || "",
-        isPublic: data.is_public,
-        type: data.type,
-        url: data.url,
+    if (value.length == 0) {
+      res.messages.other = "コンテンツが見つかりません。";
+      res.isSuccess = true;
+      return res;
+    }
+    value.map(v => {
+      res.values.push({
+        contentId: v.content_id,
+        title: v.title,
+        description: v.description || "",
+        isPublic: v.is_public,
+        type: v.type,
+        url: v.url,
       });
     });
-    return contents;
-  } catch (e) {
-    return null;
+    res.messages.other = "コンテンツを取得しました。";
+    res.isSuccess = true;
+    return res;
+  } catch (error) {
+    res.messages.other = String(error);
+    return res;
   } finally {
     await prisma.$disconnect();
   }
@@ -155,8 +233,8 @@ export async function getNotLessonContents(
 // 新規作成
 export async function createContent(
   contentId: string, title: string, description: string, type: ContentType, url: string, isPublic: boolean
-): Promise<FormState<Content, MessageContent>> {
-  const res:FormState<Content, MessageContent> = {
+): Promise<OperationResult<Content, MessageContent>> {
+  const res:OperationResult<Content, MessageContent> = {
     isSuccess: false,
     values: {
       contentId: "",
@@ -190,8 +268,8 @@ export async function createContent(
       type: value.type,
       url: value.url
     }
-    res.isSuccess = true;
     res.messages.other = "登録に成功しました。";
+    res.isSuccess = true;
     return res;
   } catch (error) {
     res.messages.other = String(error);
@@ -204,8 +282,8 @@ export async function createContent(
 // 編集
 export async function editContent(
   content: Content
-): Promise<FormState<Content, MessageContent>> {
-  const res:FormState<Content, MessageContent> = {
+): Promise<OperationResult<Content, MessageContent>> {
+  const res:OperationResult<Content, MessageContent> = {
     isSuccess: false,
     values: content,
     messages: {
@@ -247,8 +325,8 @@ export async function editContent(
 // 削除
 export async function deleteContent(
   contentId: string
-): Promise<FormState<Content, MessageContent>> {
-  const res:FormState<Content, MessageContent> = {
+): Promise<OperationResult<Content, MessageContent>> {
+  const res:OperationResult<Content, MessageContent> = {
     isSuccess: false,
     values: {
       contentId: "",
@@ -276,8 +354,8 @@ export async function deleteContent(
       type: value.type,
       url: value.url
     }
-    res.isSuccess = true;
     res.messages.other = `削除に成功しました。`;
+    res.isSuccess = true;
     return res;
   } catch (error) {
     res.messages.other = String(error);

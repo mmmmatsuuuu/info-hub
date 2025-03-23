@@ -1,13 +1,12 @@
 import { prisma } from '@lib/prisma';
-import { ContentType } from '@node_modules/.prisma/client';
-import { FormState, LessonContent, MessageLessonContent } from '@/types/form';
+import { OperationResult, LessonContent, MessageLessonContent } from '@/types/dbOperation';
 
 // 取得
 export async function getLessonContent(
   type: "lesson" | "content",
   id: string,
-): Promise<FormState<LessonContent[], MessageLessonContent>> {
-  const res:FormState<LessonContent[], MessageLessonContent> = {
+): Promise<OperationResult<LessonContent[], MessageLessonContent>> {
+  const res:OperationResult<LessonContent[], MessageLessonContent> = {
     isSuccess: false,
     values:[],
     messages: {
@@ -29,10 +28,9 @@ export async function getLessonContent(
               lessonId: v.lesson_id,
             });
           });
-          res.isSuccess = true;
           res.messages.other = "取得に成功しました。";
+          res.isSuccess = true;
         } else {
-          res.isSuccess = false;
           res.messages.other = "授業に対応するコンテンツがありません。";
         }
         break;
@@ -49,10 +47,9 @@ export async function getLessonContent(
               lessonId: v.lesson_id,
             });
           });
-          res.isSuccess = true;
           res.messages.other = "取得に成功しました。";
+          res.isSuccess = true;
         } else {
-          res.isSuccess = false;
           res.messages.other = "コンテンツに対応する授業がありません。";
         }
         break;
@@ -61,7 +58,6 @@ export async function getLessonContent(
     }
     return res;
   } catch (error) {
-    res.isSuccess = false;
     res.messages.other = String(error);
     return res;
   } finally {
@@ -72,8 +68,8 @@ export async function getLessonContent(
 // 新規作成
 export async function createLessonContent(
   data: LessonContent
-): Promise<FormState<LessonContent, MessageLessonContent>> {
-  const res:FormState<LessonContent, MessageLessonContent> = {
+): Promise<OperationResult<LessonContent, MessageLessonContent>> {
+  const res:OperationResult<LessonContent, MessageLessonContent> = {
     isSuccess: false,
     values: {
       lessonId: "",
@@ -90,15 +86,14 @@ export async function createLessonContent(
         lesson_id: data.lessonId
       }
     });
-    res.isSuccess = true;
     res.values = {
       lessonId: value.lesson_id,
       contentId: value.content_id,
     };
     res.messages.other = "データの追加に成功しました";
+    res.isSuccess = true;
     return res;
   } catch (error) {
-    res.isSuccess = false;
     res.messages.other = String(error);
     return res;
   } finally {
@@ -115,8 +110,8 @@ export async function createLessonContent(
 // 削除
 export async function deleteLessonContent(
   data: LessonContent
-): Promise<FormState<LessonContent, MessageLessonContent>> {
-  const res:FormState<LessonContent, MessageLessonContent> = {
+): Promise<OperationResult<LessonContent, MessageLessonContent>> {
+  const res:OperationResult<LessonContent, MessageLessonContent> = {
     isSuccess: false,
     values: {
       lessonId: "",
@@ -135,15 +130,14 @@ export async function deleteLessonContent(
         }
       }
     });
-    res.isSuccess = true;
     res.values = {
       contentId: value.content_id,
       lessonId: value.lesson_id,
     }
     res.messages.other = "削除に成功しました。";
+    res.isSuccess = true;
     return res;
   } catch (error) {
-    res.isSuccess = false;
     res.messages.other = String(error);
     return res;
   } finally {

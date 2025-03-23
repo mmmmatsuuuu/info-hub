@@ -1,14 +1,14 @@
 "use server";
 import z from "zod";
 import { ValidateLesson } from "@lib/validate";
-import { FormState, Lesson, MessageLesson } from "@/types/form";
+import { OperationResult, Lesson, MessageLesson } from "@/types/dbOperation";
 import { createLesson, editLesson, deleteLesson } from "@lib/dbController/lesson";
 
 export async function createLessonAction(
-  prevState: FormState<Lesson, MessageLesson>,
+  prevState: OperationResult<Lesson, MessageLesson>,
   formData: FormData
-): Promise<FormState<Lesson, MessageLesson>> {
-  const res:FormState<Lesson, MessageLesson> = {
+): Promise<OperationResult<Lesson, MessageLesson>> {
+  const res:OperationResult<Lesson, MessageLesson> = {
     isSuccess: false,
     values: {
       lessonId: "",
@@ -74,10 +74,10 @@ export async function createLessonAction(
 }
 
 export async function editLessonAction(
-  prevState: FormState<Lesson, MessageLesson>,
+  prevState: OperationResult<Lesson, MessageLesson>,
   formData: FormData
-): Promise<FormState<Lesson, MessageLesson>> {
-  const res:FormState<Lesson, MessageLesson> = {
+): Promise<OperationResult<Lesson, MessageLesson>> {
+  const res:OperationResult<Lesson, MessageLesson> = {
     isSuccess: false,
     values: {
       lessonId: "",
@@ -139,10 +139,10 @@ export async function editLessonAction(
 }
 
 export async function deleteLessonAction(
-  prevState: FormState<Lesson, MessageLesson>,
+  prevState: OperationResult<Lesson, MessageLesson>,
   formData: FormData
-): Promise<FormState<Lesson, MessageLesson>> {
-  const res:FormState<Lesson, MessageLesson> = {
+): Promise<OperationResult<Lesson, MessageLesson>> {
+  const res:OperationResult<Lesson, MessageLesson> = {
     isSuccess: false,
     values: {
       lessonId: "",

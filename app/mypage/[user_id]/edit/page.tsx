@@ -13,8 +13,13 @@ export default async function EditMyPage({
   const userId = (await params).user_id;
   let userData;
   if (userId && user.userId) {
-    userData = await getUserWithStudent(userId);
+    const value = await getUserWithStudent(userId);
+    if (value.isSuccess == false) {
+      return redirect("/");
+    }
+    userData = value.values;
   }
+
   if (!userData) {
     return redirect("/register");
   }
@@ -23,12 +28,13 @@ export default async function EditMyPage({
       className="w-full p-4"
     >
       <EditStudentForm 
-        userId={ userData.user_id }
-        username={ userData.name }
+        userId={ userData.userId }
+        username={ userData.username }
         email={ userData.email }
-        schoolName={ userData.Student? userData.Student.school_name : ""}
-        admissionYear={ userData.Student? userData.Student.admission_year : 1900 }
-        studentNumber={ userData.Student? Number(userData.Student.student_number) : 1101 }
+        type={ userData.type }
+        schoolName={ userData.schoolName }
+        admissionYear={ userData.admissionYear }
+        studentNumber={ Number(userData.studentNumber) }
       />
     </div>
   )

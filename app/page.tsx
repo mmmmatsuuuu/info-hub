@@ -13,10 +13,11 @@ export default async function HomePage() {
   const { userId } = await auth();
   let userData;
   if (userId) {
-    userData = await getUserWithClerkId(userId);
-    if (!userData) {
+    const res = await getUserWithClerkId(userId);
+    if (res.isSuccess = false) {
       return redirect("/register");
     }
+    userData = res.values;
   }
 
 

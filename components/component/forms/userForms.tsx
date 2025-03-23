@@ -2,7 +2,7 @@
 import React, { useEffect, useActionState } from "react";
 import { addUserAction, editUserAction } from "@lib/actions/userActions";
 import { useRouter } from "next/navigation";
-import { UserAndStudent, MessageUserAndStudent, FormState } from "@/types/form";
+import { UserAndStudent, MessageUserAndStudent, OperationResult } from "@/types/dbOperation";
 import { InputDiv, SubmitButton, SuccessTip, ErrorTip } from "@components/ui/formUi";
 
 /**
@@ -11,16 +11,17 @@ import { InputDiv, SubmitButton, SuccessTip, ErrorTip } from "@components/ui/for
  * ユーザ名、メールアドレス、学校名、入学年度、学籍番号
  */
 export function CreateUserForm({
-  username, email, schoolName, admissionYear, studentNumber,
+  username, email, type, schoolName, admissionYear, studentNumber,
 }: UserAndStudent) {
   // 編数定義
   const router = useRouter();
-  const initialState:FormState<UserAndStudent, MessageUserAndStudent> = {
+  const initialState:OperationResult<UserAndStudent, MessageUserAndStudent> = {
     messages: {},
     isSuccess: false,
     values: {
       username: username ? username : "",
       email: email ? email : "",
+      type: type ? type : "student",
       schoolName: schoolName ? schoolName : "",
       admissionYear: admissionYear ? admissionYear : new Date().getFullYear(),
       studentNumber: studentNumber ? studentNumber : 1101,
@@ -83,11 +84,11 @@ export function CreateUserForm({
         error={ state.messages.studentNumber ? state.messages.studentNumber : null }
       />
       <ErrorTip
-        flag={ state.messages.other != null && !state.isSuccess }
+        flag={ state.isSuccess ==false && state.messages.other != undefined }
         message={ state.messages.other ? state.messages.other : "" }
       />
       <SuccessTip
-        success={ state.isSuccess }
+        success={ state.isSuccess == true && state.messages.other != undefined }
         message={ `${ state.messages.other } トップページに戻ります。` }
       />
       <div
@@ -112,13 +113,14 @@ export function EditStudentForm({
 }: UserAndStudent) {
   // 編数定義
   const router = useRouter();
-  const initialState:FormState<UserAndStudent, MessageUserAndStudent> = {
+  const initialState:OperationResult<UserAndStudent, MessageUserAndStudent> = {
     messages: {},
     isSuccess: false,
     values: {
       userId: userId,
       username: username ? username : "",
       email: email ? email : "",
+      type: "student",
       schoolName: schoolName ? schoolName : "",
       admissionYear: admissionYear ? admissionYear : new Date().getFullYear(),
       studentNumber: studentNumber ? studentNumber : 1101,
@@ -182,11 +184,11 @@ export function EditStudentForm({
         error={ state.messages.studentNumber ? state.messages.studentNumber : null }
       />
       <ErrorTip
-        flag={ !state.isSuccess && state.messages.other != null }
+        flag={ state.isSuccess == false && state.messages.other != undefined }
         message={ state.messages.other || "" }
       />
       <SuccessTip
-        success={ state.isSuccess }
+        success={ state.isSuccess == true && state.messages.other != undefined }
         message={ state.messages.other || ""}
       />
       <div

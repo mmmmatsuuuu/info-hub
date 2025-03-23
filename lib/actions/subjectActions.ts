@@ -1,15 +1,15 @@
 "use server";
 import z from "zod";
-import { FormState, MessageSubject, Subject } from "@/types/form";
+import { OperationResult, MessageSubject, Subject } from "@/types/dbOperation";
 import { deleteSubject, createSubject, editSubject } from "@lib/dbController/subject";
 import { ValidateSubject } from "@lib/validate";
 
 export async function createSubjectAction(
-  prevState: FormState<Subject, MessageSubject>,
+  prevState: OperationResult<Subject, MessageSubject>,
   formData: FormData
-):Promise<FormState<Subject, MessageSubject>> {
-  const res:FormState<Subject, MessageSubject> = {
-    isSuccess: true,
+):Promise<OperationResult<Subject, MessageSubject>> {
+  const res:OperationResult<Subject, MessageSubject> = {
+    isSuccess: false,
     values: {
       subjectId: "",
       subjectName: "",
@@ -69,11 +69,11 @@ export async function createSubjectAction(
 }
 
 export async function editSubjectAction(
-  prevState: FormState<Subject, MessageSubject>,
+  prevState: OperationResult<Subject, MessageSubject>,
   formData: FormData
-):Promise<FormState<Subject, MessageSubject>> {
-  const res:FormState<Subject, MessageSubject> = {
-    isSuccess: true,
+):Promise<OperationResult<Subject, MessageSubject>> {
+  const res:OperationResult<Subject, MessageSubject> = {
+    isSuccess: false,
     values: {
       subjectId: "",
       subjectName: "",
@@ -133,9 +133,21 @@ export async function editSubjectAction(
 }
 
 export async function deleteSubjectAction(
-  prevState: FormState<Subject, MessageSubject>,
+  prevState: OperationResult<Subject, MessageSubject>,
   formData: FormData
-): Promise<FormState> {
+): Promise<OperationResult<Subject, MessageSubject>> {
+  const res:OperationResult<Subject, MessageSubject> = {
+    isSuccess: false,
+    values: {
+      subjectId: "",
+      subjectName: "",
+      description: "",
+      isPublic: false,
+    },
+    messages: {
+      other: "",
+    },
+  }
   try {
     // データ整形
     const rawData = {
@@ -148,33 +160,22 @@ export async function deleteSubjectAction(
     // バリデーション失敗時の処理
     const result = dataSchema.safeParse(rawData.subjectId);
     if (!result.success) {
-      return {
-        messages: {
-          other: result.error.format()._errors.join(", "),
-        },
-        values: rawData,
-        isSuccess: false,
-      }
+      res.messages.other = result.error.format()._errors.join(", "),
+      res.values.subjectId = rawData.subjectId;
+      return res;
     }
 
     // データベース処理
-    const res = await deleteSubject(result.data);
+    const value = await deleteSubject(result.data);
 
     // 結果を返す
-    return {
-      isSuccess: res.success,
-      messages: res.messages,
-      values: res.values,
-    }
-
+    res.values = value.values;
+    res.messages = value.messages;
+    res.isSuccess = value.isSuccess;
+    return res;
   } catch (error) {
     // エラーハンドリング
-    return {
-      isSuccess: false,
-      messages: {
-        other: String(error),
-      },
-      values: {},
-    }
+    res.messages.other = String(error);
+    return res;
   }
 }

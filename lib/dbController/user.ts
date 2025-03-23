@@ -1,23 +1,70 @@
 import { prisma } from '@lib/prisma';
-import { UserAndStudent } from '@/types/form';
+import { OperationResult, User, MessageUser, UserAndStudent, MessageUserAndStudent } from '@/types/dbOperation';
 
-export async function getUserWithClerkId(clerkId: string) {
+export async function getUserWithClerkId(
+  clerkId: string
+): Promise<OperationResult<User, MessageUser>> {
+  const res:OperationResult<User, MessageUser> = {
+    isSuccess: false,
+    values: {
+      userId: "",
+      clerkId: "",
+      type: "student",
+      name: "",
+      email: "",
+    },
+    messages: {
+      other: "clerk_idによるユーザ情報の取得",
+    }
+  }
   try {
-    return await prisma.user.findUnique({
+    const value = await prisma.user.findUnique({
       where: {
         clerk_id: clerkId
       }
     });
-  } catch (e) {
-    return null;
+    if (value == null) {
+      res.messages.other = "ユーザが見つかりません。";
+      return res;
+    }
+    res.values = {
+      userId: value.user_id,
+      clerkId: value.clerk_id,
+      type: value.type,
+      name: value.name,
+      email: value.email,
+    }
+    res.messages.other = "ユーザを取得しました。";
+    res.isSuccess = true;
+    return res;
+  } catch (error) {
+    res.messages.other = String(error);
+    return res;
   } finally {
     await prisma.$disconnect();
   }
 }
 
-export async function getUserWithStudent(userId: string) {
+export async function getUserWithStudent(
+  userId: string
+): Promise<OperationResult<UserAndStudent, MessageUserAndStudent>> {
+  const res:OperationResult<UserAndStudent, MessageUserAndStudent> = {
+    isSuccess: false,
+    values: {
+      userId: "",
+      username: "",
+      email: "",
+      type: "student",
+      schoolName: "",
+      admissionYear: 0,
+      studentNumber: 0,
+    },
+    messages: {
+      other: "ユーザ情報の取得",
+    }
+  };
   try {
-    return await prisma.user.findUnique({
+    const value = await prisma.user.findUnique({
       where: {
         user_id: userId
       },
@@ -27,8 +74,29 @@ export async function getUserWithStudent(userId: string) {
         },
       }
     });
-  } catch (e) {
-    return null;
+    if (value == null) {
+      res.messages.other = "ユーザが見つかりません。";
+      return res;
+    }
+    if (value.Student == null) {
+      res.messages.other = "ユーザ情報が取得できませんでした。";
+      return res;
+    }
+    res.values = {
+      userId: value.user_id,
+      username: value.name,
+      email: value.email,
+      type: value.type,
+      schoolName: value.Student?.school_name,
+      admissionYear: value.Student?.admission_year,
+      studentNumber: Number(value.Student?.student_number),
+    }
+    res.messages.other = "ユーザを取得しました。";
+    res.isSuccess = true;
+    return res;
+  } catch (error) {
+    res.messages.other = String(error);
+    return res;
   } finally { 
     await prisma.$disconnect();
   }
@@ -41,9 +109,24 @@ export async function createUserWithStudent(
   admissionYear: number,
   schoolName: string,
   studentNumber: string,
-) {
+) :Promise<OperationResult<UserAndStudent, MessageUserAndStudent>> {
+  const res:OperationResult<UserAndStudent, MessageUserAndStudent> = {
+    isSuccess: false,
+    values: {
+      userId: "",
+      username: "",
+      email: "",
+      type: "student",
+      schoolName: "",
+      admissionYear: 0,
+      studentNumber: 0,
+    },
+    messages: {
+      other: "ユーザ情報の登録",
+    }
+  };
   try {
-    const result = await prisma.$transaction(async (tx) => {
+    const value = await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
         data: {
           clerk_id: clerkId,
@@ -62,14 +145,22 @@ export async function createUserWithStudent(
       });
       return { user, student };
     });
-  
-    return {
-      messages: {
-        other: "登録に成功しました。",
-      },
-      isSuccess: true,
-      values: result.user
-    };
+
+    res.values = {
+      userId: value.user.user_id,
+      username: value.user.name,
+      email: value.user.email,
+      type: value.user.type,
+      schoolName: value.student.school_name,
+      admissionYear: value.student.admission_year,
+      studentNumber: Number(value.student.student_number),
+    }
+    res.messages.other = "登録に成功しました。";
+    res.isSuccess = true;
+    return res;
+  } catch(error) {
+    res.messages.other = String(error);
+    return res;
   } finally {
     await prisma.$disconnect();
   }
@@ -82,9 +173,24 @@ export async function editUserWithStudent(
   admissionYear: number,
   schoolName: string,
   studentNumber: string,
-) {
+) :Promise<OperationResult<UserAndStudent, MessageUserAndStudent>> {
+  const res:OperationResult<UserAndStudent, MessageUserAndStudent> = {
+    isSuccess: false,
+    values: {
+      userId: "",
+      username: "",
+      email: "",
+      type: "student",
+      schoolName: "",
+      admissionYear: 0,
+      studentNumber: 0,
+    },
+    messages: {
+      other: "ユーザ情報の登録",
+    }
+  };
   try {
-    const result = await prisma.$transaction(async (tx) => {
+    const value = await prisma.$transaction(async (tx) => {
       const user = await tx.user.update({
         where: {
           user_id: userId,
@@ -107,19 +213,21 @@ export async function editUserWithStudent(
       return { user, student };
     });
   
-    const values:UserAndStudent = {
-      userId: result.user.user_id,
-      username: result.user.name,
-      email: result.user.email,
-      admissionYear: result.student.admission_year,
-      schoolName: result.student.school_name,
-      studentNumber: Number(result.student.student_number),
+    res.values = {
+      userId: value.user.user_id,
+      username: value.user.name,
+      email: value.user.email,
+      type: value.user.type,
+      schoolName: value.student.school_name,
+      admissionYear: value.student.admission_year,
+      studentNumber: Number(value.student.student_number),
     }
-    return {
-      messages: "データベースへの登録に成功。",
-      success: true,
-      values: values
-    };
+    res.messages.other = "更新に成功しました。";
+    res.isSuccess = true;
+    return res;
+  } catch(error) {
+    res.messages.other = String(error);
+    return res;
   } finally {
     await prisma.$disconnect();
   }

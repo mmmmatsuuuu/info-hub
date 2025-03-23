@@ -1,12 +1,12 @@
 import { auth } from "@clerk/nextjs/server";
 import { InnerCard } from "@components/ui/card";
 import { InternalLink } from "@components/ui/myLink";
-import { NotFoundWithRedirect } from "@components/ui/notFound";
+import { NotFoundWithRedirect, NotFound } from "@components/ui/notFound";
 import { Header1, Header2 } from "@components/ui/title";
 import { getUserWithClerkId } from "@lib/dbController/user";
 import { getSubjectWithUnits, getSubjects } from "@lib/dbController/subject";
 import { CreateUnitForm, EditUnitForm, DeleteUnitForm } from "@components/component/forms/unitForms";
-import { OptionProps, Unit } from "@/types/form";
+import { OptionProps, Unit } from "@/types/dbOperation";
 import { ContentManagerBreadcrumbs } from "@components/component/breadcrumbs";
 import { BreadCrumb } from "@/types/common";
 
@@ -27,7 +27,7 @@ export default async function ContentManagePage({
   }
 
   const user = await getUserWithClerkId(userId);
-  if (user == null) {
+  if (user.isSuccess == false) {
     return (
       <NotFoundWithRedirect
         text="ユーザ登録が済んでいません。ユーザ登録をしてください。"
@@ -35,7 +35,7 @@ export default async function ContentManagePage({
       />
     );
   }
-  if (user.type != "admin") {
+  if (user.values.type != "admin") {
     return (
       <NotFoundWithRedirect
         text="管理者権限がありません。"
@@ -48,15 +48,16 @@ export default async function ContentManagePage({
   const subjectId = p.subject_id;
 
   // データの取得
-  const subject = await getSubjectWithUnits(subjectId);
-  if (!subject) {
+  const res1 = await getSubjectWithUnits(subjectId);
+  if (res1.isSuccess == false) {
     return (
       <NotFoundWithRedirect
-        text="科目が存在しません。"
+        text="エラーが発生しました。"
         href="/"
       />
     )
   }
+  const subject = res1.values;
 
   const breadcrumbs: BreadCrumb[] = [
     {
@@ -65,16 +66,25 @@ export default async function ContentManagePage({
     },
     {
       path: `/content_manager/${ subjectId }`,
-      name: subject.subject_name,
+      name: subject.subjectName,
     }
   ];
 
-  const subjects = await getSubjects();
+  const  res2 = await getSubjects();
+  if (res2.isSuccess = false) {
+    return (
+      <NotFoundWithRedirect
+        text="エラーが発生しました。"
+        href="/"
+      />
+    )
+  }
+  const subjects = res2.values;
   const options:OptionProps[] = [];
   subjects.map(s => {
     var val:OptionProps = {
-      label: s.subject_name,
-      value: s.subject_id,
+      label: s.subjectName,
+      value: s.subjectId,
     }
     options.push(val);
   });
@@ -100,7 +110,7 @@ export default async function ContentManagePage({
       </div>
       <Header1 title="単元管理" />
       <InnerCard>
-        <Header2 title={ subject.subject_name } />
+        <Header2 title={ subject.subjectName } />
         <p>{ subject.description }</p>
       </InnerCard>
       <div
@@ -140,24 +150,30 @@ export default async function ContentManagePage({
         <div
           className="overflow-y-scroll"
         >
-          { subject.Units.map(u => {
-            const unit:Unit = {
-              unitId: u.unit_id,
-              unitName: u.unit_name,
-              description: u.description || "",
-              subjectId: u.subject_id,
-              isPublic: u.is_public,
-            }
-            return (
-              <DataColumn
-                key={unit.unitId}
-                defaultValue={ subjectId }
-                options={ options }
-                unit={ unit }
-                link={`/content_manager/${ subjectId }/${ unit.unitId }`}
-              />
-            )
-          })}
+          { 
+            subject.units.length > 0
+            ?
+            subject.units.map(u => {
+              const unit:Unit = {
+                unitId: u.unitId,
+                unitName: u.unitName,
+                description: u.description || "",
+                subjectId: u.subjectId,
+                isPublic: u.isPublic,
+              }
+              return (
+                <DataColumn
+                  key={unit.unitId}
+                  defaultValue={ subjectId }
+                  options={ options }
+                  unit={ unit }
+                  link={`/content_manager/${ subjectId }/${ unit.unitId }`}
+                />
+              )
+            })
+            :
+            <NotFound text="データがありません。" />
+          }
         </div>
       </div>
     </div>

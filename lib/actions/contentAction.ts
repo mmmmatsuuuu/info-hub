@@ -1,14 +1,14 @@
 "use server";
 import z from "zod";
-import { FormState, Content, MessageContent } from "@/types/form";
+import { OperationResult, Content, MessageContent } from "@/types/dbOperation";
 import { createContent, editContent, deleteContent } from "@lib/dbController/content";
 import { ValidateContent } from "@lib/validate";
 
 export async function createContentAction(
-  prevState: FormState<Content, MessageContent>,
+  prevState: OperationResult<Content, MessageContent>,
   formData: FormData
-): Promise<FormState<Content, MessageContent>> {
-  const res:FormState<Content, MessageContent> = {
+): Promise<OperationResult<Content, MessageContent>> {
+  const res:OperationResult<Content, MessageContent> = {
     isSuccess: false,
     values: {
       contentId: "",
@@ -77,10 +77,10 @@ export async function createContentAction(
 }
 
 export async function editContentAction(
-  prevState: FormState<Content, MessageContent>,
+  prevState: OperationResult<Content, MessageContent>,
   formData: FormData
-): Promise<FormState<Content, MessageContent>> {
-  const res:FormState<Content, MessageContent> = {
+): Promise<OperationResult<Content, MessageContent>> {
+  const res:OperationResult<Content, MessageContent> = {
     isSuccess: false,
     values: {
       contentId: "",
@@ -152,10 +152,10 @@ export async function editContentAction(
 }
 
 export async function deleteContentAction(
-  prevState: FormState<Content, MessageContent>,
+  prevState: OperationResult<Content, MessageContent>,
   formData: FormData
-): Promise<FormState<Content, MessageContent>> {
-  const res:FormState<Content, MessageContent> = {
+): Promise<OperationResult<Content, MessageContent>> {
+  const res:OperationResult<Content, MessageContent> = {
     isSuccess: false,
     values: {
       contentId: "",

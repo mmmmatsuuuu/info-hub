@@ -1,13 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
-import Link from "next/link";
 import { InnerCard } from "@components/ui/card";
 import { NotFoundWithRedirect } from "@components/ui/notFound";
 import { Header1 } from "@components/ui/title";
 import { getUserWithClerkId } from "@lib/dbController/user";
-import { ContentWithLessons } from "@/types/form";
 import { getAllContents } from "@lib/dbController/content";
-import { TypeIcon } from "@components/component/contentType";
-import { CreateContentForm, EditContentForm, DeleteContentForm } from "@components/component/forms/contentForms";
+import { CreateContentForm } from "@components/component/forms/contentForms";
 import ContentsList from "@components/component/ContentsList";
 
 export default async function ContentManagePage() {
@@ -23,7 +20,7 @@ export default async function ContentManagePage() {
   }
 
   const user = await getUserWithClerkId(userId);
-  if (user == null) {
+  if (user.isSuccess == false) {
     return (
       <NotFoundWithRedirect
         text="ユーザ登録が済んでいません。ユーザ登録をしてください。"
@@ -31,7 +28,7 @@ export default async function ContentManagePage() {
       />
     );
   }
-  if (user.type != "admin") {
+  if (user.values.type != "admin") {
     return (
       <NotFoundWithRedirect
         text="管理者権限がありません。"
@@ -41,7 +38,9 @@ export default async function ContentManagePage() {
   }
   
   // データの取得
-  const contents = await getAllContents();
+  const res = await getAllContents();
+
+  const contents = res.values;
 
   return (
     <div

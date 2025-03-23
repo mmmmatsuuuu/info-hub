@@ -1,60 +1,40 @@
 import { prisma } from '@lib/prisma';
-import { Subject, MessageSubject, FormState } from '@/types/form';
+import { Subject, MessageSubject, SubjectAndUnits, MessageSubjectAndUnits, OperationResult, UnitAndLessons, Lesson } from '@/types/dbOperation';
 
-export async function getSubject(subjectId: string) {
+export async function getSubject(
+  subjectId: string
+): Promise<OperationResult<Subject, MessageSubject>> {
+  const res:OperationResult<Subject, MessageSubject> = {
+    isSuccess: false,
+    values: {
+      subjectId: "",
+      subjectName: "",
+      description: "",
+      isPublic: false,
+    },
+    messages: {
+      other: "",
+    },
+  };
   try {
-    return await prisma.subject.findUnique({
+    const value = await prisma.subject.findUnique({
       where: {
         subject_id: subjectId,
       }
     });
-  } finally {
-    await prisma.$disconnect();
-  }
-}
-
-export async function getSubjects() {
-  try {
-    return await prisma.subject.findMany({
-      orderBy: {
-        subject_id: 'asc'
-      }
-    });
-  } finally {
-    await prisma.$disconnect();
-  }
-}
-
-export async function getPublicSubjects(): Promise<FormState<Subject[], MessageSubject>> {
-  const res:FormState<Subject[], MessageSubject> = {
-    isSuccess: false,
-    values: [],
-    messages: {
-      other: "公開科目一覧",
-    }
-  }
-  try {
-    const subjects:Subject[] = [];
-    const datas = await prisma.subject.findMany({
-      where: {
-        is_public: true,
-      }
-    });
-    if (datas) {
-      datas.map(d => {
-        subjects.push({
-          subjectId: d.subject_id,
-          subjectName: d.subject_name,
-          description: d.description || "",
-          isPublic: d.is_public,
-        })
-      });
+    if (value == null) {
+      res.messages.other = "科目が見つかりません。";
       res.isSuccess = true;
-      res.values = subjects;
-      res.messages.other = "データを取得しました。";
-    } else {
-      res.messages.other = "データの取得に失敗しました。";
+      return res;
     }
+    res.values = {
+      subjectId: value.subject_id,
+      subjectName: value.subject_name,
+      description: value.description || "",
+      isPublic: value.is_public,
+    };
+    res.messages.other = "科目を取得しました。";
+    res.isSuccess = true;
     return res;
   } catch(error) {
     res.messages.other = String(error);
@@ -64,9 +44,105 @@ export async function getPublicSubjects(): Promise<FormState<Subject[], MessageS
   }
 }
 
-export async function getSubjectWithUnits(subjectId: string) {
+export async function getSubjects(
+
+): Promise<OperationResult<Subject[], MessageSubject>> {
+  const res:OperationResult<Subject[], MessageSubject> = {
+    isSuccess: false,
+    values: [],
+    messages: {
+      other: "公開科目一覧",
+    }
+  }
   try {
-    return await prisma.subject.findUnique({
+    const value = await prisma.subject.findMany({
+      orderBy: {
+        subject_id: 'asc'
+      }
+    });
+    if (value.length == 0) {
+      res.messages.other = "科目が見つかりません。";
+      res.isSuccess = true;
+      return res;
+    }
+    value.map(v => {
+      res.values.push({
+        subjectId: v.subject_id,
+        subjectName: v.subject_name,
+        description: v.description || "",
+        isPublic: v.is_public,
+      });
+    });
+    res.messages.other = "科目を取得しました。";
+    res.isSuccess = true;
+    return res;
+  } catch(error) {
+    res.messages.other = String(error);
+    return res;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function getPublicSubjects(
+
+): Promise<OperationResult<Subject[], MessageSubject>> {
+  const res:OperationResult<Subject[], MessageSubject> = {
+    isSuccess: false,
+    values: [],
+    messages: {
+      other: "公開科目一覧",
+    }
+  }
+  try {
+    const subjects:Subject[] = [];
+    const value = await prisma.subject.findMany({
+      where: {
+        is_public: true,
+      }
+    });
+    if (value.length == 0) {
+      res.messages.other = "科目が見つかりません。";
+      res.isSuccess = true;
+      return res;
+    }
+    value.map(v => {
+      res.values.push({
+        subjectId: v.subject_id,
+        subjectName: v.subject_name,
+        description: v.description || "",
+        isPublic: v.is_public,
+      })
+    });
+    res.messages.other = "データを取得しました。";
+    res.isSuccess = true;
+    return res;
+  } catch(error) {
+    res.messages.other = String(error);
+    return res;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function getSubjectWithUnits(
+  subjectId: string
+):Promise<OperationResult<SubjectAndUnits, MessageSubjectAndUnits>> {
+  const res:OperationResult<SubjectAndUnits, MessageSubjectAndUnits> = {
+    isSuccess: false,
+    values: {
+      subjectId: "",
+      subjectName: "",
+      description: "",
+      isPublic: false,
+      units: [],
+    },
+    messages: {
+      other: "",
+    }
+  };
+  try {
+    const value = await prisma.subject.findUnique({
       where: {
         subject_id: subjectId,
       },
@@ -74,10 +150,6 @@ export async function getSubjectWithUnits(subjectId: string) {
         Units: {
           include: {
             Lessons: {
-              select: {
-                lesson_id: true,
-                title: true,
-              },
               orderBy: {
                 lesson_id: 'asc'
               }
@@ -89,13 +161,71 @@ export async function getSubjectWithUnits(subjectId: string) {
         },
       },
     });
+    if (value == null) {
+      res.messages.other = "科目が見つかりません。";
+      res.isSuccess = true;
+      return res;
+    }
+    res.values = {
+      subjectId: value.subject_id,
+      subjectName: value.subject_name,
+      description: value.description || "",
+      isPublic: value.is_public,
+      units: [],
+    }
+    if (value.Units.length > 0) {
+      value.Units.map(u => {
+        const unit:UnitAndLessons = {
+          unitId: u.unit_id,
+          unitName: u.unit_name,
+          subjectId: u.subject_id,
+          description: u.description || "",
+          isPublic: u.is_public,
+          lessons: [],
+        };
+        if (u.Lessons.length > 0) {
+          u.Lessons.map(l => {
+            const lesson:Lesson = {
+              lessonId: l.lesson_id,
+              title: l.title,
+              description: l.description || "",
+              isPublic: l.is_public,
+              unitId: l.unit_id,
+            }
+            unit.lessons.push(lesson);
+          });
+        }
+        res.values.units.push(unit);
+      });
+    }
+    res.messages.other = "科目を取得しました。";
+    res.isSuccess = true;
+    return res;
+  } catch(error) {
+    res.messages.other = String(error);
+    return res;
   } finally {
     await prisma.$disconnect();
   }
 }
-export async function getSubjectWithPublicUnits(subjectId: string) {
+export async function getSubjectWithPublicUnits(
+  subjectId: string
+):Promise<OperationResult<SubjectAndUnits, MessageSubjectAndUnits>> {
+  const res:OperationResult<SubjectAndUnits, MessageSubjectAndUnits> = {
+    isSuccess: false,
+    values: {
+      subjectId: "",
+      subjectName: "",
+      description: "",
+      isPublic: false,
+      units: [],
+    },
+    messages: {
+      other: "",
+    }
+  };
   try {
-    return await prisma.subject.findUnique({
+    const value = await prisma.subject.findUnique({
       where: {
         subject_id: subjectId,
       },
@@ -109,10 +239,6 @@ export async function getSubjectWithPublicUnits(subjectId: string) {
               where: {
                 is_public: true,
               },
-              select: {
-                lesson_id: true,
-                title: true,
-              },
               orderBy: {
                 lesson_id: 'asc'
               }
@@ -124,6 +250,49 @@ export async function getSubjectWithPublicUnits(subjectId: string) {
         },
       },
     });
+    if (value == null) {
+      res.messages.other = "科目が見つかりません。";
+      res.isSuccess = true;
+      return res;
+    }
+    res.values = {
+      subjectId: value.subject_id,
+      subjectName: value.subject_name,
+      description: value.description || "",
+      isPublic: value.is_public,
+      units: [],
+    }
+    if (value.Units.length > 0) {
+      value.Units.map(u => {
+        const unit:UnitAndLessons = {
+          unitId: u.unit_id,
+          unitName: u.unit_name,
+          subjectId: u.subject_id,
+          description: u.description || "",
+          isPublic: u.is_public,
+          lessons: [],
+        };
+        if (u.Lessons.length > 0) {
+          u.Lessons.map(l => {
+            const lesson:Lesson = {
+              lessonId: l.lesson_id,
+              title: l.title,
+              description: l.description || "",
+              isPublic: l.is_public,
+              unitId: l.unit_id,
+            }
+            unit.lessons.push(lesson);
+          });
+        }
+        res.values.units.push(unit);
+      });
+    }
+    res.messages.other = "科目を取得しました。";
+    res.isSuccess = true;
+    return res;
+  } catch(error) {
+    res.messages.other = String(error);
+    return res;
   } finally {
     await prisma.$disconnect();
   }
@@ -135,7 +304,19 @@ export async function createSubject(
   subjectName: string, 
   description: string,
   isPublic: boolean,
-):Promise<FormState<Subject, MessageSubject>> {
+):Promise<OperationResult<Subject, MessageSubject>> {
+  const res:OperationResult<Subject, MessageSubject> = {
+    isSuccess: false,
+    values: {
+      subjectId: "",
+      subjectName: "",
+      description: "",
+      isPublic: false,
+    },
+    messages: {
+      other: "科目の登録",
+    }
+  }
   try {
     const value = await prisma.subject.create({
       data: {
@@ -145,31 +326,18 @@ export async function createSubject(
         is_public: isPublic,
       }
     });
-    return {
-      isSuccess: true,
-      values: {
-        subjectId: value.subject_id,
-        subjectName: value.subject_name,
-        description: value.description || "",
-        isPublic: value.is_public
-      },
-      messages: {
-        other: "登録に成功しました。",
-      }
+    res.values = {
+      subjectId: value.subject_id,
+      subjectName: value.subject_name,
+      description: value.description || "",
+      isPublic: value.is_public,
     }
+    res.messages.other = "登録に成功しました。";
+    res.isSuccess = true;
+    return res;
   } catch (error) {
-    return {
-      isSuccess: false,
-      values: {
-        subjectId: subjectId,
-        subjectName: subjectName,
-        description: description,
-        isPublic: isPublic
-      },
-      messages: {
-        other: String(error),
-      }
-    }
+    res.messages.other = String(error);
+    return res;
   } finally {
     await prisma.$disconnect();
   }
@@ -181,7 +349,19 @@ export async function editSubject(
   subjectName: string, 
   description: string,
   isPublic: boolean,
-):Promise<FormState<Subject, MessageSubject>>  {
+):Promise<OperationResult<Subject, MessageSubject>>  {
+  const res:OperationResult<Subject, MessageSubject> = {
+    isSuccess: false,
+    values: {
+      subjectId: "",
+      subjectName: "",
+      description: "",
+      isPublic: false,
+    },
+    messages: {
+      other: "科目の更新",
+    }
+  }
   try {
     const value = await prisma.subject.update({
       where: {
@@ -193,59 +373,57 @@ export async function editSubject(
         is_public: isPublic,
       }
     });
-    return {
-      isSuccess: true,
-      values: {
-        subjectId: value.subject_id,
-        subjectName: value.subject_name,
-        description: value.description || "",
-        isPublic: value.is_public
-      },
-      messages: {
-        other: "登録に成功しました。",
-      }
+    res.values = {
+      subjectId: value.subject_id,
+      subjectName: value.subject_name,
+      description: value.description || "",
+      isPublic: value.is_public,
     }
+    res.messages.other = "更新に成功しました。";
+    res.isSuccess = true;
+    return res;
   } catch (error) {
-    return {
-      isSuccess: false,
-      values: {
-        subjectId: subjectId,
-        subjectName: subjectName,
-        description: description,
-        isPublic: isPublic
-      },
-      messages: {
-        other: String(error),
-      }
-    }
+    res.messages.other = String(error);
+    return res;
   } finally {
     await prisma.$disconnect();
   }
 }
 
 // 教科の削除
-export async function deleteSubject(subjectId: string) {
+export async function deleteSubject(
+  subjectId: string
+):Promise<OperationResult<Subject, MessageSubject>> {
+  const res:OperationResult<Subject, MessageSubject> = {
+    isSuccess: false,
+    values: {
+      subjectId: "",
+      subjectName: "",
+      description: "",
+      isPublic: false,
+    },
+    messages: {
+      other: "科目の削除",
+    }
+  }
   try {
-    const data = await prisma.subject.delete({
+    const value = await prisma.subject.delete({
       where: {
         subject_id: subjectId
       }
     });
-    return {
-      success: true,
-      messages: {
-        other: "削除に成功しました。"
-      },
-      values: data,
+    res.values = {
+      subjectId: value.subject_id,
+      subjectName: value.subject_name,
+      description: value.description || "",
+      isPublic: value.is_public,
     }
+    res.messages.other = "削除に成功しました。";
+    res.isSuccess = true;
+    return res;
   } catch (error) {
-    return {
-      success: false,
-      messages: {
-        other: String(error)
-      },
-      values: {},
-    }
+    res.messages.other = String(error);
+    return res;
   } finally {
     await prisma.$disconnect();
   }

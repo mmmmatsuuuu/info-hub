@@ -6,7 +6,7 @@ import { FormAlert, Button, SubmitButton, InputDiv, RadioDiv, ErrorTip, SuccessT
 import { OuterCard } from "@components/ui/card";
 import { Header2 } from "@components/ui/title";
 import { MovieIcon,QuizIcon,OtherContentIcon, CloseIcon } from "@components/ui/Icons";
-import { FormState, Content, MessageContent } from "@/types/form";
+import { OperationResult, Content, MessageContent } from "@/types/dbOperation";
 
 /**
  * コンテンツの新規作成
@@ -15,7 +15,7 @@ import { FormState, Content, MessageContent } from "@/types/form";
 export function CreateContentForm() {
   const router = useRouter();
   const [ display, setDisplay ] = useState<string>("hidden");
-  const initialState:FormState<Content, MessageContent> = {
+  const initialState:OperationResult<Content, MessageContent> = {
     messages: {},
     isSuccess:false,
     values: {
@@ -185,11 +185,11 @@ export function CreateContentForm() {
           </div>
           <div>
             <SuccessTip
-              success={ state.isSuccess && state.messages.other != null}
+              success={ state.isSuccess == true && state.messages.other != undefined}
               message={ state.messages.other || "" }
             />
             <ErrorTip
-              flag={ !state.isSuccess && state.messages.other != null}
+              flag={ state.isSuccess == false && state.messages.other != undefined}
               message={ state.messages.other || "" }
             />
           </div>
@@ -263,7 +263,7 @@ export function EditContentForm({
 }) {
   const router = useRouter();
   const [ display, setDisplay ] = useState<string>("hidden");
-  const initialState:FormState<Content, MessageContent> = {
+  const initialState:OperationResult<Content, MessageContent> = {
     messages: {},
     isSuccess:false,
     values: content
@@ -423,11 +423,11 @@ export function EditContentForm({
           </div>
           <div>
             <SuccessTip
-              success={ state.isSuccess && state.messages.other != null}
+              success={ state.isSuccess == true && state.messages.other != undefined}
               message={ state.messages.other || "" }
             />
             <ErrorTip
-              flag={ !state.isSuccess && state.messages.other != null}
+              flag={ state.isSuccess == false && state.messages.other != undefined}
               message={ state.messages.other || "" }
             />
           </div>
@@ -457,7 +457,7 @@ export function DeleteContentForm({
 }) {
   // 編数定義
   const router = useRouter();
-  const initialState:FormState<Content, MessageContent> = {
+  const initialState:OperationResult<Content, MessageContent> = {
     messages: {},
     isSuccess: false,
     values: {
@@ -495,12 +495,12 @@ export function DeleteContentForm({
         削除
       </SubmitButton>
       <FormAlert
-        flag={ state.isSuccess && state.messages.other != undefined }
+        flag={ state.isSuccess == true && state.messages.other != undefined }
         message={ state.messages.other || "" }
         type="success"
       />
       <FormAlert
-        flag={ !state.isSuccess && state.messages.other != undefined }
+        flag={ state.isSuccess == false && state.messages.other != undefined }
         message={ state.messages.other || "" }
         type="error"
       />

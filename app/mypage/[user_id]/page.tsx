@@ -15,7 +15,11 @@ export default async function MyPage({
   const userId = (await params).user_id;
   let userData;
   if (userId && user.userId) {
-    userData = await getUserWithStudent(userId);
+    const res = await getUserWithStudent(userId);
+    if (res.isSuccess = false) {
+      return redirect("/register");
+    }
+    userData = res.values;
   }
   if (!userData) {
     return redirect("/register");
@@ -37,7 +41,7 @@ export default async function MyPage({
           <tbody>
             <tr className="border-b">
               <td>ユーザ名</td>
-              <td>{ userData.name }</td>
+              <td>{ userData.username }</td>
             </tr>
             <tr className="border-b">
               <td>タイプ</td>
@@ -53,15 +57,15 @@ export default async function MyPage({
             </tr>
             <tr className="border-b">
               <td>学校名</td>
-              <td>{ userData.Student? userData.Student.school_name : "" }</td>
+              <td>{ userData.schoolName }</td>
             </tr>
             <tr className="border-b">
               <td>入学年度</td>
-              <td>{ userData.Student? userData.Student.admission_year : 1900 }</td>
+              <td>{ userData.admissionYear }</td>
             </tr>
             <tr className="border-b">
               <td>学籍番号</td>
-              <td>{ userData.Student? Number(userData.Student.student_number) : 1101 }</td>
+              <td>{ Number(userData.studentNumber) }</td>
             </tr>
           </tbody>
         </table>

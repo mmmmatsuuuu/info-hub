@@ -1,22 +1,18 @@
 "use client"
 import Link from "next/link";
-// import { useState, useEffect } from "react";
-import { ContentWithLessons } from "@/types/form";
+import { ContentAndLessons } from "@/types/dbOperation";
 import { TypeIcon } from "./contentType";
 import { EditContentForm, DeleteContentForm } from "./forms/contentForms";
+import { NotFound } from "@components/ui/notFound";
 
 export default function ContentsList({
   contents
 }: {
-  contents: ContentWithLessons[] | null
+  contents: ContentAndLessons[] | null
 }) {
   if (contents == null) {
     return (
-      <div
-        className="flex justify-center items-center"
-      >
-        データがありません。
-      </div>
+      <NotFound text="データがありません。"/>
     );
   } else {
     // フィルター、ソート機能を実装する
@@ -77,7 +73,7 @@ export default function ContentsList({
 function DataColumn({
   content
 }: {
-  content: ContentWithLessons
+  content: ContentAndLessons
 }) {
   return (
     <div

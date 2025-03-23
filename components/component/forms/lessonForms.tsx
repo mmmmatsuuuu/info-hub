@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { FormAlert, Button, SubmitButton, InputDiv, RadioDiv, SelectDiv, ErrorTip, SuccessTip } from "@components/ui/formUi";
 import { OuterCard } from "@components/ui/card";
 import { Header2 } from "@components/ui/title";
-import { FormState, Lesson, MessageLesson } from "@/types/form";
-import { OptionProps } from "@/types/form";
+import { OperationResult, Lesson, MessageLesson } from "@/types/dbOperation";
+import { OptionProps } from "@/types/dbOperation";
 import { CloseIcon } from "@components/ui/Icons";
 
 export function CreateLessonForm({
@@ -18,7 +18,7 @@ export function CreateLessonForm({
 }) {
   const router = useRouter();
   const [ display, setDisplay ] = useState<string>("hidden");
-  const initialState:FormState<Lesson, MessageLesson> = {
+  const initialState:OperationResult<Lesson, MessageLesson> = {
     messages: {},
     isSuccess:false,
     values: {
@@ -169,11 +169,11 @@ export function CreateLessonForm({
           </div>
           <div>
             <SuccessTip
-              success={ state.isSuccess && state.messages.other != null}
+              success={ state.isSuccess == true && state.messages.other != undefined}
               message={ state.messages.other || "" }
             />
             <ErrorTip
-              flag={ !state.isSuccess && state.messages.other != null}
+              flag={ state.isSuccess == false && state.messages.other != undefined}
               message={ state.messages.other || "" }
             />
           </div>
@@ -202,7 +202,7 @@ export function EditLessonForm({
 }) {
   const router = useRouter();
   const [ display, setDisplay ] = useState<string>("hidden");
-  const initialState:FormState<Lesson, MessageLesson> = {
+  const initialState:OperationResult<Lesson, MessageLesson> = {
     messages: {},
     isSuccess:false,
     values: lesson
@@ -344,11 +344,11 @@ export function EditLessonForm({
           </div>
           <div>
             <SuccessTip
-              success={ state.isSuccess && state.messages.other != null}
+              success={ state.isSuccess == true && state.messages.other != undefined}
               message={ state.messages.other || "" }
             />
             <ErrorTip
-              flag={ !state.isSuccess && state.messages.other != null}
+              flag={ state.isSuccess ==false && state.messages.other != undefined}
               message={ state.messages.other || "" }
             />
           </div>
@@ -378,7 +378,7 @@ export function DeleteLessonForm({
 }) {
   // 編数定義
   const router = useRouter();
-  const initialState:FormState<Lesson, MessageLesson> = {
+  const initialState:OperationResult<Lesson, MessageLesson> = {
     messages: {},
     isSuccess: false,
     values: {
@@ -415,12 +415,12 @@ export function DeleteLessonForm({
         削除
       </SubmitButton>
       <FormAlert
-        flag={ state.isSuccess && state.messages.other != undefined }
+        flag={ state.isSuccess == true && state.messages.other != undefined }
         message={ state.messages.other || "" }
         type="success"
       />
       <FormAlert
-        flag={ !state.isSuccess && state.messages.other != undefined }
+        flag={ state.isSuccess == false && state.messages.other != undefined }
         message={ state.messages.other || "" }
         type="error"
       />

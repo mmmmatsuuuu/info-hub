@@ -1,15 +1,13 @@
 "use server";
-import z from "zod";
-import { FormState, LessonContent, MessageLessonContent } from "@/types/form";
+import { OperationResult, LessonContent, MessageLessonContent } from "@/types/dbOperation";
 import { createLessonContent, deleteLessonContent } from "@lib/dbController/lessonContent";
 import { ValidateLessonContent } from "@lib/validate";
-import { raw } from "@node_modules/@prisma/client/runtime/library";
 
 export async function createLessonContentAction(
-  prevState: FormState<LessonContent, MessageLessonContent>,
+  prevState: OperationResult<LessonContent, MessageLessonContent>,
   formData: FormData
-): Promise<FormState<LessonContent, MessageLessonContent>> {
-  const res:FormState<LessonContent, MessageLessonContent> = {
+): Promise<OperationResult<LessonContent, MessageLessonContent>> {
+  const res:OperationResult<LessonContent, MessageLessonContent> = {
     isSuccess: false,
     values: {
       lessonId: "",
@@ -57,10 +55,10 @@ export async function createLessonContentAction(
 }
 
 export async function deleteLessonContentAction(
-  prevState: FormState<LessonContent, MessageLessonContent>,
+  prevState: OperationResult<LessonContent, MessageLessonContent>,
   formData: FormData
-): Promise<FormState<LessonContent, MessageLessonContent>> {
-  const res:FormState<LessonContent, MessageLessonContent> = {
+): Promise<OperationResult<LessonContent, MessageLessonContent>> {
+  const res:OperationResult<LessonContent, MessageLessonContent> = {
     isSuccess: false,
     values: {
       lessonId: "",

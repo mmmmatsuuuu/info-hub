@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { FormAlert, Button, SubmitButton, RichSelectDiv } from "@components/ui/formUi";
 import { OuterCard } from "@components/ui/card";
 import { Header2 } from "@components/ui/title";
-import { FormState, LessonContent, MessageLessonContent, OptionProps } from "@/types/form";
+import { OperationResult, LessonContent, MessageLessonContent, OptionProps } from "@/types/dbOperation";
 import { CloseIcon } from "@components/ui/Icons";
 /**
  * 新規作成
@@ -20,7 +20,7 @@ export function CreateLessonContentForm({
   // セレクトボックスから追加するコンテンツを一つ選んで追加ボタンで追加する処理を作成していく。
   const router = useRouter();
   const [ display, setDisplay ] = useState<string>("hidden");
-  const initialState:FormState<LessonContent, MessageLessonContent> = {
+  const initialState:OperationResult<LessonContent, MessageLessonContent> = {
     messages: {},
     isSuccess:false,
     values: {
@@ -138,7 +138,7 @@ export function DeleteLessonContentForm({
 }) {
   // 編数定義
   const router = useRouter();
-  const initialState:FormState<LessonContent, MessageLessonContent> = {
+  const initialState:OperationResult<LessonContent, MessageLessonContent> = {
     messages: {},
     isSuccess: false,
     values: {
