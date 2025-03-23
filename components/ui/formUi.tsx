@@ -331,6 +331,9 @@ export function RichSelectDiv({
         name={ name } 
         value={ value }
       />
+      {
+        label && <p className="font-bold">{ label }</p>
+      }
       <div
         className={`overflow-y-scroll flex flex-col justify-start gap-1 ${ cls }`}
         style={{ height: `${size}px`}}
@@ -364,6 +367,10 @@ export function FormAlert({
   href?: string // 実装中のため、hrefを必ず指定する。
   type: "success" | "error"
 }) {
+  const [display, setDisplay] = useState("block");
+  const handleClick = () => {
+    setDisplay("hidden");
+  }
   if (flag) {
     if (href) {
       return (
@@ -392,10 +399,6 @@ export function FormAlert({
         </div>
       )
     } else {
-      const [display, setDisplay] = useState("block");
-      const handleClick = () => {
-        setDisplay("hidden");
-      }
       return (
         <div
           className={ `${display} z-50  fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center` }

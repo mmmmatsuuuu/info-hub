@@ -60,6 +60,7 @@ export function CreateLessonForm({
     createLessonAction,
     initialState
   );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (state.isSuccess) {
       const timer = setTimeout(() => {
@@ -237,6 +238,7 @@ export function EditLessonForm({
     editLessonAction,
     initialState
   );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (state.isSuccess) {
       const timer = setTimeout(() => {
@@ -397,6 +399,7 @@ export function DeleteLessonForm({
   );
 
   // 削除成功後の処理
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (state.isSuccess) {
       const timer = setTimeout(() => {

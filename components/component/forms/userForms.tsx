@@ -35,6 +35,7 @@ export function CreateUserForm({
   );
 
   // 登録成功後の処理
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (state.isSuccess) {
       const timer = setTimeout(() => {
@@ -134,6 +135,7 @@ export function EditStudentForm({
   );
 
   // 登録成功後の処理
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (state.isSuccess) {
       const timer = setTimeout(() => {

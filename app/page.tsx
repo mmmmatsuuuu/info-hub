@@ -11,16 +11,12 @@ import { redirect } from 'next/navigation';
 export default async function HomePage() {
   // ユーザデータがない場合、registerページにリダイレクト
   const { userId } = await auth();
-  let userData;
   if (userId) {
     const res = await getUserWithClerkId(userId);
     if (res.isSuccess = false) {
       return redirect("/register");
     }
-    userData = res.values;
   }
-
-
 
   return (
     <div

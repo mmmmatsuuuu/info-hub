@@ -160,7 +160,7 @@ export async function deleteSubjectAction(
     // バリデーション失敗時の処理
     const result = dataSchema.safeParse(rawData.subjectId);
     if (!result.success) {
-      res.messages.other = result.error.format()._errors.join(", "),
+      res.messages.other = result.error.format()._errors.join(", ");
       res.values.subjectId = rawData.subjectId;
       return res;
     }

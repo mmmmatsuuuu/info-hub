@@ -95,7 +95,6 @@ export async function getPublicSubjects(
     }
   }
   try {
-    const subjects:Subject[] = [];
     const value = await prisma.subject.findMany({
       where: {
         is_public: true,

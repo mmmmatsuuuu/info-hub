@@ -48,6 +48,7 @@ export function CreateSubjectForm() {
     createSubjectAction,
     initialState
   );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (state.isSuccess) {
       const timer = setTimeout(() => {
@@ -203,6 +204,7 @@ export function EditSubjectForm({
     editSubjectAction,
     initialState
   );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (state.isSuccess) {
       const timer = setTimeout(() => {
@@ -348,6 +350,7 @@ export function DeleteSubjectForm({
   );
 
   // 削除成功後の処理
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (state.isSuccess) {
       const timer = setTimeout(() => {

@@ -99,7 +99,7 @@ export default async function ContentManagePage({
   const units = unitsRes.values;
   const options:OptionProps[] = [];
   units.map(s => {
-    var val:OptionProps = {
+    const val:OptionProps = {
       label: s.unitName,
       value: s.unitId,
     }

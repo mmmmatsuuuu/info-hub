@@ -82,7 +82,7 @@ export default async function ContentManagePage({
   const subjects = res2.values;
   const options:OptionProps[] = [];
   subjects.map(s => {
-    var val:OptionProps = {
+    const val:OptionProps = {
       label: s.subjectName,
       value: s.subjectId,
     }

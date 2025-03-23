@@ -16,13 +16,13 @@ export async function getLessonContent(
   try {
     switch (type) {
       case "lesson":
-        var values = await prisma.lessonContent.findMany({
+        const lessonValues = await prisma.lessonContent.findMany({
           where: {
             lesson_id: id,
           }
         });
-        if (values.length > 0) {
-          values.map(v => {
+        if (lessonValues.length > 0) {
+          lessonValues.map(v => {
             res.values.push({
               contentId: v.content_id,
               lessonId: v.lesson_id,
@@ -35,13 +35,13 @@ export async function getLessonContent(
         }
         break;
       case "content":
-        var values = await prisma.lessonContent.findMany({
+        const contentValues = await prisma.lessonContent.findMany({
           where: {
             content_id: id,
           }
         });
-        if (values.length > 0) {
-          values.map(v => {
+        if (contentValues.length > 0) {
+          contentValues.map(v => {
             res.values.push({
               contentId: v.content_id,
               lessonId: v.lesson_id,

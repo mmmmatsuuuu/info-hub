@@ -46,6 +46,7 @@ export function CreateLessonContentForm({
     createLessonContentAction,
     initialState
   );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (state.isSuccess) {
       const timer = setTimeout(() => {
@@ -154,6 +155,7 @@ export function DeleteLessonContentForm({
   );
 
   // 削除成功後の処理
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (state.isSuccess) {
       const timer = setTimeout(() => {

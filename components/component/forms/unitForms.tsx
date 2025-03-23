@@ -59,7 +59,7 @@ export function CreateUnitForm({
     createUnitAction,
     initialState
   );
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (state.isSuccess) {
       const timer = setTimeout(() => {
@@ -237,7 +237,7 @@ export function EditUnitForm({
     editUnitAction,
     initialState
   );
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (state.isSuccess) {
       const timer = setTimeout(() => {
@@ -398,6 +398,7 @@ export function DeleteUnitForm({
   );
 
   // 削除成功後の処理
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (state.isSuccess) {
       const timer = setTimeout(() => {

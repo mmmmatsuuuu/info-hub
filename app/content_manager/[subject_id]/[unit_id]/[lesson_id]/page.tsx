@@ -123,7 +123,7 @@ export default async function ContentManagePage({
   const options:OptionProps[] = [];
   if (datas.length > 0) {
     datas.map(d => {
-      var value:OptionProps = {
+      const value:OptionProps = {
         label: <OptionLabel content={ d } />,
         value: d.contentId,
       }
