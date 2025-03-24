@@ -208,3 +208,18 @@ export type MessageLessonContent = {
   contentId?: string;
   other?: string;
 }
+
+export type Progress = {
+  studentId: string;
+  contentId: string;
+  viewCount: number;
+  testScore: number;
+}
+
+export type MessageProgress = {
+  studentId?: string;
+  contentId?: string;
+  viewCount?: string;
+  testScore?: string;
+  other?: string;
+}

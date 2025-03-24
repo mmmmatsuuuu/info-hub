@@ -3,7 +3,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "@components/component/Sidebar";
 import { Header1, Header2 } from "@components/ui/title";
 import { OuterCard, InnerCard } from "@components/ui/card";
-import { Movie } from "@components/component/Movie";
+import { Movie, MovieWithCounter } from "@components/component/Movie";
 import { Quiz } from "@components/component/Quiz";
 import { Others } from "@components/component/Others";
 import { NotFoundWithRedirect } from "@components/ui/notFound";
@@ -11,6 +11,7 @@ import Footer from "@components/component/Footer";
 import { auth } from "@clerk/nextjs/server";
 import { getUserWithClerkId } from '@lib/dbController/user';
 import { redirect } from 'next/navigation';
+import { User } from "@/types/dbOperation";
 
 export default async function LessonPage({
   params
@@ -19,11 +20,13 @@ export default async function LessonPage({
 }) {
   // ユーザデータがない場合、registerページにリダイレクト
   const { userId } = await auth();
+  let userData:User | null = null;
   if (userId) {
-    const userData = await getUserWithClerkId(userId);
-    if (!userData) {
+    const res = await getUserWithClerkId(userId);
+    if (!res.values) {
       return redirect("/register");
     }
+    userData = res.values;
   }
 
   // レッスンが見つからなった場合の処理
@@ -56,9 +59,18 @@ export default async function LessonPage({
             </p>
             <InnerCard>
               <Header2 title="動画" />
-              <Movie
-                contents={ lesson.movies }
-              />
+              {
+                userData != null
+                ?
+                <MovieWithCounter
+                  contents={ lesson.movies }
+                  studentId={ userData.userId }
+                />
+                :
+                <Movie
+                  contents={ lesson.movies }
+                />
+              }
             </InnerCard>
             <InnerCard>
               <Header2 title="小テスト" />

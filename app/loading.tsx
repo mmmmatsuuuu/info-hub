@@ -13,7 +13,11 @@ export default function Loading() {
           width={ 50 }
           height={ 50 }
         />
-        <p>読み込み中...</p>
+        <p
+          className="text-slate-500"
+        >
+          読み込み中...
+        </p>
       </div>
     </div>
   )
