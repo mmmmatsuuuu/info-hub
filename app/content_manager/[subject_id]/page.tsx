@@ -7,7 +7,7 @@ import { getUserWithClerkId } from "@lib/dbController/user";
 import { getSubjectWithUnits, getSubjects } from "@lib/dbController/subject";
 import { CreateUnitForm, EditUnitForm, DeleteUnitForm } from "@components/component/forms/unitForms";
 import { OptionProps, Unit } from "@/types/dbOperation";
-import { ContentManagerBreadcrumbs } from "@components/component/breadcrumbs";
+import { ContentManagerBreadcrumbs } from "@components/component/common/breadcrumbs";
 import { BreadCrumb } from "@/types/common";
 
 export default async function ContentManagePage({
@@ -94,15 +94,11 @@ export default async function ContentManagePage({
       className="w-full p-4 flex flex-col gap-4"
     >
       <div
-        className="mt-8"
+        className="flex justify-between items-center"
       >
         <ContentManagerBreadcrumbs 
           breadcrumbs={ breadcrumbs }
         />
-      </div>
-      <div
-        className="flex justify-end"
-      >
         <InternalLink 
           href="/content_manager/contents"
           text="コンテンツ一覧を開く"

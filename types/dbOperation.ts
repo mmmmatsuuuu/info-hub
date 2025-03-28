@@ -1,17 +1,21 @@
 import React from "@node_modules/@types/react";
 
-export type OperationResult<Tvalues=unknown, Tmessages=unknown> = {
+export interface OperationResult<Tvalues=unknown, Tmessages=unknown> {
   isSuccess: boolean;
   values: Tvalues;
   messages: Tmessages;
 }
 
-export type OptionProps = {
+export interface OptionProps {
   label: React.ReactNode,
   value: string,
 }
 
-export type User = {
+export interface Message {
+  other?: string;
+}
+
+export interface User {
   userId: string,
   clerkId: string,
   type: string,
@@ -19,7 +23,7 @@ export type User = {
   email: string,
 }
 
-export type MessageUser = {
+export interface MessageUser {
   userId?: string,
   clerkId?: string,
   type?: string,
@@ -28,17 +32,17 @@ export type MessageUser = {
   other?: string,
 }
 
-export type UserAndStudent = {
+export interface UserAndStudent {
   userId?: string;
-  username?: string;
-  email?: string;
+  username: string;
+  email: string;
   type:string;
-  schoolName?: string,
-  admissionYear?: number,
-  studentNumber?: number,
+  schoolName: string,
+  admissionYear: number,
+  studentNumber: number,
 }
 
-export type MessageUserAndStudent = {
+export interface MessageUserAndStudent {
   userId?: string;
   username?: string;
   email?: string;
@@ -49,14 +53,14 @@ export type MessageUserAndStudent = {
   other?: string;
 }
 
-export type Subject = {
+export interface Subject {
   subjectId: string;
   subjectName: string;
   description?: string;
   isPublic: boolean;
 }
 
-export type MessageSubject = {
+export interface MessageSubject {
   subjectId?: string;
   subjectName?: string;
   description?: string;
@@ -64,7 +68,7 @@ export type MessageSubject = {
   other?: string;
 }
 
-export type SubjectAndUnits = {
+export interface SubjectAndUnits {
   subjectId: string;
   subjectName: string;
   description?: string;
@@ -72,7 +76,7 @@ export type SubjectAndUnits = {
   units: UnitAndLessons[];
 }
 
-export type MessageSubjectAndUnits = {
+export interface MessageSubjectAndUnits {
   subjectId?: string;
   subjectName?: string;
   description?: string;
@@ -81,7 +85,7 @@ export type MessageSubjectAndUnits = {
   other?: string; 
 }
 
-export type Unit = {
+export interface Unit {
   unitId: string;
   unitName: string;
   subjectId: string;
@@ -89,7 +93,7 @@ export type Unit = {
   isPublic: boolean;
 }
 
-export type MessageUnit = {
+export interface MessageUnit {
   unitId?: string;
   unitName?: string;
   subjectId?: string;
@@ -98,7 +102,7 @@ export type MessageUnit = {
   other?:string;
 }
 
-export type UnitAndLessons = {
+export interface UnitAndLessons {
   unitId: string;
   unitName: string;
   subjectId: string;
@@ -107,7 +111,7 @@ export type UnitAndLessons = {
   lessons: Lesson[];
 }
 
-export type MessageUnitAndLessons = {
+export interface MessageUnitAndLessons {
   unitId?: string;
   unitName?: string;
   subjectId?: string;
@@ -117,7 +121,7 @@ export type MessageUnitAndLessons = {
   other?: string
 }
 
-export type Lesson = {
+export interface Lesson {
   lessonId: string;
   title: string;
   description: string;
@@ -125,7 +129,7 @@ export type Lesson = {
   unitId: string;
 }
 
-export type MessageLesson = {
+export interface MessageLesson {
   lessonId?: string;
   title?: string;
   description?: string;
@@ -134,7 +138,7 @@ export type MessageLesson = {
   other?: string;
 }
 
-export type LessonAndContents = {
+export interface LessonAndContents {
   unit_id: string;
   title: string;
   description: string;
@@ -145,7 +149,7 @@ export type LessonAndContents = {
   others: Content[],
 }
 
-export type MessageLessonAndContents = {
+export interface MessageLessonAndContents {
   unit_id?: string;
   title?: string;
   description?: string;
@@ -158,7 +162,7 @@ export type MessageLessonAndContents = {
 }
 
 
-export type Content = {
+export interface Content {
   contentId: string;
   title: string;
   description: string;
@@ -167,7 +171,7 @@ export type Content = {
   url: string;
 }
 
-export type MessageContent = {
+export interface MessageContent {
   contentId?: string;
   title?: string;
   description?: string;
@@ -177,7 +181,7 @@ export type MessageContent = {
   other?: string;
 }
 
-export type ContentAndLessons = {
+export interface ContentAndLessons {
   contentId: string;
   title: string;
   description: string;
@@ -187,7 +191,7 @@ export type ContentAndLessons = {
   lessons: Lesson[];
 }
 
-export type MessageContentAndLessons = {
+export interface MessageContentAndLessons {
   contentId?: string;
   title?: string;
   description?: string;
@@ -199,27 +203,42 @@ export type MessageContentAndLessons = {
 }
 
 
-export type LessonContent = {
+export interface LessonContent {
   lessonId: string;
   contentId: string;
 }
-export type MessageLessonContent = {
+export interface MessageLessonContent {
   lessonId?: string;
   contentId?: string;
   other?: string;
 }
 
-export type Progress = {
+export interface Progress {
   studentId: string;
   contentId: string;
   viewCount: number;
   testScore: number;
 }
 
-export type MessageProgress = {
+export interface MessageProgress {
   studentId?: string;
   contentId?: string;
   viewCount?: string;
   testScore?: string;
+  other?: string;
+}
+
+export interface ContentProgress {
+  contentId: string;
+  title: string;
+  type: string;
+  count: number;
+}
+
+export interface MessageContentProgress {
+  contentId?: string;
+  title?: string;
+  type?: string;
+  count?: string;
   other?: string;
 }

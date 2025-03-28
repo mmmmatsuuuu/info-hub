@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import { Content, Progress } from '@/types/dbOperation';
 import { NotFound } from '@components/ui/notFound';
-import { YouTubePlayerForms } from "./forms/youtubePlayerForms";
+import { YouTubePlayerForms } from "../forms/youtubePlayerForms";
 import { YouTubePlayer } from './YoutubePlayer';
 import { getProgress } from '@lib/dbController/progress';
 

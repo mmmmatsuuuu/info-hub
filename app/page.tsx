@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { OuterCard } from '@components/ui/card';
 import { Header1 } from '@components/ui/title';
-import { LessonList } from '@components/component/LessonList';
+import { LessonList } from '@components/component/common/LessonList';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
-import Footer from '@components/component/Footer';
+import Footer from '@components/component/common/Footer';
 import { auth } from "@clerk/nextjs/server";
 import { getUserWithClerkId } from '@lib/dbController/user';
 import { redirect } from 'next/navigation';
+import { Loading } from '@components/ui/loading';
 
 export default async function HomePage() {
   // ユーザデータがない場合、registerページにリダイレクト
@@ -48,9 +49,11 @@ export default async function HomePage() {
               <Header1
                 title='情報Ⅰ'
               />
-              <LessonList 
-                subjectId='1'
-              />
+              <Suspense fallback={ <Loading /> }>
+                <LessonList 
+                  subjectId='1'
+                />
+              </Suspense>
             </OuterCard>
           </div>
         </TabsContent>
@@ -62,9 +65,11 @@ export default async function HomePage() {
               <Header1
                 title='情報Ⅱ'
               />
-              <LessonList 
-                subjectId='2'
-              />
+              <Suspense fallback={ <Loading /> }>
+                <LessonList 
+                  subjectId='2'
+                />
+              </Suspense>
             </OuterCard>
           </div>
         </TabsContent>
