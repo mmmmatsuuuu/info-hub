@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { ContentAndLessons } from "@/types/dbOperation";
 import { TypeIcon } from "./contentType";
-import { EditContentForm, DeleteContentForm } from "./forms/contentForms";
+import { EditContentForm, DeleteContentForm } from "../forms/contentForms";
 import { NotFound } from "@components/ui/notFound";
 
 export default function ContentsList({
@@ -146,13 +146,18 @@ function DataColumn({
           >
             {
               content.lessons.map(l => {
+                const url = `/content_manager/${l.lessonId.slice(0, 1)}/${l.lessonId.slice(0, 2)}/${l.lessonId}`;
                 return (
-                  <span 
+                  <Link
                     key={ l.lessonId }
-                    className="border border-gray-400 text-gray-400 rounded p-1 mx-1"
+                    href={ url }
                   >
-                    { l.lessonId } - { l.title }
-                  </span>
+                    <span 
+                      className="border border-gray-400 text-gray-400 rounded p-1 mx-1 hover:bg-gray-100"
+                    >
+                      { l.lessonId } - { l.title }
+                    </span>
+                  </Link>
                 )
               })
             }

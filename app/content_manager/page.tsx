@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { auth } from "@clerk/nextjs/server";
 import { InternalLink } from "@components/ui/myLink";
 import { NotFoundWithRedirect, NotFound } from "@components/ui/notFound";
@@ -6,8 +7,9 @@ import { getUserWithClerkId } from "@lib/dbController/user";
 import { getSubjects } from "@lib/dbController/subject";
 import { CreateSubjectForm, EditSubjectForm, DeleteSubjectForm } from "@components/component/forms/subjectForms";
 import { Subject } from "@/types/dbOperation";
-import { ContentManagerBreadcrumbs } from "@components/component/breadcrumbs";
+import { ContentManagerBreadcrumbs } from "@components/component/common/breadcrumbs";
 import { BreadCrumb } from "@/types/common";
+import { Loading } from "@components/ui/loading";
 
 export default async function ContentManagePage() {
   // 認証の確認
@@ -55,15 +57,11 @@ export default async function ContentManagePage() {
       className="w-full p-4 flex flex-col gap-4"
     >
       <div
-        className="mt-8"
+        className="flex justify-between items-center"
       >
         <ContentManagerBreadcrumbs 
           breadcrumbs={ breadcrumbs }
         />
-      </div>
-      <div
-        className="flex justify-end"
-      >
         <InternalLink 
           href="/content_manager/contents"
           text="コンテンツ一覧を開く"
@@ -102,32 +100,33 @@ export default async function ContentManagePage() {
 
           </div>
         </div>
-        <div
-          className="overflow-y-scroll"
-        >
-
-        { 
-          subjects.length > 0
-          ?
-          subjects.map(s => {
-            const subject:Subject = {
-              subjectId: s.subjectId,
-              subjectName: s.subjectName,
-              description: s.description ? s.description : undefined,
-              isPublic: s.isPublic
-            }
-            return (
-              <DataColumn
-                key={s.subjectId}
-                subject={ subject }
-                link={`/content_manager/${ s.subjectId }` }
-              />
-            )
-          })
-          :
-          <NotFound text="データがありません。"/>
-        }
-        </div>
+        <Suspense fallback={ <Loading /> }>
+          <div
+            className="overflow-y-scroll"
+          >
+          { 
+            subjects.length > 0
+            ?
+            subjects.map(s => {
+              const subject:Subject = {
+                subjectId: s.subjectId,
+                subjectName: s.subjectName,
+                description: s.description ? s.description : undefined,
+                isPublic: s.isPublic
+              }
+              return (
+                <DataColumn
+                  key={s.subjectId}
+                  subject={ subject }
+                  link={`/content_manager/${ s.subjectId }` }
+                />
+              )
+            })
+            :
+            <NotFound text="データがありません。"/>
+          }
+          </div>
+        </Suspense>
       </div>
     </div>
   )

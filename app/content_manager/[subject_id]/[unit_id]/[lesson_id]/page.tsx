@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { InnerCard } from "@components/ui/card";
 import { InternalLink } from "@components/ui/myLink";
@@ -8,9 +9,9 @@ import { getUnit } from "@lib/dbController/unit";
 import { getSubject } from "@lib/dbController/subject";
 import { getUserWithClerkId } from "@lib/dbController/user";
 import { getNotLessonContents } from "@lib/dbController/content";
-import { ContentManagerBreadcrumbs } from "@components/component/breadcrumbs";
+import { ContentManagerBreadcrumbs } from "@components/component/common/breadcrumbs";
 import { BreadCrumb } from "@/types/common";
-import { TypeIcon } from "@components/component/contentType";
+import { TypeIcon } from "@components/component/common/contentType";
 import { CreateLessonContentForm, DeleteLessonContentForm } from "@components/component/forms/lessonContentForms";
 import { Content, LessonContent, OptionProps } from "@/types/dbOperation";
 import { ExternalLink } from "@components/ui/myLink";
@@ -136,15 +137,11 @@ export default async function ContentManagePage({
       className="w-full p-4 flex flex-col gap-4"
     >
       <div
-        className="mt-8"
+        className="flex justify-between items-center"
       >
         <ContentManagerBreadcrumbs 
           breadcrumbs={ breadcrumbs }
         />
-      </div>
-      <div
-        className="flex justify-end"
-      >
         <InternalLink 
           href="/content_manager/contents"
           text="コンテンツ一覧を開く"
@@ -264,7 +261,6 @@ function DataColumn({
     contentId: content.contentId,
     lessonId: lessonId
   };
-
   return (
     <div
       className="flex gap-1 items-center border-b p-1"
@@ -299,9 +295,29 @@ function DataColumn({
         { content.contentId }
       </div>
       <div
-        className="grow"
+        className="grow flex flex-col gap-1"
       >
-        { content.title }
+        <div
+          className="font-bold text-sm"
+        >
+          { content.title }
+        </div>
+        <div
+          className="text-xs"
+        >
+          { content.description }
+        </div>
+        <div
+          className="text-xs"
+        >
+          <Link
+            href={ content.url }
+            className="hover:underline hover:text-blue-400"
+            target="_blank" rel="noopener noreferrer"
+          >
+            { content.url }
+          </Link>
+        </div>
       </div>
       <div>
         <DeleteLessonContentForm 

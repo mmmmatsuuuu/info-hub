@@ -6,7 +6,7 @@ import { Header1, Header2 } from "@components/ui/title";
 import { getSubject } from "@lib/dbController/subject";
 import { getUnitWithLessons, getUnits } from "@lib/dbController/unit";
 import { getUserWithClerkId } from "@lib/dbController/user";
-import { ContentManagerBreadcrumbs } from "@components/component/breadcrumbs";
+import { ContentManagerBreadcrumbs } from "@components/component/common/breadcrumbs";
 import { CreateLessonForm, EditLessonForm, DeleteLessonForm } from "@components/component/forms/lessonForms";
 import { Lesson, OptionProps } from "@/types/dbOperation";
 import { BreadCrumb } from "@/types/common";
@@ -111,15 +111,11 @@ export default async function ContentManagePage({
       className="w-full p-4 flex flex-col gap-4"
     >
       <div
-        className="mt-8"
+        className="flex justify-between items-center"
       >
         <ContentManagerBreadcrumbs 
           breadcrumbs={ breadcrumbs }
         />
-      </div>
-      <div
-        className="flex justify-end"
-      >
         <InternalLink 
           href="/content_manager/contents"
           text="コンテンツ一覧を開く"

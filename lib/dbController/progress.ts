@@ -1,5 +1,6 @@
 import { prisma } from "@lib/prisma";
-import { Progress, MessageProgress, OperationResult } from "@/types/dbOperation";
+import { Message, Progress, MessageProgress, OperationResult } from "@/types/dbOperation";
+import { LessonProgress, StudentProgress, SubjectWithUnits, UnitWithLessons } from "@/types/dashboardData";
 
 // 取得
 export async function getProgress(
@@ -47,6 +48,129 @@ export async function getProgress(
     await prisma.$disconnect();
   }
 }
+
+export async function getStudentProgress(
+  studentId: string,
+): Promise<OperationResult<StudentProgress, Message>> {
+  const res: OperationResult<StudentProgress, Message> = {
+    isSuccess: false,
+    values: {
+      studentId: studentId,
+      progress: [],
+    },
+    messages: {
+      other: "取得"
+    },
+  };
+  try {
+    const subjects = await prisma.subject.findMany({
+      where: {
+        is_public: true,
+      },
+      select: {
+        subject_id: true,
+        subject_name: true,
+        Units: {
+          where: {
+            is_public: true,
+          },
+          select: {
+            unit_id: true,
+            unit_name: true,
+            Lessons: {
+              where: {
+                is_public: true,
+              },
+              select: {
+                lesson_id: true,
+                title: true,
+                Contents: {
+                  select: {
+                    Content: {
+                      select: {
+                        content_id: true,
+                        title: true,
+                        type: true,
+                      }
+                    }
+                  },
+                  orderBy: {
+                    content_id: "asc",
+                  },
+                }
+              },
+              orderBy: {
+                lesson_id: "asc",
+              },
+            }
+          },
+          orderBy: {
+            unit_id: "asc",
+          },
+        }
+      },
+      orderBy: {
+        subject_id: "asc",
+      }
+    });
+    if (subjects.length == 0) {
+      res.messages.other = "データの取得に失敗しました。";
+      return res;
+    }
+
+    const progress = await prisma.progress.findMany({
+      where: {
+        student_id: studentId
+      },
+    });
+
+    // データ整形
+    for (let i = 0; i < subjects.length; i++) {
+      const units = subjects[i].Units;
+      const subjectWithUnits:SubjectWithUnits = {
+        subjectId: subjects[i].subject_id,
+        subjectName: subjects[i].subject_name,
+        units: [],
+      };
+      for (let j = 0; j < units.length; j++) {
+        const lessons = units[j].Lessons;
+        const unitWithLessons:UnitWithLessons = {
+          unitId: units[j].unit_id,
+          unitName: units[j].unit_name,
+          lessons: [],
+        };
+        for (let k = 0; k < lessons.length; k++) {
+          const contents = lessons[k].Contents.filter(content => content.Content.type == "movie");
+          const contentCount = contents.length;
+          let viewCount = 0;
+          for (let l = 0; l < contents.length; l++) {
+            if (progress.find(p => p.content_id == contents[l].Content.content_id && p.view_count > 0)) {
+              viewCount++;
+            }
+          }
+          const lessonProgress:LessonProgress = {
+            lessonId: lessons[k].lesson_id,
+            title: lessons[k].title,
+            progress: viewCount / contentCount * 100,
+          };
+          unitWithLessons.lessons.push(lessonProgress);
+        }
+        subjectWithUnits.units.push(unitWithLessons);
+      }
+      res.values.progress.push(subjectWithUnits);
+    }
+
+    res.messages.other = "取得しました。";
+    res.isSuccess = true;
+    return res;
+  } catch(error) {
+    res.messages.other = String(error);
+    return res;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 
 // 追加または変更
 export async function setProgress(
