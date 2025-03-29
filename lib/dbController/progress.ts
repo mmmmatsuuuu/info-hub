@@ -1,6 +1,7 @@
+"use server"
 import { prisma } from "@lib/prisma";
 import { Message, Progress, MessageProgress, OperationResult } from "@/types/dbOperation";
-import { LessonProgress, StudentProgress, SubjectWithUnits, UnitWithLessons } from "@/types/dashboardData";
+import { LessonProgress, StudentProgress, StudentsProgress, SubjectWithUnits, UnitProgress, UnitWithLessons } from "@/types/dashboardData";
 
 // 取得
 export async function getProgress(
@@ -49,6 +50,8 @@ export async function getProgress(
   }
 }
 
+// 生徒一人分の進捗を取得する
+// 動画を視聴した比率を求める
 export async function getStudentProgress(
   studentId: string,
 ): Promise<OperationResult<StudentProgress, Message>> {
@@ -63,6 +66,7 @@ export async function getStudentProgress(
     },
   };
   try {
+    // 教科情報の取得
     const subjects = await prisma.subject.findMany({
       where: {
         is_public: true,
@@ -118,6 +122,7 @@ export async function getStudentProgress(
       return res;
     }
 
+    // 進捗情報の取得
     const progress = await prisma.progress.findMany({
       where: {
         student_id: studentId
@@ -127,7 +132,7 @@ export async function getStudentProgress(
     // データ整形
     for (let i = 0; i < subjects.length; i++) {
       const units = subjects[i].Units;
-      const subjectWithUnits:SubjectWithUnits = {
+      const subjectWithUnits:SubjectWithUnits<UnitWithLessons> = {
         subjectId: subjects[i].subject_id,
         subjectName: subjects[i].subject_name,
         units: [],
@@ -162,6 +167,171 @@ export async function getStudentProgress(
 
     res.messages.other = "取得しました。";
     res.isSuccess = true;
+    return res;
+  } catch(error) {
+    res.messages.other = String(error);
+    return res;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+// 指定したクラスのそれぞれの生徒の進捗を取得する
+export async function getStudentsProgress(
+  schoolName: string,
+  admissionYear: number,
+  grade: number,
+  classNum?: number,
+) {
+  const res:OperationResult<StudentsProgress[], Message> = {
+    isSuccess: false,
+    values: [],
+    messages: {
+      other: "データ取得",
+    }
+  };
+  try {
+    // 引数整形
+    let studentNumberParam = String(grade);
+    if (classNum != 0) studentNumberParam = studentNumberParam + String(classNum);
+
+    // 生徒情報を取得
+    const fetchStudents = await prisma.student.findMany({
+      where: {
+        admission_year: admissionYear,
+        school_name: {
+          startsWith: schoolName,
+        },
+        student_number: {
+          startsWith: studentNumberParam,
+        }
+      },
+      select: {
+        user_id: true,
+        student_number: true,
+        User: {
+          select: {
+            name: true,
+            email: true,
+          }
+        }
+      }
+    });
+    if (fetchStudents.length == 0) {
+      res.messages.other = "生徒がいません。";
+      return res;
+    }
+
+    // 教科情報を取得
+    const fetchSubjects = await prisma.subject.findMany({
+      where: {
+        is_public: true,
+      },
+      select: {
+        subject_id: true,
+        subject_name: true,
+        Units: {
+          where: {
+            is_public: true,
+          },
+          select: {
+            unit_id: true,
+            unit_name: true,
+            Lessons: {
+              where: {
+                is_public: true,
+              },
+              select: {
+                lesson_id: true,
+                title: true,
+                Contents: {
+                  select: {
+                    Content: {
+                      select: {
+                        content_id: true,
+                        title: true,
+                        type: true,
+                      }
+                    }
+                  },
+                  orderBy: {
+                    content_id: "asc",
+                  },
+                }
+              },
+              orderBy: {
+                lesson_id: "asc",
+              },
+            }
+          },
+          orderBy: {
+            unit_id: "asc",
+          },
+        }
+      },
+      orderBy: {
+        subject_id: "asc",
+      }
+    });
+    if (fetchSubjects.length == 0) {
+      res.messages.other = "データの取得に失敗しました。";
+      return res;
+    }
+
+    // 進捗情報を取得
+    const fetchProgress = await prisma.progress.findMany();
+
+    // データ整形
+    for (let i = 0; i < fetchStudents.length; i++) {
+      const student = fetchStudents[i];
+      const studentProgress:StudentsProgress = {
+        studentId: student.user_id,
+        studentNumber: student.student_number,
+        name: student.User.name,
+        progress: []
+      };
+      for (let j = 0; j < fetchSubjects.length; j++) {
+        const subject = fetchSubjects[j];
+        const subjectWithUnits: SubjectWithUnits<UnitProgress> = {
+          subjectId: subject.subject_id,
+          subjectName: subject.subject_name,
+          units: []
+        };
+        for (let k = 0; k < subject.Units.length; k++) {
+          const unit = subject.Units[k];
+          const unitProgress: UnitProgress = {
+            unitId: unit.unit_id,
+            unitName: unit.unit_name,
+            progress: 0
+          }
+          let totalContents = 0;
+          let correctContents = 0;
+          for (let l = 0; l < unit.Lessons.length; l++) {
+            const lesson = unit.Lessons[l];
+            for (let m = 0; m < lesson.Contents.length; m++) {
+              const content = lesson.Contents[m].Content;
+              const progress = fetchProgress.find(p => p.content_id == content.content_id);
+              if (content.type == "movie") {
+                totalContents++;
+                if (progress && progress.view_count > 0) {
+                  correctContents++;
+                }
+              }
+            }
+          }
+          unitProgress.progress = correctContents / totalContents * 100;
+          subjectWithUnits.units.push(unitProgress);
+        }
+        studentProgress.progress.push(subjectWithUnits);
+        if (j < 5) {
+          console.log(studentProgress);
+        }
+      }
+      res.values.push(studentProgress)
+    }
+    res.isSuccess = true;
+    res.messages.other = "データを取得しました。";
+    // 返却
     return res;
   } catch(error) {
     res.messages.other = String(error);
