@@ -7,9 +7,9 @@ import { InternalLink } from "@components/ui/myLink";
 import { 
   BasicInfo, 
   PersonalDataDashboard,
-  StudentsDataDashboard,
   UnitsDataDashboard 
-} from "@components/component/mypage";
+} from "@components/component/ssrMypage";
+import { StudentsDataDashboard } from "@components/component/csrMypage";
 import { UserAndStudent } from "@/types/dbOperation";
 import { NotFoundWithRedirect } from "@components/ui/notFound";
 import Footer from "@components/component/common/Footer";

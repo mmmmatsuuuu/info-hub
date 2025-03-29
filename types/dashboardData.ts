@@ -10,13 +10,28 @@ export interface UnitWithLessons {
   lessons: LessonProgress[];
 }
 
-export interface SubjectWithUnits {
+export interface UnitProgress {
+  unitId: string;
+  unitName: string;
+  progress: number;
+}
+
+export interface SubjectWithUnits<T extends UnitWithLessons | UnitProgress> {
   subjectId: string;
   subjectName: string;
-  units: UnitWithLessons[];
+  units: T[];
 }
 
 export interface StudentProgress {
   studentId: string;
-  progress: SubjectWithUnits[];
+  studentNumber?: string;
+  name?: string;
+  progress: SubjectWithUnits<UnitWithLessons>[];
+}
+
+export interface StudentsProgress {
+  studentId: string;
+  studentNumber?: string;
+  name?: string;
+  progress: SubjectWithUnits<UnitProgress>[];
 }

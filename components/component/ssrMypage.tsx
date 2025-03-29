@@ -140,7 +140,7 @@ export async function PersonalDataDashboard({
           </div>
         </div>
         <div
-          className="flex gap-2"
+          className="grid gap-4 grid-cols-1 md:grid-cols-2"
         >
           <Suspense fallback={ <Loading size={ 20 } />}>
             <SubjetCard
@@ -160,7 +160,7 @@ export async function PersonalDataDashboard({
 function SubjetCard({
   subject
 }: {
-  subject: SubjectWithUnits
+  subject: SubjectWithUnits<UnitWithLessons>
 }) {
   return (
     <div
@@ -224,7 +224,7 @@ async function UnitCard({
           }
         </div>
         <div
-          className="text-xs w-24 text-center"
+          className="text-xs w-16 text-center"
         >
           {progress == 1 && (
             <div className="rounded border bg-green-100 border-green-400 text-green-400">
@@ -286,17 +286,6 @@ async function LessonProgressCard({
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-  )
-}
-
-export function StudentsDataDashboard() {
-  return (
-    <OuterCard>
-      <Header2 title="各生徒の授業取り組み状況ダッシュボード（作成中）" />
-      <p>＜内容＞</p>
-      <p>指定した生徒について、各授業の動画を何人の生徒が視聴済みか？</p>
-      <p>指定した生徒について、各授業の小テストの点数（平均や合計など）</p>
-    </OuterCard>
   )
 }
 
