@@ -1,3 +1,4 @@
+"use server"
 import { prisma } from '@lib/prisma';
 import { ContentType } from '@node_modules/.prisma/client';
 import { Content, MessageContent, ContentAndLessons, MessageContentAndLessons, OperationResult } from '@/types/dbOperation';

@@ -1,5 +1,5 @@
 import { z } from "@node_modules/zod";
-import { UserAndStudent, Subject, Unit, Content, Lesson, LessonContent } from "@/types/dbOperation";
+import { UserAndStudent, Subject, Unit, Content, Lesson, LessonContent, Quiz } from "@/types/dbOperation";
 
 export function ValidateUserAndStudent(
   data: UserAndStudent
@@ -131,5 +131,27 @@ export function ValidateLessonContent(
       .string()
       .min(1, "コンテンツIDは1文字以上でお願いします。"),
   });
+  return dataSchema.safeParse(data);
+}
+
+export function ValidateQuiz(
+  data:Quiz
+) {
+  const dataSchema = z.object({
+    quizId: z
+      .string()
+      .min(1, "小テストIDは1文字以上でお願いします。"),
+    contentId: z
+      .string()
+      .min(1, "コンテンツIDは1文字以上でお願いします。"),
+    title: z
+      .string()
+      .min(1, "タイトルは1文字以上でお願いします。"),
+    description: z
+      .string(),
+    isPublic: z
+      .boolean(),
+  }).passthrough();
+
   return dataSchema.safeParse(data);
 }

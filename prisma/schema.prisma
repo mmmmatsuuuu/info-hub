@@ -22,8 +22,8 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  Student    Student? // 1対1リレーション (typeがstudentの場合)
-  Teacher    Teacher? // 1対1リレーション (typeがteacherの場合)
+  Student Student? // 1対1リレーション (typeがstudentの場合)
+  Teacher Teacher? // 1対1リレーション (typeがteacherの場合)
 }
 
 model Student {
@@ -34,8 +34,8 @@ model Student {
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
 
-  User           User     @relation(fields: [user_id], references: [user_id])
-  Progress       Progress[]
+  User     User       @relation(fields: [user_id], references: [user_id])
+  Progress Progress[]
 }
 
 model Teacher {
@@ -45,33 +45,33 @@ model Teacher {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  User        User     @relation(fields: [user_id], references: [user_id])
-  Subject     Subject  @relation(fields: [subject_id], references: [subject_id])
+  User    User    @relation(fields: [user_id], references: [user_id])
+  Subject Subject @relation(fields: [subject_id], references: [subject_id])
 }
 
 model Subject {
-  subject_id  String   @id @default(uuid()) @map("subject_id")
+  subject_id   String   @id @default(uuid()) @map("subject_id")
   subject_name String
   description  String?
   is_public    Boolean  @default(false)
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
-  Units        Unit[]
-  Teachers     Teacher[]
+  Units    Unit[]
+  Teachers Teacher[]
 }
 
 model Unit {
-  unit_id      String   @id @default(uuid()) @map("unit_id")
-  unit_name    String
-  subject_id   String
-  description  String?
-  is_public    Boolean  @default(false)
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
+  unit_id     String   @id @default(uuid()) @map("unit_id")
+  unit_name   String
+  subject_id  String
+  description String?
+  is_public   Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 
-  Subject      Subject  @relation(fields: [subject_id], references: [subject_id])
-  Lessons      Lesson[]
+  Subject Subject  @relation(fields: [subject_id], references: [subject_id])
+  Lessons Lesson[]
 }
 
 model Lesson {
@@ -82,9 +82,9 @@ model Lesson {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  Unit        Unit     @relation(fields: [unit_id], references: [unit_id])
-  Contents    LessonContent[]
-  unit_id     String
+  Unit     Unit            @relation(fields: [unit_id], references: [unit_id])
+  Contents LessonContent[]
+  unit_id  String
 }
 
 enum ContentType {
@@ -94,37 +94,59 @@ enum ContentType {
 }
 
 model Content {
-  content_id  String   @id @default(uuid()) @map("content_id")
+  content_id  String      @id @default(uuid()) @map("content_id")
   title       String
   description String?
   type        ContentType
-  is_public   Boolean  @default(false)
+  is_public   Boolean     @default(false)
   url         String // movie || quiz || other
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
 
-  Lessons     LessonContent[]
-  Progress    Progress[]
+  Lessons  LessonContent[]
+  Progress Progress[]
+  Quiz     Quiz?
 }
 
 model LessonContent {
-  lesson_id   String
-  content_id  String
+  lesson_id  String
+  content_id String
 
-  Lesson      Lesson   @relation(fields: [lesson_id], references: [lesson_id], onDelete: Cascade)
-  Content     Content  @relation(fields: [content_id], references: [content_id], onDelete: Cascade)
+  Lesson  Lesson  @relation(fields: [lesson_id], references: [lesson_id], onDelete: Cascade)
+  Content Content @relation(fields: [content_id], references: [content_id], onDelete: Cascade)
 
   @@id([lesson_id, content_id]) // 複合主キー
 }
 
 model Progress {
-  student_id  String
-  content_id  String
-  view_count  Int
-  test_score  Int?
+  student_id String
+  content_id String
+  view_count Int
+  test_score Int?
 
-  Student     Student @relation(fields: [student_id], references: [user_id])
-  Content     Content @relation(fields: [content_id], references: [content_id])
+  Student Student @relation(fields: [student_id], references: [user_id])
+  Content Content @relation(fields: [content_id], references: [content_id])
 
   @@id([student_id, content_id]) // 複合主キー
+}
+
+model Quiz {
+  quiz_id     String   @id @default(uuid()) @map("quiz_id")
+  content_id  String   @unique // Contentと1対1の関係
+  title       String
+  description String?
+  is_public   Boolean  @default(false)
+  questions   Json // JSONB で問題を管理
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  Content Content @relation(fields: [content_id], references: [content_id])
+}
+
+model Image {
+  image_id   String   @id @default(uuid()) @map("image_id")
+  title      String
+  image_url  String
+  metadata   Json? // 画像のメタデータ (例: 位置情報やタグ)
+  created_at DateTime @default(now())
 }
