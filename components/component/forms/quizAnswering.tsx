@@ -24,6 +24,7 @@ import { InnerCard } from "@components/ui/card";
 import { ErrorTip } from "@components/ui/formUi";
 import { SortOption } from "@/types/quiz";
 import { AnswerType, UserAnswer } from "@/types/quiz";
+import { SaveQuizReslut } from "@lib/actions/answeringAction";
 
 export default function QuizAnswerForm({
   questions, quizId, userId
@@ -62,6 +63,9 @@ export default function QuizAnswerForm({
       answers: answers
     }
     console.log(userAnswer);
+    const res = await SaveQuizReslut(userAnswer);
+    const value = res.values;
+    console.log(value);
   }
   return (
     <div

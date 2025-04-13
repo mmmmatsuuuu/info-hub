@@ -130,6 +130,49 @@ export async function getAllQuiz():Promise<OperationResult<Quiz[], Message>> {
   }
 }
 
+export async function getLessonQuiz(
+  lessonId: string
+):Promise<OperationResult<Quiz[], Message>> {
+  const res:OperationResult<Quiz[], Message> = {
+    isSuccess: false,
+    values: [],
+    messages: {
+      other: "小テスト（取得）"
+    }
+  }
+  try {
+    const values = await prisma.lessonQuiz.findMany({
+      where: {
+        lesson_id: lessonId,
+      },
+      include: {
+        Quiz: {}
+      }
+    });
+    if (values.length == 0) {
+      res.messages.other = "小テストが見つかりません。";
+      return res;
+    }
+    values.map((value) => {
+      res.values.push({
+        quizId: value.Quiz.quiz_id,
+        title: value.Quiz.title,
+        description: value.Quiz.description || "",
+        isPublic: value.Quiz.is_public,
+        questions: value.Quiz.questions as unknown as Questions,
+      });
+    });
+    res.messages.other = `小テストを取得しました。`;
+    res.isSuccess = true;
+    return res;
+  } catch (error) {
+    res.messages.other = String(error);
+    return res;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 // 追加
 export async function createQuiz(
   quizId: string,

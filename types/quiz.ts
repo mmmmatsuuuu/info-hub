@@ -44,6 +44,8 @@ export interface AnswerType {
   questionId: number;
   questionType: string;
   answer: any;
+  correct?: boolean;
+  correctAnswer?: any;
 }
 
 export interface UserAnswer {
@@ -58,5 +60,4 @@ export interface QuizResult {
   score: number;
   pointAllocation: number;
   answers: AnswerType[];
-  correctAnswers: AnswerType[];
 }

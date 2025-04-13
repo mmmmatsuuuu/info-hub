@@ -76,6 +76,7 @@ export default async function LessonPage({
               <Header2 title="小テスト" />
               <Quiz 
                 contents={lesson.quiz}
+                lessonId={ lesson.lesson_id}
               />
             </InnerCard>
             <InnerCard>
