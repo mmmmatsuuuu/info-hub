@@ -50,11 +50,15 @@ export default async function ContentManagePage() {
       className="w-full p-4 flex flex-col gap-4"
     >
       <div
-        className="flex justify-end"
+        className="flex justify-end gap-2 text-sm"
       >
         <InternalLink
           href="/content_manager"
           text="コンテンツマネージャー"
+        />
+        <InternalLink 
+          href="/content_manager/quiz"
+          text="小テスト一覧を開く"
         />
       </div>
       <Header1 title="コンテンツ管理" />

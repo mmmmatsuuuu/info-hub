@@ -86,7 +86,6 @@ export async function MovieWithCounter({
       studentId: studentId,
       contentId: contents[i].contentId,
       viewCount: res.isSuccess ? res.values.viewCount : 0,
-      testScore: res.isSuccess ? res.values.testScore : 0,
     }
     progressList.push(progress);
   }

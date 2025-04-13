@@ -24,6 +24,7 @@ model User {
 
   Student Student? // 1対1リレーション (typeがstudentの場合)
   Teacher Teacher? // 1対1リレーション (typeがteacherの場合)
+  QuizResults QuizResult[]
 }
 
 model Student {
@@ -85,6 +86,7 @@ model Lesson {
   Unit     Unit            @relation(fields: [unit_id], references: [unit_id])
   Contents LessonContent[]
   unit_id  String
+  Quizzes  LessonQuiz[]
 }
 
 enum ContentType {
@@ -105,7 +107,6 @@ model Content {
 
   Lessons  LessonContent[]
   Progress Progress[]
-  Quiz     Quiz?
 }
 
 model LessonContent {
@@ -122,7 +123,6 @@ model Progress {
   student_id String
   content_id String
   view_count Int
-  test_score Int?
 
   Student Student @relation(fields: [student_id], references: [user_id])
   Content Content @relation(fields: [content_id], references: [content_id])
@@ -132,7 +132,6 @@ model Progress {
 
 model Quiz {
   quiz_id     String   @id @default(uuid()) @map("quiz_id")
-  content_id  String   @unique // Contentと1対1の関係
   title       String
   description String?
   is_public   Boolean  @default(false)
@@ -140,7 +139,8 @@ model Quiz {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  Content Content @relation(fields: [content_id], references: [content_id])
+  QuizResults QuizResult[]
+  lessons     LessonQuiz[]
 }
 
 model Image {
@@ -149,4 +149,32 @@ model Image {
   image_url  String
   metadata   Json? // 画像のメタデータ (例: 位置情報やタグ)
   created_at DateTime @default(now())
+}
+
+model QuizResult {
+  quiz_result_id   String   @id @default(uuid()) @map("quiz_result_id")
+  user_id          String
+  quiz_id          String
+  score            Int
+  point_allocation Int
+  answer           Json // JSONB で回答を管理
+  correct_answer   Json // JSONB で正解を管理
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  User User @relation(fields: [user_id], references: [user_id])
+  Quiz Quiz @relation(fields: [quiz_id], references: [quiz_id])
+
+  @@index([user_id])
+  @@index([quiz_id])
+}
+
+model LessonQuiz {
+  lesson_id String
+  quiz_id   String
+
+  Lesson Lesson @relation(fields: [lesson_id], references: [lesson_id], onDelete: Cascade)
+  Quiz   Quiz   @relation(fields: [quiz_id], references: [quiz_id], onDelete: Cascade)
+
+  @@id([lesson_id, quiz_id]) // 複合主キー
 }

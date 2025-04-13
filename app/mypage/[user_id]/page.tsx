@@ -7,7 +7,6 @@ import { InternalLink } from "@components/ui/myLink";
 import { 
   BasicInfo, 
   PersonalDataDashboard,
-  UnitsDataDashboard 
 } from "@components/component/ssrMypage";
 import { StudentsDataDashboard } from "@components/component/csrMypage";
 import { UserAndStudent } from "@/types/dbOperation";
@@ -81,7 +80,6 @@ export default async function MyPage({
         ?
         <Suspense fallback={ <Loading />}>
           <StudentsDataDashboard />
-          <UnitsDataDashboard />
         </Suspense>
         :
         <></>
@@ -91,7 +89,6 @@ export default async function MyPage({
         ?
         <Suspense fallback={ <Loading />}>
           <StudentsDataDashboard />
-          <UnitsDataDashboard />
         </Suspense>
         :
         <></>

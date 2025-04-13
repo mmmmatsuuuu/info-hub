@@ -1,10 +1,10 @@
 import { Quiz } from "@/types/dbOperation";
 import { ShortAnswerQuestion, MultipleChoiceQuestion, MultipleSelectQuestion, SortQuestion } from "@/types/quiz";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function quizDataFormat(data: any):Quiz {
   const formattedData:Quiz = {
     quizId: "",
-    contentId: "",
     title: "",
     description: "",
     isPublic: false,
@@ -26,11 +26,10 @@ export function quizDataFormat(data: any):Quiz {
   }
 
   formattedData.quizId = data.quizId;
-  formattedData.contentId = data.contentId;
   formattedData.title = data.title;
   formattedData.description = data.description;
-  formattedData.isPublic = data.isPublic;
-
+  formattedData.isPublic = data.isPublic == "true" ? true : false;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data.questions.map((q:any) => {
     switch (q.type) {
       case "記述式":

@@ -218,14 +218,12 @@ export interface Progress {
   studentId: string;
   contentId: string;
   viewCount: number;
-  testScore: number;
 }
 
 export interface MessageProgress {
   studentId?: string;
   contentId?: string;
   viewCount?: string;
-  testScore?: string;
   other?: string;
 }
 
@@ -246,7 +244,6 @@ export interface MessageContentProgress {
 
 export interface Quiz {
   quizId: string;
-  contentId: string;
   title: string;
   description: string;
   isPublic: boolean;
@@ -255,7 +252,6 @@ export interface Quiz {
 
 export interface MessageQuiz extends Message {
   quizId?: string;
-  contentId?: string;
   title?: string;
   description?: string;
   isPublic?: string;

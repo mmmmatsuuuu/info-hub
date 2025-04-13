@@ -115,7 +115,7 @@ export function ValidateContent(
       .enum(["movie", "quiz", "other"]),
     url: z
       .string()
-      .url("URLの形になっていません。")
+      .min(1, "コンテンツ名は1文字以上でお願いします。")
   });
   return dataSchema.safeParse(data);
 }

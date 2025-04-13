@@ -2,7 +2,7 @@
 import { prisma } from "@lib/prisma";
 import { Prisma } from "@node_modules/.prisma/client";
 import { Questions } from "@/types/quiz";
-import { Quiz, Message, MessageQuiz, OperationResult } from "@/types/dbOperation";
+import { Quiz, Message, OperationResult } from "@/types/dbOperation";
 
 // 取得
 export async function getQuiz(
@@ -12,7 +12,6 @@ export async function getQuiz(
     isSuccess: false,
     values: {
       quizId: "",
-      contentId: "",
       title: "",
       description: "",
       isPublic: false,
@@ -34,7 +33,6 @@ export async function getQuiz(
     }
     res.values = {
       quizId: value.quiz_id,
-      contentId: value.content_id,
       title: value.title,
       description: value.description || "",
       isPublic: value.is_public,
@@ -51,10 +49,90 @@ export async function getQuiz(
   }
 }
 
+export async function getPublicQuiz(
+  quizId: string
+):Promise<OperationResult<Quiz, Message>> {
+  const res:OperationResult<Quiz, Message> = {
+    isSuccess: false,
+    values: {
+      quizId: "",
+      title: "",
+      description: "",
+      isPublic: false,
+      questions: []
+    },
+    messages: {
+      other: "小テスト（取得）"
+    }
+  };
+  try {
+    const value = await prisma.quiz.findUnique({
+      where: {
+        quiz_id: quizId,
+        is_public: true,
+      }
+    });
+    if (value == null) {
+      res.messages.other = "小テストが見つかりません。";
+      return res;
+    }
+    res.values = {
+      quizId: value.quiz_id,
+      title: value.title,
+      description: value.description || "",
+      isPublic: value.is_public,
+      questions: value.questions as unknown as Questions,
+    }
+    res.messages.other = `小テストを取得しました。`;
+    res.isSuccess = true;
+    return res;
+  } catch (error) {
+    res.messages.other = String(error);
+    return res;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function getAllQuiz():Promise<OperationResult<Quiz[], Message>> {
+  const res:OperationResult<Quiz[], Message> = {
+    isSuccess: false,
+    values: [],
+    messages: {
+      other: "小テスト（取得）"
+    }
+  };
+  try {
+    const values = await prisma.quiz.findMany({
+      orderBy: {
+        quiz_id: "asc"
+      }
+    });
+    if (values == null || values.length == 0) {
+      res.messages.other = "小テストが見つかりません。";
+      return res;
+    }
+    res.values = values.map((value) => ({
+      quizId: value.quiz_id,
+      title: value.title,
+      description: value.description || "",
+      isPublic: value.is_public,
+      questions: value.questions as unknown as Questions,
+    }));
+    res.messages.other = `小テストを取得しました。`;
+    res.isSuccess = true;
+    return res;
+  } catch (error) {
+    res.messages.other = String(error);
+    return res;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 // 追加
 export async function createQuiz(
   quizId: string,
-  contentId: string,
   title: string,
   description: string,
   isPublic: boolean,
@@ -64,7 +142,6 @@ export async function createQuiz(
     isSuccess: false,
     values: {
       quizId: "",
-      contentId: "",
       title: "",
       description: "",
       isPublic: false,
@@ -78,7 +155,6 @@ export async function createQuiz(
     const value = await prisma.quiz.create({
       data: {
         quiz_id: quizId,
-        content_id: contentId,
         title: title,
         description: description,
         is_public: isPublic,
@@ -87,7 +163,6 @@ export async function createQuiz(
     });
     res.values = {
       quizId: value.quiz_id,
-      contentId: value.content_id,
       title: value.title,
       description: value.description || "",
       isPublic: value.is_public,
@@ -121,7 +196,6 @@ export async function editQuiz(
         quiz_id: quiz.quizId,
       },
       data: {
-        content_id: quiz.contentId,
         title: quiz.title,
         description: quiz.description,
         is_public: quiz.isPublic,
@@ -130,7 +204,6 @@ export async function editQuiz(
     });
     res.values = {
       quizId: value.quiz_id,
-      contentId: value.content_id,
       title: value.title,
       description: value.description || "",
       isPublic: value.is_public,
@@ -155,7 +228,6 @@ export async function deleteQuiz(
     isSuccess: false,
     values: {
       quizId: "",
-      contentId: "",
       title: "",
       description: "",
       isPublic: false,
@@ -173,7 +245,6 @@ export async function deleteQuiz(
     });
     res.values = {
       quizId: value.quiz_id,
-      contentId: value.content_id,
       title: value.title,
       description: value.description || "",
       isPublic: value.is_public,

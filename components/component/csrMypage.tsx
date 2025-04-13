@@ -219,6 +219,15 @@ function StudentDataTable({
           )
         }) 
       }
+      {
+        studentsProgress.length == 0
+        &&
+        <tr>
+          <td colSpan={ 3 }>
+            <NotFound text="学校や入学年度を指定してデータを読み込んでください。" />
+          </td>
+        </tr>
+      }
       </tbody>
     </table>
   )

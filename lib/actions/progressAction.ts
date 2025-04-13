@@ -11,7 +11,6 @@ export async function incrementViewCountAction(
       studentId: progress.studentId,
       contentId: progress.contentId,
       viewCount: progress.viewCount + 1,
-      testScore: progress.testScore,
     },
     messages: {},
   }

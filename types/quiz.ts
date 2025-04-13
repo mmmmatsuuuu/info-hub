@@ -39,3 +39,24 @@ export interface SortQuestion extends Question {
 }
 
 export type Questions = (ShortAnswerQuestion | MultipleChoiceQuestion | MultipleSelectQuestion | SortQuestion)[];
+
+export interface AnswerType {
+  questionId: number;
+  questionType: string;
+  answer: any;
+}
+
+export interface UserAnswer {
+  quizId: string;
+  userId: string;
+  answers: AnswerType[];
+}
+
+export interface QuizResult {
+  quizId: string;
+  userId: string;
+  score: number;
+  pointAllocation: number;
+  answers: AnswerType[];
+  correctAnswers: AnswerType[];
+}

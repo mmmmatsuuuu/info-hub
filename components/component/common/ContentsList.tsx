@@ -77,7 +77,7 @@ function DataColumn({
 }) {
   return (
     <div
-      className="flex gap-1 items-center border-b p-1"
+      className="flex gap-1 items-center border-b p-1 hover:bg-slate-100"
       key={ content.contentId }
     >
       <div
