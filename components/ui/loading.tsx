@@ -1,13 +1,15 @@
 import { LoadingIcon } from "@components/ui/Icons"
 
 export function Loading({
-  size
+  size,
+  message,
 }: {
-  size?: number
+  size?: number;
+  message?:string;
 }) {
   return (
     <div
-      className="flex justify-center items-center w-full h-full"
+      className="flex justify-center items-center gap-2 w-full h-full"
     >
       <div
         className="flex flex-col justify-center items-center"
@@ -18,6 +20,7 @@ export function Loading({
           height={ size || 30 }
         />
       </div>
+      { message && <p>{ message }</p>}
     </div>
   )
 }

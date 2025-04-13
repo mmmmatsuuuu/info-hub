@@ -1,3 +1,4 @@
+"use server"
 import { prisma } from '@lib/prisma';
 import { Lesson, MessageLesson, LessonAndContents, MessageLessonAndContents, Content, OperationResult } from '@/types/dbOperation';
 

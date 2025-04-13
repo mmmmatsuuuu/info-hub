@@ -3,6 +3,7 @@ import { InnerCard } from "@components/ui/card";
 import { ExternalLink } from "@components/ui/myLink";
 import { Header3 } from "@components/ui/title";
 import { NotFound } from "@components/ui/notFound";
+
 export function Quiz({
   contents
 }: {

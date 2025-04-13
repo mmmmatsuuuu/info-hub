@@ -1,16 +1,13 @@
-import { Suspense } from "react";
 import { auth } from "@clerk/nextjs/server";
-import { InnerCard } from "@components/ui/card";
-import { NotFoundWithRedirect } from "@components/ui/notFound";
-import { Header1 } from "@components/ui/title";
 import { getUserWithClerkId } from "@lib/dbController/user";
-import { getAllContents } from "@lib/dbController/content";
-import { CreateContentForm } from "@components/component/forms/contentForms";
-import ContentsList from "@components/component/common/ContentsList";
-import { Loading } from "@components/ui/loading";
+import { NotFoundWithRedirect, NotFound } from "@components/ui/notFound";
+import { CreateQuizForm } from "@components/component/forms/quizForms";
+import { getAllQuiz } from "@lib/dbController/quiz";
+import { Header1 } from "@components/ui/title";
+import QuizList from "@components/component/common/QuizList";
 import { InternalLink } from "@components/ui/myLink";
 
-export default async function ContentManagePage() {
+export default async function QuizManagePage() {
   // 認証の確認
   const { userId } = await auth();
   if (!userId) {
@@ -23,7 +20,7 @@ export default async function ContentManagePage() {
   }
 
   const user = await getUserWithClerkId(userId);
-  if (user.isSuccess == false) {
+  if (!user.values) {
     return (
       <NotFoundWithRedirect
         text="ユーザ登録が済んでいません。ユーザ登録をしてください。"
@@ -39,11 +36,18 @@ export default async function ContentManagePage() {
       />
     );
   }
-  
-  // データの取得
-  const res = await getAllContents();
 
-  const contents = res.values;
+  // データ取得
+  const resQuiz = await getAllQuiz();
+  if (resQuiz.isSuccess == false) {
+    return (
+      <NotFound
+        text={ resQuiz.messages.other || "小テストの取得に失敗しました。" }
+      />
+    );
+  }
+
+  const quizzes = resQuiz.values;
 
   return (
     <div
@@ -57,24 +61,19 @@ export default async function ContentManagePage() {
           text="コンテンツマネージャー"
         />
         <InternalLink 
-          href="/content_manager/quiz"
-          text="小テスト一覧を開く"
+          href="/content_manager/contents"
+          text="コンテンツ一覧を開く"
         />
       </div>
-      <Header1 title="コンテンツ管理" />
-      <InnerCard>
-        <p>ここでは、授業で使用するコンテンツの管理を行います。</p>
-      </InnerCard>
+      <Header1 title="小テスト管理" />
       <div
         className="flex justify-end"
       >
-        <CreateContentForm />
+        <CreateQuizForm />
       </div>
-      <Suspense fallback={ <Loading /> }>
-        <ContentsList
-          contents={ contents }
-        />
-      </Suspense>
+      <QuizList
+        quizzes={ quizzes }
+      />
     </div>
   )
 }

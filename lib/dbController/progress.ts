@@ -14,7 +14,6 @@ export async function getProgress(
       studentId: studentId,
       contentId: contentId,
       viewCount: 0,
-      testScore: 0,
     },
     messages: {
       other: "取得"
@@ -36,9 +35,6 @@ export async function getProgress(
     res.values.studentId = value.student_id;
     res.values.contentId = value.content_id;
     res.values.viewCount = value.view_count;
-    if (value.test_score) {
-      res.values.testScore = value.test_score;
-    }
     res.messages.other = "取得しました。";
     res.isSuccess = true;
     return res;
@@ -323,9 +319,6 @@ export async function getStudentsProgress(
           subjectWithUnits.units.push(unitProgress);
         }
         studentProgress.progress.push(subjectWithUnits);
-        if (j < 5) {
-          console.log(studentProgress);
-        }
       }
       res.values.push(studentProgress)
     }
@@ -372,14 +365,12 @@ export async function setProgress(
         },
         data: {
           view_count: progress.viewCount,
-          test_score: progress.testScore
         }
       });
       res.values = {
         studentId: value.student_id,
         contentId: value.content_id,
         viewCount: value.view_count,
-        testScore: value.test_score || 0,
       };
       res.messages.other = "登録に成功しました。";
       res.isSuccess = true;
@@ -390,14 +381,12 @@ export async function setProgress(
           student_id: progress.studentId,
           content_id: progress.contentId,
           view_count: progress.viewCount,
-          test_score: progress.testScore
         }
       });
       res.values = {
         studentId: value.student_id,
         contentId: value.content_id,
         viewCount: value.view_count,
-        testScore: value.test_score || 0,
       };
       res.messages.other = "登録に成功しました。";
       res.isSuccess = true;
@@ -435,7 +424,6 @@ export async function deleteProgress(
       studentId: value.student_id,
       contentId: value.content_id,
       viewCount: value.view_count,
-      testScore: value.test_score || 0,
     }
     res.messages.other = "削除に成功しました。";
     res.isSuccess = true;

@@ -116,10 +116,18 @@ export default async function ContentManagePage({
         <ContentManagerBreadcrumbs 
           breadcrumbs={ breadcrumbs }
         />
-        <InternalLink 
-          href="/content_manager/contents"
-          text="コンテンツ一覧を開く"
-        />
+        <div
+          className="flex gap-2 text-sm"
+        >
+          <InternalLink 
+            href="/content_manager/contents"
+            text="コンテンツ一覧を開く"
+          />
+          <InternalLink 
+            href="/content_manager/quiz"
+            text="小テスト一覧を開く"
+          />
+        </div>
       </div>
       <Header1 title="授業管理" />
       <InnerCard>
@@ -199,7 +207,7 @@ function DataColumn({
 }) {
   return (
     <div
-      className="flex gap-1 items-center border-b p-1"
+      className="flex gap-1 items-center border-b p-1 hover:bg-slate-100"
       key={ lesson.lessonId }
     >
       <div
