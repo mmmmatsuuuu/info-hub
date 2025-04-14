@@ -27,15 +27,17 @@ export default async function MyPage({
       <NotFoundWithRedirect
         text="ログインが済んでいません。"
         href="/login"
+        buttonText="ログイン"
       />
     )
   }
   const res = await getUserWithStudent(userId);
-  if (res.isSuccess = false) {
+  if (res.isSuccess == false) {
     return (
       <NotFoundWithRedirect
         text="ユーザ情報の登録が済んでいません。"
         href="/register"
+        buttonText="ユーザ情報登録"
       />
     )
   }
@@ -45,6 +47,7 @@ export default async function MyPage({
       <NotFoundWithRedirect
         text="ユーザ情報の登録が済んでいません。"
         href="/register"
+        buttonText="ユーザ情報登録"
       />
     )
   }

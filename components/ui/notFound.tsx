@@ -15,10 +15,11 @@ export function NotFound({
 }
 
 export function NotFoundWithRedirect({
-  text, href
+  text, href, buttonText
 }: {
   text: string;
   href: string;
+  buttonText: string;
 }) {
   return (
     <div
@@ -27,7 +28,7 @@ export function NotFoundWithRedirect({
       { text }
       <InternalLink
         href={ href }
-        text="トップに戻る"
+        text={ buttonText }
       />
     </div>
   )

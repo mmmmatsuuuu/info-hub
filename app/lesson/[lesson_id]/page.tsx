@@ -35,7 +35,7 @@ export default async function LessonPage({
   const lesson = res.values;
   if (!res.isSuccess || !lesson ) {
     return (
-      <NotFoundWithRedirect text="レッスンが見つかりませんでした。" href="/" />
+      <NotFoundWithRedirect text="レッスンが見つかりませんでした。" href="/" buttonText="トップへ戻る" />
     )
   }
 
@@ -76,6 +76,7 @@ export default async function LessonPage({
               <Header2 title="小テスト" />
               <Quiz 
                 contents={lesson.quiz}
+                lessonId={ lesson.lesson_id}
               />
             </InnerCard>
             <InnerCard>

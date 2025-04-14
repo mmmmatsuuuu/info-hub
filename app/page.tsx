@@ -14,7 +14,7 @@ export default async function HomePage() {
   const { userId } = await auth();
   if (userId) {
     const res = await getUserWithClerkId(userId);
-    if (res.isSuccess = false) {
+    if (res.isSuccess == false) {
       return redirect("/register");
     }
   }

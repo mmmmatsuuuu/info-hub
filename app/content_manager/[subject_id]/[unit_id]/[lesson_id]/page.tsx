@@ -28,6 +28,7 @@ export default async function ContentManagePage({
       <NotFoundWithRedirect
         text="ログインしていません。ログインを済ませてください。"
         href="/"
+        buttonText="トップページに戻る"
       />
     );
   }
@@ -38,6 +39,7 @@ export default async function ContentManagePage({
       <NotFoundWithRedirect
         text="ユーザ登録が済んでいません。ユーザ登録をしてください。"
         href="/register"
+        buttonText="ユーザ登録"
       />
     );
   }
@@ -46,6 +48,7 @@ export default async function ContentManagePage({
       <NotFoundWithRedirect
         text="管理者権限がありません。"
         href="/"
+        buttonText="トップページに戻る"
       />
     );
   }
@@ -62,6 +65,7 @@ export default async function ContentManagePage({
       <NotFoundWithRedirect
         text="エラーが発生しました。"
         href="/"
+        buttonText="トップページに戻る"
       />
     )
   }
@@ -73,6 +77,7 @@ export default async function ContentManagePage({
       <NotFoundWithRedirect
         text="エラーが発生しました。"
         href="/"
+        buttonText="トップページに戻る"
       />
     )
   }
@@ -85,6 +90,7 @@ export default async function ContentManagePage({
       <NotFoundWithRedirect
         text="授業がありません。"
         href="/"
+        buttonText="トップページに戻る"
       />
     )
   }
@@ -116,6 +122,7 @@ export default async function ContentManagePage({
       <NotFoundWithRedirect
         text="エラーが発生しました。"
         href="/"
+        buttonText="トップページに戻る"
       />
     )
   }

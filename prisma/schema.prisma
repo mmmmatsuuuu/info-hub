@@ -158,7 +158,6 @@ model QuizResult {
   score            Int
   point_allocation Int
   answer           Json // JSONB で回答を管理
-  correct_answer   Json // JSONB で正解を管理
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
 

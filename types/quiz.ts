@@ -42,8 +42,12 @@ export type Questions = (ShortAnswerQuestion | MultipleChoiceQuestion | Multiple
 
 export interface AnswerType {
   questionId: number;
+  text?: string;
+  img?: string;
   questionType: string;
   answer: any;
+  correct?: boolean;
+  correctAnswer?: any;
 }
 
 export interface UserAnswer {
@@ -58,5 +62,4 @@ export interface QuizResult {
   score: number;
   pointAllocation: number;
   answers: AnswerType[];
-  correctAnswers: AnswerType[];
 }
