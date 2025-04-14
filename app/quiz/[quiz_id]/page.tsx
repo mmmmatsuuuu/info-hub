@@ -25,6 +25,7 @@ export default async function QuizPage({
       <NotFoundWithRedirect
         text="ログインが済んでいません。"
         href="/login"
+        buttonText="ログイン"
       />
     )
   }
@@ -35,6 +36,7 @@ export default async function QuizPage({
       <NotFoundWithRedirect
         text="小テストが見つかりませんでした"
         href="/"
+        buttonText="トップページに戻る"
       />
     )
   }

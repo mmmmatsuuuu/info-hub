@@ -1,6 +1,7 @@
 import { Content } from "@/types/dbOperation";
 import { InnerCard } from "@components/ui/card";
-import { ExternalLink, InternalLink } from "@components/ui/myLink";
+import { ExternalLink } from "@components/ui/myLink";
+// import { InternalLink } from "@components/ui/myLink";
 import { Header3 } from "@components/ui/title";
 import { NotFound } from "@components/ui/notFound";
 import { getLessonQuiz } from "@lib/dbController/quiz";
@@ -58,7 +59,7 @@ export async function Quiz({
           </InnerCard>
         );
       })}
-      { quiz.map(q => {
+      {/* { quiz.map(q => {
         return (
           <InnerCard
             key={ q.quizId }
@@ -87,7 +88,7 @@ export async function Quiz({
             </div>
           </InnerCard>
         );
-      })}
+      })} */}
 
     </div>
   )

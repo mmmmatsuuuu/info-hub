@@ -15,6 +15,7 @@ export default async function QuizManagePage() {
       <NotFoundWithRedirect
         text="ログインしていません。ログインを済ませてください。"
         href="/"
+        buttonText="ログイン"
       />
     );
   }
@@ -25,6 +26,7 @@ export default async function QuizManagePage() {
       <NotFoundWithRedirect
         text="ユーザ登録が済んでいません。ユーザ登録をしてください。"
         href="/register"
+        buttonText="ユーザ登録"
       />
     );
   }
@@ -33,6 +35,7 @@ export default async function QuizManagePage() {
       <NotFoundWithRedirect
         text="管理者権限がありません。"
         href="/"
+        buttonText="トップページに戻る"
       />
     );
   }

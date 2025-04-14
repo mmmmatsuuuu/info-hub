@@ -15,7 +15,7 @@ export default async function RegisterPage() {
 
   // ユーザ情報がある場合
   const data = await getUserWithClerkId(user.id);
-  if (data.isSuccess == false) {
+  if (data.isSuccess == true) {
     return redirect("/");
   }
   const username = user.username ? user.username : "";

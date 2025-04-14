@@ -43,6 +43,7 @@ export async function SaveQuizReslut(userAnswer: UserAnswer)
         correctAnswer: null,
       }
       pointAllocation++;
+
       switch (question.type) {
         case "記述式":
           if (question.correct == answer.answer) {
@@ -83,8 +84,8 @@ export async function SaveQuizReslut(userAnswer: UserAnswer)
           }
           break;
         case "並び換え":
-          let correctOrder = question.correctOrder;
-          let userOrder = answer.answer.join(" ");
+          const correctOrder = question.correctOrder;
+          const userOrder = answer.answer.join(" ");
           if (userOrder == correctOrder) {
             answer.correct = true;
             score++;
@@ -94,6 +95,8 @@ export async function SaveQuizReslut(userAnswer: UserAnswer)
         default:
           throw new Error("問題の形式が不正です。");
       }
+      answer.text = question.questionText;
+      answer.img = question.img;
       res.values.answers.push(answer);
     }
     
@@ -105,7 +108,7 @@ export async function SaveQuizReslut(userAnswer: UserAnswer)
       pointAllocation: pointAllocation,
       answers: res.values.answers,
     }
-    const createRes = await createQuizResult(quizResult);
+    await createQuizResult(quizResult);
   
     // 結果をユーザに返却
     res.values.userId = userId;

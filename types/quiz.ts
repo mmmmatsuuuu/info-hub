@@ -42,6 +42,8 @@ export type Questions = (ShortAnswerQuestion | MultipleChoiceQuestion | Multiple
 
 export interface AnswerType {
   questionId: number;
+  text?: string;
+  img?: string;
   questionType: string;
   answer: any;
   correct?: boolean;
