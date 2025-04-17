@@ -38,8 +38,7 @@ export default async function LessonPage({
       <NotFoundWithRedirect text="レッスンが見つかりませんでした。" href="/" buttonText="トップへ戻る" />
     )
   }
-
-
+  
   return (
     <SidebarProvider
       defaultOpen={ true }
