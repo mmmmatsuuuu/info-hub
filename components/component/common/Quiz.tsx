@@ -4,7 +4,7 @@ import { ExternalLink } from "@components/ui/myLink";
 // import { InternalLink } from "@components/ui/myLink";
 import { Header3 } from "@components/ui/title";
 import { NotFound } from "@components/ui/notFound";
-import { getLessonQuiz } from "@lib/dbController/quiz";
+// import { getLessonQuiz } from "@lib/dbController/quiz";
 
 export async function Quiz({
   contents, lessonId
@@ -17,14 +17,15 @@ export async function Quiz({
       <NotFound text="このレッスンで使用する小テストはありません。" />
     );
   }
-  const res = await getLessonQuiz(lessonId);
-  if (res.isSuccess === false) {
-    return (
-      <NotFound text={ res.messages.other || "" } />
-    );
-  }
-  const quiz = res.values;
-  console.log(quiz);
+  // const res = await getLessonQuiz(lessonId);
+  // if (res.isSuccess === false) {
+  //   return (
+  //     <NotFound text={ res.messages.other || "" } />
+  //   );
+  // }
+  // const quiz = res.values;
+  // console.log(quiz);
+  console.log(lessonId);
   return (
     <div
       className="flex flex-col gap-4"
