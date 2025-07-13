@@ -11,7 +11,7 @@ export default async function HomePage() {
     <div
       className='max-w-5xl mx-auto w-full py-6 overflow-y-scroll px-4'
     >
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">情報学習ハブ</h1>
+      <h1 className="text-3xl font-bold text-foreground mb-8 text-center">🧑‍💻情報学習ハブ🧑‍💻</h1>
       <Tabs 
         defaultValue='info1' 
         className="w-full"
@@ -31,9 +31,9 @@ export default async function HomePage() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value='info1'>
-          <Card className="p-6 border-0 shadow-none">
+          <Card className="p-6">
             <CardHeader className="p-0 mb-4">
-              <CardTitle className="text-2xl font-bold text-gray-800">情報Ⅰ レッスン一覧</CardTitle>
+              <CardTitle className="text-2xl font-bold text-foreground">情報Ⅰ レッスン一覧</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <Suspense fallback={ <Loading /> }>
@@ -45,9 +45,9 @@ export default async function HomePage() {
           </Card>
         </TabsContent>
         <TabsContent value='info2'>
-          <Card className="p-6 border-0 shadow-none">
+          <Card className="p-6">
             <CardHeader className="p-0 mb-4">
-              <CardTitle className="text-2xl font-bold text-gray-800">情報Ⅱ レッスン一覧</CardTitle>
+              <CardTitle className="text-2xl font-bold text-foreground">情報Ⅱ レッスン一覧</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <Suspense fallback={ <Loading /> }>

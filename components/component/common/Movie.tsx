@@ -42,7 +42,7 @@ export async function Movie({
               url={ c.url }
             />
             <div
-              className='p-2 border rounded-b-md text-sm text-gray-500'
+              className='p-2 border rounded-b-md text-sm text-foreground'
             >
               <p>＜動画の見方＞ </p>
               <ul className='list-inside list-disc pl-6'>
@@ -99,7 +99,7 @@ export async function MovieWithCounter({
             value={ c.contentId }
           >
             <div
-              className='p-2 border rounded-b-md text-sm text-gray-500'
+              className='p-2 border rounded-b-md text-sm text-foreground'
             >
               <p>＜動画の見方＞ </p>
               <ul className='list-inside list-disc pl-6'>

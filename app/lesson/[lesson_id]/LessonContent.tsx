@@ -19,25 +19,25 @@ export default async function LessonContent({ lessonId }: { lessonId: string }) 
     <div
       className="flex flex-col gap-4 w-full"
     >
-      <h1 className="w-full border-b-2 border-gray-400 my-2 text-2xl font-bold text-gray-600">{ lesson.title }</h1>
+      <h1 className="w-full border-b-2 border-gray-400 my-2 text-2xl font-bold text-foreground">{ lesson.title }</h1>
       <p>
         { lesson.description }
       </p>
-      <Card className="w-full p-2 rounded-md bg-white border border-gray-200 text-gray-600">
-        <h2 className="text-xl font-bold text-gray-600 my-1">動画</h2>
+      <Card className="w-full p-2 rounded-md bg-card border border-border text-foreground">
+        <h2 className="text-xl font-bold text-foreground my-1">動画</h2>
         <Movie
           contents={ lesson.movies }
         />
       </Card>
-      <Card className="w-full p-2 rounded-md bg-white border border-gray-200 text-gray-600">
-        <h2 className="text-xl font-bold text-gray-600 my-1">小テスト</h2>
+      <Card className="w-full p-2 rounded-md bg-card border border-border text-foreground">
+        <h2 className="text-xl font-bold text-foreground my-1">小テスト</h2>
         <Quiz
           contents={ lesson.quiz }
           lessonId={ lesson.lesson_id }
         />
       </Card>
-      <Card className="w-full p-2 rounded-md bg-white border border-gray-200 text-gray-600">
-        <h2 className="text-xl font-bold text-gray-600 my-1">その他の教材</h2>
+      <Card className="w-full p-2 rounded-md bg-card border border-border text-foreground">
+        <h2 className="text-xl font-bold text-foreground my-1">その他の教材</h2>
         <Others
           contents={lesson.others}
         />
