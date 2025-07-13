@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ModeToggle } from "@components/ui/toggle";
 
 export default async function Header() {
   return (
@@ -13,6 +14,9 @@ export default async function Header() {
                 info-hub
               </h1>
             </Link>
+          </li>
+          <li className="mr-6">
+            <ModeToggle />
           </li>
         </ul>
       </nav>

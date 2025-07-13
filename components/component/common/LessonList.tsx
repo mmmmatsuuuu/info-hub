@@ -34,12 +34,12 @@ export async function LessonList({ subjectId }: { subjectId: string }) {
             className='p-4'
           >
             <CardHeader className='p-0 mb-2'>
-              <CardTitle className='text-xl font-bold text-gray-800'>
+              <CardTitle className='text-xl font-bold text-foreground'>
                 { unit.unitName }
               </CardTitle>
             </CardHeader>
             <CardContent className='p-0'>
-              <p className='text-gray-600 mb-4'>
+              <p className='text-foreground mb-4'>
                 {unit.description}
               </p>
               <div
@@ -93,7 +93,7 @@ export async function SmallLessonList({ subjectId }: { subjectId: string }) {
             key={unit.unitId}
             className='p-2'
           >
-            <CardTitle className="text-base font-bold text-gray-700 mb-2">
+            <CardTitle className="text-base font-bold text-foreground mb-2">
               { unit.unitName }
             </CardTitle>
             <div

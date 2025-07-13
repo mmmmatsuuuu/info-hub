@@ -8,7 +8,7 @@ export function NotFound({
 }) {
   return (
     <div
-      className="flex justify-center items-center p-4 text-gray-400"
+      className="flex justify-center items-center p-4 text-foreground"
     >
       { text }
     </div>

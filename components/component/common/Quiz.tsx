@@ -27,8 +27,8 @@ export async function Quiz({
             className="w-full flex flex-col md:flex-row items-center justify-between p-4"
           >
             <CardHeader className="p-0 md:w-5/6">
-              <CardTitle className="text-lg font-bold text-gray-800">{ c.title }</CardTitle>
-              <CardContent className="p-0 text-sm text-gray-600">
+              <CardTitle className="text-lg font-bold text-foreground">{ c.title }</CardTitle>
+              <CardContent className="p-0 text-sm text-foreground">
                 { c.description }
               </CardContent>
             </CardHeader>

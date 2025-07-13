@@ -12,7 +12,7 @@ export function LessonCard({
   return (
     <Card className="flex flex-col md:flex-row items-center justify-between p-4">
       <CardHeader className="p-0">
-        <CardTitle className="text-lg font-bold text-gray-800">
+        <CardTitle className="text-lg font-bold text-foreground">
           { `${lessonId} - ${title}` }
         </CardTitle>
       </CardHeader>
@@ -45,8 +45,8 @@ export async function SmallLessonCard({
       href={ `/lesson/${ lessonId }` }
       className="block"
     >
-      <Card className="p-2 hover:bg-gray-100">
-        <CardTitle className="text-sm font-medium text-gray-700">
+      <Card className="p-2 hover:bg-accent hover:text-accent-foreground">
+        <CardTitle className="text-sm font-medium text-foreground">
           { `${lessonId} - ${ title }` }
         </CardTitle>
       </Card>

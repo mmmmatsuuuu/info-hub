@@ -52,40 +52,40 @@
   .dark {
     --sidebar-background: 240 10% 14.9%; /* Dark gray for sidebar */
     --sidebar-foreground: 0 0% 98%; /* Off-white for sidebar text */
-    --sidebar-primary: 25 85% 65%; /* Slightly brighter Orange for sidebar active items */
+    --sidebar-primary: 180 40% 40%; /* Muted Teal for sidebar active items */
     --sidebar-primary-foreground: 240 10% 9%; /* Dark gray for sidebar active text */
     --sidebar-accent: 240 10% 14.9%; /* Dark gray for sidebar hover */
     --sidebar-accent-foreground: 0 0% 98%; /* Off-white for sidebar hover text */
     --sidebar-border: 240 10% 14.9%; /* Dark gray for sidebar border */
-    --sidebar-ring: 25 85% 65%; /* Slightly brighter Orange for sidebar focus ring */
+    --sidebar-ring: 180 40% 40%; /* Muted Teal for sidebar focus ring */
 
-    --background: 220 10% 10%; /* Deep blue-gray */
-    --foreground: 220 10% 85%; /* Soft light gray */
+    --background: 220 10% 8%; /* Very dark bluish-gray */
+    --foreground: 220 10% 85%; /* Soft off-white */
 
-    --card: 240 10% 3.9%; /* Very dark gray */
+    --card: 220 10% 15%; /* Slightly lighter bluish-gray for card */
     --card-foreground: 0 0% 98%; /* Off-white */
 
-    --popover: 240 10% 3.9%; /* Very dark gray */
+    --popover: 220 10% 15%; /* Slightly lighter bluish-gray for popover */
     --popover-foreground: 0 0% 98%; /* Off-white */
 
-    --primary: 25 85% 65%; /* Slightly brighter Orange */
+    --primary: 180 40% 40%; /* Muted Teal */
     --primary-foreground: 240 10% 9%; /* Dark gray */
 
-    --secondary: 180 70% 50%; /* Deeper Teal */
+    --secondary: 270 30% 30%; /* Soft Purple */
     --secondary-foreground: 0 0% 98%; /* Off-white */
 
     --muted: 240 10% 14.9%; /* Darker gray */
     --muted-foreground: 240 10% 63.9%; /* Medium gray */
 
-    --accent: 330 80% 75%; /* Brighter Pink */
+    --accent: 30 60% 50%; /* Warm Orange */
     --accent-foreground: 240 10% 9%; /* Dark gray */
 
     --destructive: 0 62.8% 30.6%; /* Red */
     --destructive-foreground: 0 0% 98%; /* Off-white */
 
-    --border: 240 10% 14.9%; /* Dark gray */
-    --input: 240 10% 14.9%; /* Dark gray */
-    --ring: 25 85% 65%; /* Slightly brighter Orange */
+    --border: 220 10% 25%; /* Bluish-gray for border */
+    --input: 220 10% 25%; /* Bluish-gray for input */
+    --ring: 180 40% 40%; /* Muted Teal */
 
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
