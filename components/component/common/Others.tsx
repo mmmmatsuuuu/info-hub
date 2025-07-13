@@ -1,8 +1,8 @@
 import { Content } from "@/types/dbOperation";
-import { InnerCard } from "@components/ui/card";
-import { ExternalLink } from "@components/ui/myLink";
-import { Header3 } from "@components/ui/title";
 import { NotFound } from "@components/ui/notFound";
+import Link from "next/link";
+import { Button } from "@components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 
 export function Others({
   contents
@@ -20,32 +20,28 @@ export function Others({
     >
       { contents.map(c => {
         return (
-          <InnerCard
+          <Card
             key={c.contentId}
+            className="w-full flex flex-col md:flex-row items-center justify-between p-4"
           >
-            <div
-              className="flex items-center p-2"
-            >
-              <div
-                className="grow"
-              >
-                <Header3 title={ c.title } />
-                <p
-                  className="text-xs"
-                >
-                  { c.description }
-                </p>
-              </div>
-              <div
-                className="w-[96px]"
-              >
-                <ExternalLink
-                  cls="w-full"
+            <CardHeader className="p-0 md:w-5/6">
+              <CardTitle className="text-lg font-bold text-gray-800">{ c.title }</CardTitle>
+              <CardContent className="p-0 text-sm text-gray-600">
+                { c.description }
+              </CardContent>
+            </CardHeader>
+            <CardFooter className="p-0 mt-4 md:mt-0 md:w-1/6 flex justify-center">
+              <Button asChild className="w-full">
+                <Link
                   href={ c.url }
-                />
-              </div>
-            </div>
-          </InnerCard>
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  開く
+                </Link>
+              </Button>
+            </CardFooter>
+          </Card>
         );
       })}
     </div>

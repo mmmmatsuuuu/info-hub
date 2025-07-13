@@ -1,77 +1,62 @@
 import React, { Suspense } from 'react';
-import { OuterCard } from '@components/ui/card';
-import { Header1 } from '@components/ui/title';
 import { LessonList } from '@components/component/common/LessonList';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import Footer from '@components/component/common/Footer';
-import { auth } from "@clerk/nextjs/server";
-import { getUserWithClerkId } from '@lib/dbController/user';
-import { redirect } from 'next/navigation';
-import { Loading } from '@components/ui/loading';
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import Loading from './loading';
 
 export default async function HomePage() {
-  // ユーザデータがない場合、registerページにリダイレクト
-  const { userId } = await auth();
-  if (userId) {
-    const res = await getUserWithClerkId(userId);
-    if (res.isSuccess == false) {
-      return redirect("/register");
-    }
-  }
 
   return (
     <div
-      className='w-full py-6 overflow-y-scroll'
+      className='max-w-5xl mx-auto w-full py-6 overflow-y-scroll px-4'
     >
+      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">情報学習ハブ</h1>
       <Tabs 
         defaultValue='info1' 
-        defaultChecked
+        className="w-full"
       >
-        <TabsList>
+        <TabsList className="flex w-full mb-6">
           <TabsTrigger 
             value='info1'
-            className='px-6'
+            className='flex-1 text-md py-1'
           >
             情報Ⅰ
           </TabsTrigger>
           <TabsTrigger 
             value='info2'
-            className='px-6'
+            className='flex-1 text-md py-1'
           >
             情報Ⅱ
           </TabsTrigger>
         </TabsList>
         <TabsContent value='info1'>
-          <div
-            className="flex flex-col gap-6"
-          >
-            <OuterCard>
-              <Header1
-                title='情報Ⅰ'
-              />
+          <Card className="p-6 border-0 shadow-none">
+            <CardHeader className="p-0 mb-4">
+              <CardTitle className="text-2xl font-bold text-gray-800">情報Ⅰ レッスン一覧</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
               <Suspense fallback={ <Loading /> }>
                 <LessonList 
                   subjectId='1'
                 />
               </Suspense>
-            </OuterCard>
-          </div>
+            </CardContent>
+          </Card>
         </TabsContent>
         <TabsContent value='info2'>
-          <div
-            className="flex flex-col gap-6"
-          >
-            <OuterCard>
-              <Header1
-                title='情報Ⅱ'
-              />
+          <Card className="p-6 border-0 shadow-none">
+            <CardHeader className="p-0 mb-4">
+              <CardTitle className="text-2xl font-bold text-gray-800">情報Ⅱ レッスン一覧</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
               <Suspense fallback={ <Loading /> }>
                 <LessonList 
                   subjectId='2'
                 />
               </Suspense>
-            </OuterCard>
-          </div>
+            </CardContent>
+          </Card>
         </TabsContent>
         <Footer />
       </Tabs>

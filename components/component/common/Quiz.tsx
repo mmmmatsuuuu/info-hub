@@ -1,10 +1,8 @@
 import { Content } from "@/types/dbOperation";
-import { InnerCard } from "@components/ui/card";
-import { ExternalLink } from "@components/ui/myLink";
-// import { InternalLink } from "@components/ui/myLink";
-import { Header3 } from "@components/ui/title";
 import { NotFound } from "@components/ui/notFound";
-// import { getLessonQuiz } from "@lib/dbController/quiz";
+import Link from "next/link";
+import { Button } from "@components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 
 export async function Quiz({
   contents, lessonId
@@ -17,14 +15,6 @@ export async function Quiz({
       <NotFound text="このレッスンで使用する小テストはありません。" />
     );
   }
-  // const res = await getLessonQuiz(lessonId);
-  // if (res.isSuccess === false) {
-  //   return (
-  //     <NotFound text={ res.messages.other || "" } />
-  //   );
-  // }
-  // const quiz = res.values;
-  // console.log(quiz);
   console.log(lessonId);
   return (
     <div
@@ -32,65 +22,30 @@ export async function Quiz({
     >
       { contents.map(c => {
         return (
-          <InnerCard
+          <Card
             key={c.contentId}
+            className="w-full flex flex-col md:flex-row items-center justify-between p-4"
           >
-            <div
-              className="flex items-center p-2"
-            >
-              <div
-                className="grow"
-              >
-                <Header3 title={ c.title } />
-                <p
-                  className="text-xs"
-                >
-                  { c.description }
-                </p>
-              </div>
-              <div
-                className="w-[96px]"
-              >
-                <ExternalLink
-                  cls="w-full"
+            <CardHeader className="p-0 md:w-5/6">
+              <CardTitle className="text-lg font-bold text-gray-800">{ c.title }</CardTitle>
+              <CardContent className="p-0 text-sm text-gray-600">
+                { c.description }
+              </CardContent>
+            </CardHeader>
+            <CardFooter className="p-0 mt-4 md:mt-0 md:w-1/6 flex justify-center">
+              <Button asChild className="w-full">
+                <Link
                   href={ c.url }
-                />
-              </div>
-            </div>
-          </InnerCard>
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  開く
+                </Link>
+              </Button>
+            </CardFooter>
+          </Card>
         );
       })}
-      {/* { quiz.map(q => {
-        return (
-          <InnerCard
-            key={ q.quizId }
-          >
-            <div
-              className="flex items-center p-2"
-            >
-              <div
-                className="grow"
-              >
-                <Header3 title={ q.title } />
-                <p
-                  className="text-xs"
-                >
-                  { q.description }
-                </p>
-              </div>
-              <div
-                className="w-[96px]"
-              >
-                <InternalLink
-                  cls="w-full"
-                  href={ `/quiz/${q.quizId}` }
-                />
-              </div>
-            </div>
-          </InnerCard>
-        );
-      })} */}
-
     </div>
   )
 }
