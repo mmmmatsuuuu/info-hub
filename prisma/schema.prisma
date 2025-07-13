@@ -15,7 +15,6 @@ enum UserType {
 
 model User {
   user_id    String   @id @default(uuid()) @map("user_id")
-  clerk_id   String   @unique
   type       UserType @default(student)
   name       String
   email      String   @unique
@@ -24,7 +23,6 @@ model User {
 
   Student Student? // 1対1リレーション (typeがstudentの場合)
   Teacher Teacher? // 1対1リレーション (typeがteacherの場合)
-  QuizResults QuizResult[]
 }
 
 model Student {
@@ -86,7 +84,7 @@ model Lesson {
   Unit     Unit            @relation(fields: [unit_id], references: [unit_id])
   Contents LessonContent[]
   unit_id  String
-  Quizzes  LessonQuiz[]
+  
 }
 
 enum ContentType {
@@ -130,50 +128,10 @@ model Progress {
   @@id([student_id, content_id]) // 複合主キー
 }
 
-model Quiz {
-  quiz_id     String   @id @default(uuid()) @map("quiz_id")
-  title       String
-  description String?
-  is_public   Boolean  @default(false)
-  questions   Json // JSONB で問題を管理
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-
-  QuizResults QuizResult[]
-  lessons     LessonQuiz[]
-}
-
 model Image {
   image_id   String   @id @default(uuid()) @map("image_id")
   title      String
   image_url  String
   metadata   Json? // 画像のメタデータ (例: 位置情報やタグ)
   created_at DateTime @default(now())
-}
-
-model QuizResult {
-  quiz_result_id   String   @id @default(uuid()) @map("quiz_result_id")
-  user_id          String
-  quiz_id          String
-  score            Int
-  point_allocation Int
-  answer           Json // JSONB で回答を管理
-  created_at       DateTime @default(now())
-  updated_at       DateTime @updatedAt
-
-  User User @relation(fields: [user_id], references: [user_id])
-  Quiz Quiz @relation(fields: [quiz_id], references: [quiz_id])
-
-  @@index([user_id])
-  @@index([quiz_id])
-}
-
-model LessonQuiz {
-  lesson_id String
-  quiz_id   String
-
-  Lesson Lesson @relation(fields: [lesson_id], references: [lesson_id], onDelete: Cascade)
-  Quiz   Quiz   @relation(fields: [quiz_id], references: [quiz_id], onDelete: Cascade)
-
-  @@id([lesson_id, quiz_id]) // 複合主キー
 }

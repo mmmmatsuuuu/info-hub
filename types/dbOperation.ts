@@ -1,5 +1,4 @@
 import React from "@node_modules/@types/react";
-import { Questions } from "./quiz";
 
 export interface OperationResult<Tvalues=unknown, Tmessages=unknown> {
   isSuccess: boolean;
@@ -240,22 +239,6 @@ export interface MessageContentProgress {
   type?: string;
   count?: string;
   other?: string;
-}
-
-export interface Quiz {
-  quizId: string;
-  title: string;
-  description: string;
-  isPublic: boolean;
-  questions: Questions;
-}
-
-export interface MessageQuiz extends Message {
-  quizId?: string;
-  title?: string;
-  description?: string;
-  isPublic?: string;
-  questions?: string;
 }
 
 export interface Image {

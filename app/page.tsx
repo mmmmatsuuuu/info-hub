@@ -4,20 +4,10 @@ import { Header1 } from '@components/ui/title';
 import { LessonList } from '@components/component/common/LessonList';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import Footer from '@components/component/common/Footer';
-import { auth } from "@clerk/nextjs/server";
-import { getUserWithClerkId } from '@lib/dbController/user';
 import { redirect } from 'next/navigation';
 import { Loading } from '@components/ui/loading';
 
 export default async function HomePage() {
-  // ユーザデータがない場合、registerページにリダイレクト
-  const { userId } = await auth();
-  if (userId) {
-    const res = await getUserWithClerkId(userId);
-    if (res.isSuccess == false) {
-      return redirect("/register");
-    }
-  }
 
   return (
     <div
