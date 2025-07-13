@@ -13,9 +13,7 @@ export default async function RootLayout({
         <meta name="description" content="「情報Ⅰ」や「情報Ⅱ」に関する内容を動画や小テスト、対応する教材で学ぶことができるサイトです。" />
         <meta name="robots" content="index, follow" />
       </head>
-      <body
-        className='w-screen h-screen bg-white'
-      >
+      <body className="min-h-screen bg-background font-sans antialiased">
         <Header />
         <div 
           className='flex flex-row h-[calc(100vh-64px)] overflow-y-hidden relative bg-white'

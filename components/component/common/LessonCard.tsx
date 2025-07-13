@@ -1,7 +1,6 @@
-import { InnerCard, SmallCard } from "@components/ui/card";
-import { Header3 } from "@components/ui/title";
-import { InternalLink } from "@components/ui/myLink";
-import Link from "@node_modules/next/link";
+import Link from "next/link";
+import { Button } from "@components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 
 export function LessonCard({
   lessonId, title
@@ -11,32 +10,27 @@ export function LessonCard({
 }) {
 
   return (
-    <InnerCard
-      bgColor='bg-white'
-      borderColor='border-stone-200'
-    >
-      <div
-        className="flex items-center"
-      >
-        <div
-          className="grow"
-        > 
-          <Header3 
-            title={ `${lessonId} - ${title}` }
-
-          />
-        </div>
-        <div
-          className="py-4"
+    <Card className="flex flex-col md:flex-row items-center justify-between p-4">
+      <CardHeader className="p-0">
+        <CardTitle className="text-lg font-bold text-gray-800">
+          { `${lessonId} - ${title}` }
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-0 mt-2 md:mt-0">
+        {/* 必要に応じてここに詳細情報を追加 */}
+      </CardContent>
+      <CardFooter className="p-0 mt-4 md:mt-0">
+        <Button asChild
+          className="w-full"
         >
-          <InternalLink 
+          <Link 
             href={ `/lesson/${ lessonId }` }
-            text="開く"
-            cls="px-8"
-          />
-        </div>
-      </div>
-    </InnerCard>
+          >
+            開く
+          </Link>
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }
 
@@ -49,14 +43,13 @@ export async function SmallLessonCard({
   return (
     <Link
       href={ `/lesson/${ lessonId }` }
-      className=""
+      className="block"
     >
-      <SmallCard
-        bgColor="bg-white hover:bg-gray-700"
-        textColor="text-gray-500 hover:text-white"
-      >
-            { `${lessonId} - ${ title }` }
-      </SmallCard>
+      <Card className="p-2 hover:bg-gray-100">
+        <CardTitle className="text-sm font-medium text-gray-700">
+          { `${lessonId} - ${ title }` }
+        </CardTitle>
+      </Card>
     </Link>
   )
 }

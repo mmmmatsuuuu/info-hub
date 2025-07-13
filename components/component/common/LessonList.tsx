@@ -1,7 +1,7 @@
-import { Header2, Header3 } from '@components/ui/title';
 import { getSubjectWithPublicUnits } from '@lib/dbController/subject';
 import { LessonCard, SmallLessonCard } from './LessonCard';
 import { NotFound } from '@components/ui/notFound';
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export async function LessonList({ subjectId }: { subjectId: string }) {
   const res = await getSubjectWithPublicUnits(subjectId);
@@ -25,32 +25,38 @@ export async function LessonList({ subjectId }: { subjectId: string }) {
 
   return (
     <div
-      className='' 
+      className='flex flex-col gap-4' 
     >
       {subject.units.map((unit) => {
         return (
-          <div
+          <Card
             key={unit.unitId}
-            className='p-2 py-4 border-b border-gray-400 pb-10'
+            className='p-4'
           >
-            <Header2 title={ unit.unitName } />
-            <p className='text-gray-600'>
-              {unit.description}
-            </p>
-            <div
-              className='flex flex-col gap-4'
-            >
-              {unit.lessons.map((lesson) => {
-                return (
-                  <LessonCard
-                    key={ lesson.lessonId }
-                    lessonId={ lesson.lessonId }
-                    title={ lesson.title }
-                  />
-                );
-              })}
-            </div>
-          </div>
+            <CardHeader className='p-0 mb-2'>
+              <CardTitle className='text-xl font-bold text-gray-800'>
+                { unit.unitName }
+              </CardTitle>
+            </CardHeader>
+            <CardContent className='p-0'>
+              <p className='text-gray-600 mb-4'>
+                {unit.description}
+              </p>
+              <div
+                className='flex flex-col gap-4'
+              >
+                {unit.lessons.map((lesson) => {
+                  return (
+                    <LessonCard
+                      key={ lesson.lessonId }
+                      lessonId={ lesson.lessonId }
+                      title={ lesson.title }
+                    />
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
         );
       })}
     </div>
@@ -79,15 +85,17 @@ export async function SmallLessonList({ subjectId }: { subjectId: string }) {
 
   return (
     <div
-      className='border-l border-slate-400 p-1' 
+      className='p-1 flex flex-col gap-2' 
     >
       {subject.units.map((unit) => {
         return (
-          <div
+          <Card
             key={unit.unitId}
-            className='p-2 border-b border-slate-300'
+            className='p-2'
           >
-            <Header3 title={ unit.unitName } />
+            <CardTitle className="text-base font-bold text-gray-700 mb-2">
+              { unit.unitName }
+            </CardTitle>
             <div
               className='flex flex-col gap-1'
             >
@@ -101,7 +109,7 @@ export async function SmallLessonList({ subjectId }: { subjectId: string }) {
                 );
               })}
             </div>
-          </div>
+          </Card>
         );
       })}
     </div>

@@ -4,16 +4,18 @@ import Link from "next/link";
 import { Button } from "@components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 
-export function Others({
-  contents
+export async function Quiz({
+  contents, lessonId
 }: {
-  contents: Content[]
+  contents: Content[],
+  lessonId: string
 }) {
   if (contents.length == 0) {
     return (
-      <NotFound text="このレッスンで使用する教材はありません。" />
+      <NotFound text="このレッスンで使用する小テストはありません。" />
     );
   }
+  console.log(lessonId);
   return (
     <div
       className="flex flex-col gap-4"

@@ -1,32 +1,28 @@
-import {
-  Sidebar,
-  SidebarContent,
-} from "@/components/ui/sidebar";
 import { SmallLessonList } from "./LessonList";
-import { Header3 } from "@components/ui/title";
 
 export default function AppSidebar() {
   return (
-    <Sidebar
-      className="absolute left-0 h-full border-l"
+    <div
+      className="h-[calc(100vh-64px)] overflow-y-scroll"
     >
-      <SidebarContent
+      <div
+        className="overflow-y-auto"
       >
         <div>
           <div
-            className="p-2 m-2 mb-4 rounded-md border-gray-400"
+            className="p-2 m-2 mb-4 rounded-md"
           >
-            <Header3 title="情報Ⅰ" />
+            <h3 className="text-md font-bold text-gray-500 my-1">情報Ⅰ</h3>
             <SmallLessonList subjectId="1" />
           </div>
           <div
-            className="p-2 m-2 rounded-md border-gray-400"
+            className="p-2 m-2 rounded-md"
           >
-            <Header3 title="情報Ⅱ" />
+            <h3 className="text-md font-bold text-gray-500 my-1">情報Ⅱ</h3>
             <SmallLessonList subjectId="2" />
           </div>
         </div>
-      </SidebarContent>
-    </Sidebar>  
+      </div>
+    </div>  
   );
 }

@@ -1,9 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
-import { Content, Progress } from '@/types/dbOperation';
+import { Content } from '@/types/dbOperation';
 import { NotFound } from '@components/ui/notFound';
-import { YouTubePlayerForms } from "../forms/youtubePlayerForms";
 import { YouTubePlayer } from './YoutubePlayer';
-import { getProgress } from '@lib/dbController/progress';
 
 export async function Movie({
   contents
@@ -66,10 +64,9 @@ export async function Movie({
 }
 
 export async function MovieWithCounter({
-  contents, studentId
+  contents
 }: {
   contents: Content[],
-  studentId: string,
 }) {
 
   if (contents.length == 0) {
@@ -77,19 +74,6 @@ export async function MovieWithCounter({
       <NotFound text="このレッスンで使用する動画はありません。" />
     );
   }
-
-  const progressList:Progress[] = [];
-
-  for (let i = 0; i < contents.length; i++) {
-    const res = await getProgress(studentId, contents[i].contentId);
-    const progress:Progress = {
-      studentId: studentId,
-      contentId: contents[i].contentId,
-      viewCount: res.isSuccess ? res.values.viewCount : 0,
-    }
-    progressList.push(progress);
-  }
-
 
   return (
     <Tabs
@@ -108,28 +92,15 @@ export async function MovieWithCounter({
           );
         })}
       </TabsList>
-      { contents.map((c, index) => {
+      { contents.map((c) => {
         return (
           <TabsContent
             key={ c.contentId }
             value={ c.contentId }
           >
-            <YouTubePlayerForms
-              progress={ progressList[index]}
-              url={ c.url }
-            />
             <div
               className='p-2 border rounded-b-md text-sm text-gray-500'
             >
-              <div
-                className='flex flex-row-reverse'
-              >
-                <div
-                  className='bg-gray-200 rounded p-1'
-                >
-                  { `再生回数: ${ progressList[index].viewCount }` }
-                </div>
-              </div>
               <p>＜動画の見方＞ </p>
               <ul className='list-inside list-disc pl-6'>
                 <li>ノートを準備して動画の内容をまとめられるようにする</li>

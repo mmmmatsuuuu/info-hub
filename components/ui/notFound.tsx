@@ -1,4 +1,5 @@
-import { InternalLink } from "./myLink";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function NotFound({
   text
@@ -23,13 +24,16 @@ export function NotFoundWithRedirect({
 }) {
   return (
     <div
-      className="w-full h-full flex flex-col gap-6 justify-center items-center p-4 text-gray-400"
+      className="w-full h-full flex flex-col gap-6 justify-center items-center p-4 text-muted-foreground"
     >
       { text }
-      <InternalLink
-        href={ href }
-        text={ buttonText }
-      />
+      <Button asChild>
+        <Link
+          href={ href }
+        >
+          { buttonText }
+        </Link>
+      </Button>
     </div>
   )
 }
