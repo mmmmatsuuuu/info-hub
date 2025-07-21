@@ -9,10 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import { useUserActivityStore } from '@/hooks/useUserActivityStore';
 
 export function Quiz({
-  contents, lessonId
+  contents
 }: {
   contents: Content[],
-  lessonId: string
 }) {
   const { incrementQuizClick, contentActivity } = useUserActivityStore();
 

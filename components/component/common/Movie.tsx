@@ -37,7 +37,6 @@ export function Movie({
     >
       <TabsList>
         { contents.map(c => {
-          const playCount = contentActivity.videos[c.contentId]?.playCount || 0;
           return (
             <TabsTrigger
               key={ c.contentId }

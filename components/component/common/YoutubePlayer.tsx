@@ -105,7 +105,7 @@ export const YouTubePlayer = ({
       accumulatedTimeRef.current = 0;
       lastCheckedTimeRef.current = 0;
     };
-  }, [videoId, onPlayThresholdReached]);
+  }, [videoId, onPlayThresholdReached, content.contentId]);
 
   return (
     <div className="w-full">
