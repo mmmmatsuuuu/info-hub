@@ -4,6 +4,7 @@ import { NotFound } from "@components/ui/notFound";
 import { Card } from "@/components/ui/card";
 import { getPublicLesson } from "@lib/dbController/lesson";
 import { Quiz } from "@components/component/common/Quiz";
+import PythonPlayground from "@components/component/common/PythonPlayground";
 
 export default async function LessonContent({ lessonId }: { lessonId: string }) {
   const res = await getPublicLesson(lessonId);
@@ -23,12 +24,19 @@ export default async function LessonContent({ lessonId }: { lessonId: string }) 
       <p>
         { lesson.description }
       </p>
-      <Card className="w-full p-2 rounded-md bg-card border border-border text-foreground">
-        <h2 className="text-xl font-bold text-foreground my-1">動画</h2>
-        <Movie
-          contents={ lesson.movies }
-        />
-      </Card>
+      <div
+        className="flex gap-4 flex-col xl:flex-row"
+      >
+        <Card className="w-full p-2 rounded-md bg-card border border-border text-foreground">
+          <h2 className="text-xl font-bold text-foreground my-1">動画</h2>
+          <Movie
+            contents={ lesson.movies }
+          />
+        </Card>
+        <Card className="p-2 rounded-md bg-card border border-border text-foreground">
+          <PythonPlayground />
+        </Card>
+      </div>
       <Card className="w-full p-2 rounded-md bg-card border border-border text-foreground">
         <h2 className="text-xl font-bold text-foreground my-1">小テスト</h2>
         <Quiz

@@ -36,24 +36,31 @@
 - **Pyodideの導入**:
   - Pyodide（WebAssembly上で動作するPython実行環境）を利用します。
   - `next/script`コンポーネントまたは`useEffect`内で動的にスクリプトをロードし、Pyodideを初期化します。初期化中はローディング表示を行います。
-- **Playgroundコンポーネントの作成**:
-  - `components/component/common/PythonPlayground.tsx` を新規作成します。
-  - このコンポーネントは以下の要素で構成されます。
-    - **コードエディタ**:
-      - `@monaco-editor/react` ライブラリを導入し、高機能なコードエディタ（Monaco Editor）を実装します。
-      - Python言語のシンタックスハイライト、コード補完、入力候補が有効になるように設定します。
-    - **実行ボタン**: コードの実行をトリガーします。
-    - **出力/結果表示領域**: 標準出力やエラーメッセージを表示します。
-    - **入力UI**: Pythonの `input()` 関数が呼び出された際に、ユーザーがテキストを入力するためのUI（例: モーダルダイアログや専用の入力フィールド）を表示します。
-- **実行ロジック**:
-  - **コード実行**: 「実行」ボタンがクリックされたら、Monaco Editorからコードを取得し、`pyodide.runPythonAsync()` を使用して非同期に実行します。
-  - **標準出力/エラー**: Pyodideの `setStdout` と `setStderr` を使用して、出力をキャプチャし、結果表示領域にリアルタイムで反映させます。
-  - **`input()`のハンドリング**:
-    - Pythonの `builtins.input` をカスタム関数で上書きします。
-    - このカスタム関数は、Promiseを返し、入力UIを表示します。
-    - ユーザーがUI経由でテキストを入力し確定すると、Promiseが解決され、その値がPythonコードに渡されます。これにより、実行を一時停止してユーザーの入力を待つ動作を実現します。
-- **コンポーネントの配置**:
-  - 作成した`PythonPlayground.tsx`を`app/lesson/[lesson_id]/LessonContent.tsx`内の適切な位置に配置します。
+
+- **Playgroundコンポーネントの作成 (`PythonPlayground.tsx`)**:
+  - **コードエディタ**: `@monaco-editor/react` を利用し、シンタックスハイライトやコード補完が機能するエディタを実装します。
+  - **UIコンポーネント**: コード実行ボタン、出力表示領域、そして`input()`が呼ばれた際に使用する入力フィールドと送信ボタンを配置します。
+
+- **`input()`の非同期ハンドリング (`registerJsModule`)**:
+  1. **JavaScript側に関数を準備**: Playgroundコンポーネント内に、ユーザーに入力を促すUIを表示し、入力された値を解決する`Promise`を返す非同期関数（例: `promptForInput`）を定義します。
+  2. **JSモジュールとして登録**: Pyodideの初期化時に `pyodide.registerJsModule()` を使用し、`promptForInput` を含むオブジェクトをPythonから利用可能なモジュール（例: `js_input_module`）として登録します。
+  3. **Pythonコードのラップ**: ユーザーがコードを実行する際、システム側で以下の処理を行うPythonコードをユーザーコードの前に挿入します。
+      - `js_input_module` をインポートする。
+      - Pythonの組み込み`input`関数を、`await js_input_module.promptForInput()` を呼び出す非同期関数で上書きする。
+      - ユーザーコード全体を `async def main(): ...` のように非同期関数で囲み、`asyncio.run(main())` で実行する。
+
+- **ユーザーへの提示**:
+  - この実装では、Pythonコード内で `input()` を使用する際に `await` が必須となります（例: `name = await input("名前は？")`）。
+  - そのため、Playgroundの初期表示コードを `await` を使ったサンプルにし、ユーザーが正しい使い方を理解できるようにします。
+
+- **利点**:
+  - この方法は `SharedArrayBuffer` を必要としないため、サーバーの `COOP/COEP` ヘッダー設定が不要です。
+  - これにより、YouTube埋め込みなど、他の外部リソースとの競合を回避できます。
+
+### 対象ファイル
+- `app/lesson/[lesson_id]/LessonContent.tsx`
+- `components/component/common/PythonPlayground.tsx` (新規作成・修正)
+- `next.config.ts` (ヘッダー設定は不要)
 
 ### 対象ファイル
 - `app/lesson/[lesson_id]/LessonContent.tsx`

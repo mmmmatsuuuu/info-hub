@@ -9,7 +9,7 @@ export default async function HomePage() {
 
   return (
     <div
-      className='max-w-5xl mx-auto w-full py-6 overflow-y-scroll px-4'
+      className='w-full py-6 overflow-y-scroll px-4'
     >
       <h1 className="text-3xl font-bold text-foreground mb-8 text-center">🧑‍💻情報学習ハブ🧑‍💻</h1>
       <Tabs 
