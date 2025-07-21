@@ -41,7 +41,6 @@ export default async function LessonContent({ lessonId }: { lessonId: string }) 
         <h2 className="text-xl font-bold text-foreground my-1">小テスト</h2>
         <Quiz
           contents={ lesson.quiz }
-          lessonId={ lesson.lesson_id }
         />
       </Card>
       <Card className="w-full p-2 rounded-md bg-card border border-border text-foreground">

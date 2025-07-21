@@ -1,13 +1,27 @@
+'use client';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 import { Content } from '@/types/dbOperation';
 import { NotFound } from '@components/ui/notFound';
 import { YouTubePlayer } from './YoutubePlayer';
+import { useUserActivityStore } from '@/hooks/useUserActivityStore';
+import { Badge } from "@/components/ui/badge";
+import { useState, useCallback } from 'react';
 
-export async function Movie({
+export function Movie({
   contents
 }: {
   contents: Content[],
 }) {
+  const { incrementPlayCount, contentActivity } = useUserActivityStore();
+  const handlePlayThresholdReached = useCallback((videoId: string) => {
+    console.log("Play threshold reached for video:", videoId);
+    incrementPlayCount(videoId);
+  }, [incrementPlayCount]);
+
+  const [activeTab, setActiveTab] = useState(contents[0]?.contentId || '');
+
+  
 
   if (contents.length == 0) {
     return (
@@ -18,6 +32,8 @@ export async function Movie({
   return (
     <Tabs
       defaultValue={ contents[0].contentId }
+      value={activeTab}
+      onValueChange={setActiveTab}
     >
       <TabsList>
         { contents.map(c => {
@@ -33,14 +49,21 @@ export async function Movie({
         })}
       </TabsList>
       { contents.map(c => {
+        const playCount = contentActivity.videos[c.contentId]?.playCount || 0;
         return (
           <TabsContent
             key={ c.contentId }
             value={ c.contentId }
           >
             <YouTubePlayer
-              url={ c.url }
+              content={ c }
+              onPlayThresholdReached={handlePlayThresholdReached}
             />
+            <div
+              className='flex justify-end items-center py-1'
+            >
+              {playCount > 0 && <Badge variant="secondary">{playCount}回視聴</Badge>}
+            </div>
             <div
               className='p-2 border rounded-b-md text-sm text-foreground'
             >
@@ -63,7 +86,7 @@ export async function Movie({
   )
 }
 
-export async function MovieWithCounter({
+export function MovieWithCounter({
   contents
 }: {
   contents: Content[],
