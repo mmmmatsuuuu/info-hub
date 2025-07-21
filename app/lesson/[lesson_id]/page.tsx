@@ -7,9 +7,10 @@ import SidebarToggleButton from "@components/component/common/SidebarToggleButto
 export default async function LessonPage({
   params
 }: {
-  params: { lesson_id: string }
+  params: Promise<{ lesson_id: string }>
 }) {
-  const lessonId = params.lesson_id;
+  const p = await params;
+  const lessonId = p.lesson_id;
 
   return (
     <div className="flex w-full">

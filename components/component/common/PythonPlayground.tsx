@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-
 import { useState, useEffect, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 import { Loader2, Play, Terminal, PanelRightOpenIcon, PanelRightCloseIcon } from 'lucide-react';
