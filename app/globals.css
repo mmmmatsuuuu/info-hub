@@ -103,3 +103,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Sidebar Layout */
+body[data-sidebar-open='true'] #sidebar-container {
+  width: 300px; /* サイドバーの幅 */
+}
+
+body[data-sidebar-open='false'] #sidebar-container {
+  width: 0;
+  overflow: hidden;
+}
+
+body[data-sidebar-open='true'] #sidebar-toggle-button {
+  left: 300px; /* サイドバーの幅 - ボタンの半分 */
+}
+
+body[data-sidebar-open='false'] #sidebar-toggle-button {
+  left: 1px;
+}

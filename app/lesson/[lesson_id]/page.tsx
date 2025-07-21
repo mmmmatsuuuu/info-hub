@@ -1,8 +1,8 @@
 import AppSidebar from "@components/component/common/Sidebar";
-import Footer from "@components/component/common/Footer";
 import { Suspense } from "react";
 import LessonContent from "./LessonContent";
 import { Loader2 } from "lucide-react";
+import SidebarToggleButton from "@components/component/common/SidebarToggleButton";
 
 export default async function LessonPage({
   params
@@ -13,16 +13,14 @@ export default async function LessonPage({
   const lessonId = p.lesson_id;
 
   return (
-    <div
-      className="max-w-5xl grid grid-cols-7 m-auto"
-    >
-      <div
-        className="col-span-2"
-      >
+    <div className="flex w-full">
+      <div id="sidebar-container" className="bg-white dark:bg-gray-950 transition-all duration-300 ease-in-out border-r">
         <AppSidebar />
       </div>
+      <SidebarToggleButton />
       <main
-        className="p-2 col-span-5 h-[calc(100vh-64px)] overflow-y-scroll"
+        id="lesson-content-container"
+        className="p-2 h-[calc(100vh-64px)] overflow-y-scroll flex-1 pl-[28px]"
       >
         <Suspense fallback={
           <div className="flex justify-center items-center h-full w-full">
@@ -31,7 +29,6 @@ export default async function LessonPage({
         }>
           <LessonContent lessonId={lessonId} />
         </Suspense>
-        <Footer />
       </main>
     </div>
   )

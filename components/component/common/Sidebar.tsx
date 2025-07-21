@@ -1,28 +1,36 @@
 import { SmallLessonList } from "./LessonList";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
 
 export default function AppSidebar() {
   return (
     <div
       className="h-[calc(100vh-64px)] overflow-y-scroll"
     >
-      <div
-        className="overflow-y-auto"
+      <Tabs
+        defaultValue='info1'
+        className="w-full pt-4"
       >
-        <div>
-          <div
-            className="p-2 m-2 mb-4 rounded-md"
+        <TabsList className="flex w-full mb-6">
+          <TabsTrigger 
+            value='info1'
+            className='flex-1 text-md py-1'
           >
-            <h3 className="text-md font-bold text-foreground my-1">情報Ⅰ</h3>
-            <SmallLessonList subjectId="1" />
-          </div>
-          <div
-            className="p-2 m-2 rounded-md"
+            情報Ⅰ
+          </TabsTrigger>
+          <TabsTrigger 
+            value='info2'
+            className='flex-1 text-md py-1'
           >
-            <h3 className="text-md font-bold text-foreground my-1">情報Ⅱ</h3>
-            <SmallLessonList subjectId="2" />
-          </div>
-        </div>
-      </div>
+            情報Ⅱ
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value='info1'>
+          <SmallLessonList subjectId="1" />
+        </TabsContent>
+        <TabsContent value='info2'>
+          <SmallLessonList subjectId="2" />
+        </TabsContent>
+      </Tabs>
     </div>  
   );
 }
