@@ -1,6 +1,7 @@
 import './globals.css';
 import Header from '@components/component/common/Header';
 import { ThemeProvider } from "next-themes";
+import LayoutController from '@components/component/common/LayoutController';
 
 export default async function RootLayout({
   children
@@ -16,6 +17,7 @@ export default async function RootLayout({
       </head>
       <body className="min-h-screen bg-background font-sans antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <LayoutController />
           <Header />
           <div 
             className='flex flex-row h-[calc(100vh-64px)] overflow-y-hidden relative bg-background'
