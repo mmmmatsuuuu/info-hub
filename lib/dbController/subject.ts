@@ -1,6 +1,128 @@
 "use server"
 import { prisma } from '@lib/prisma';
-import { Subject, MessageSubject, SubjectAndUnits, MessageSubjectAndUnits, OperationResult, UnitAndLessons, Lesson } from '@/types/dbOperation';
+import { Subject, MessageSubject, SubjectAndUnits, MessageSubjectAndUnits, OperationResult, UnitAndLessons, Lesson, SubjectWithUnitsForMypage, UnitWithLessonsForMypage, LessonWithContents, Content } from '@/types/dbOperation';
+
+export async function getPublicSubjectsWithUnitsAndLessonsAndContents(
+
+): Promise<OperationResult<SubjectWithUnitsForMypage[], MessageSubject>> {
+  const res: OperationResult<SubjectWithUnitsForMypage[], MessageSubject> = {
+    isSuccess: false,
+    values: [],
+    messages: {
+      other: "公開科目一覧",
+    }
+  }
+  try {
+    const value = await prisma.subject.findMany({
+      where: {
+        is_public: true,
+      },
+      orderBy: {
+        subject_id: 'asc'
+      },
+      include: {
+        Units: {
+          where: {
+            is_public: true,
+          },
+          orderBy: {
+            unit_id: 'asc'
+          },
+          include: {
+            Lessons: {
+              where: {
+                is_public: true,
+              },
+              orderBy: {
+                lesson_id: 'asc'
+              },
+              include: {
+                Contents: {
+                  where: {
+                    Content: {
+                      is_public: true,
+                      type: {
+                        in: ['movie', 'quiz'],
+                      }
+                    }
+                  },
+                  orderBy: {
+                    content_id: 'asc',
+                  },
+                  include: {
+                    Content: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if (value.length == 0) {
+      res.messages.other = "科目が見つかりません。";
+      res.isSuccess = true;
+      return res;
+    }
+
+    value.map(s => {
+      const subject: SubjectWithUnitsForMypage = {
+        subjectId: s.subject_id,
+        subjectName: s.subject_name,
+        description: s.description || "",
+        isPublic: s.is_public,
+        units: [],
+      }
+
+      s.Units.map(u => {
+        const unit: UnitWithLessonsForMypage = {
+          unitId: u.unit_id,
+          unitName: u.unit_name,
+          subjectId: u.subject_id,
+          description: u.description || "",
+          isPublic: u.is_public,
+          lessons: [],
+        }
+
+        u.Lessons.map(l => {
+          const lesson: LessonWithContents = {
+            lessonId: l.lesson_id,
+            title: l.title,
+            description: l.description || "",
+            isPublic: l.is_public,
+            unitId: l.unit_id,
+            contents: [],
+          }
+
+          l.Contents.map(c => {
+            const content: Content = {
+              contentId: c.Content.content_id,
+              title: c.Content.title,
+              description: c.Content.description || "",
+              type: c.Content.type,
+              isPublic: c.Content.is_public,
+              url: c.Content.url,
+            }
+            lesson.contents.push(content)
+          })
+          unit.lessons.push(lesson)
+        })
+        subject.units.push(unit)
+      })
+      res.values.push(subject)
+    });
+
+    res.messages.other = "データを取得しました。";
+    res.isSuccess = true;
+    return res;
+  } catch (error) {
+    res.messages.other = String(error);
+    return res;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
 
 export async function getSubject(
   subjectId: string

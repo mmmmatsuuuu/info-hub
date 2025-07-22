@@ -16,6 +16,9 @@ export default async function Header() {
             </Link>
           </li>
           <li className="mr-6">
+            <Link href="/mypage">マイページ</Link>
+          </li>
+          <li className="mr-6">
             <ModeToggle />
           </li>
         </ul>

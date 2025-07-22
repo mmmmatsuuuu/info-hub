@@ -246,3 +246,16 @@ export interface Image {
   title: string;
   imageUrl: string;
 }
+
+// For Mypage
+export interface LessonWithContents extends Lesson {
+  contents: Content[];
+}
+
+export interface UnitWithLessonsForMypage extends Unit {
+  lessons: LessonWithContents[];
+}
+
+export interface SubjectWithUnitsForMypage extends Subject {
+  units: UnitWithLessonsForMypage[];
+}
